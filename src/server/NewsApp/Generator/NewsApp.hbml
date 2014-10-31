@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="NewsAppModel" namespace="NewsApp.Model" p1:Guid="49a356f3-1be5-4921-9db4-2c2af1d3ceaa" xmlns:p1="http://devart.com/schemas/EntityDeveloper/1.0" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="User" table="" p1:Guid="5e54aca9-fdd4-4da1-83ef-b5d3dbb8f3b8">
+    <id name="UserId" type="Int32" p1:ValidateRequired="True" p1:Guid="ef4779cf-05b8-4f14-9ab3-ac6acefa48a6">
+      <column name="" />
+    </id>
+    <property name="DeviceId" type="String" p1:ValidateRequired="True" p1:Guid="94f62061-1973-4019-a808-0b900d93e9ed">
+      <column name="" />
+    </property>
+    <bag name="UserNotifications" inverse="true" generic="true" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="6838389c-5451-4ffe-b137-0a5d49b1d23c">
+      <key>
+        <column name="" />
+      </key>
+      <one-to-many class="UserNotification" />
+    </bag>
+  </class>
+  <class name="Notification" table="" p1:Guid="82568817-20a1-45ab-b37f-9c53867a1b67">
+    <id name="NotificationId" type="Int32" p1:ValidateRequired="True" p1:Guid="7c3b0be8-5bea-4e89-9735-2c4b29f32eb2">
+      <column name="" />
+    </id>
+    <property name="Title" type="String" p1:ValidateRequired="True" p1:Guid="e56949ac-2b8d-4ef8-9f1b-ff8615167c45">
+      <column name="" />
+    </property>
+    <property name="Details" type="String" p1:ValidateRequired="True" p1:Guid="217d61e6-ec74-4d8c-b6cd-078fb060a32d">
+      <column name="" />
+    </property>
+    <property name="CreateDate" type="DateTime" p1:ValidateRequired="True" p1:Guid="78221907-a584-4092-80db-1b6ea1d8f204">
+      <column name="" />
+    </property>
+    <property name="Type" type="Int32" p1:ValidateRequired="True" p1:Guid="20e776c6-2008-49a8-a88a-efd396a76a17">
+      <column name="" />
+    </property>
+    <bag name="UserNotification" inverse="true" generic="false" p1:AssociationGuid="d943f797-51d1-44ee-bb90-357ac0983cae" p1:Guid="d510dd24-ac04-4e29-bbe7-2d4d13cc40d9">
+      <key>
+        <column name="" />
+      </key>
+      <one-to-many class="UserNotification" />
+    </bag>
+  </class>
+  <class name="UserNotification" table="" p1:Guid="378b61e1-c386-4644-9388-8df729feb64f">
+    <id name="UserNotificationId" type="Int32" p1:ValidateRequired="True" p1:Guid="da22e4c7-c3f6-4a8e-a4bf-a111621abf75">
+      <column name="" />
+    </id>
+    <property name="LastSeen" type="DateTime" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="7af9fc03-b032-44a2-8830-a3a68e011457">
+      <column name="" />
+    </property>
+    <many-to-one name="User" class="User" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="fdc40fec-c507-4d16-86a6-88f781df0415">
+      <column name="" />
+    </many-to-one>
+    <many-to-one name="Notification" class="Notification" p1:AssociationGuid="d943f797-51d1-44ee-bb90-357ac0983cae" p1:Guid="86335692-0f91-448a-9b15-4e511fa6b2b1">
+      <column name="" />
+    </many-to-one>
+  </class>
+</hibernate-mapping>

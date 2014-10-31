@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="NewsAppModel" namespace="NewsApp.Model" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="User" table="Users">
+    <id name="UserId" type="Int32">
+      <column name="UserId" not-null="true" />
+      <generator class="assigned" />
+    </id>
+    <property name="DeviceId" type="String">
+      <column name="DeviceId" not-null="true" />
+    </property>
+    <bag name="UserNotifications" inverse="true" generic="true">
+      <key>
+        <column name="UserId" />
+      </key>
+      <one-to-many class="UserNotification" />
+    </bag>
+  </class>
+  <class name="Notification" table="Notifications">
+    <id name="NotificationId" type="Int32">
+      <column name="NotificationId" not-null="true" />
+      <generator class="assigned" />
+    </id>
+    <property name="Title" type="String">
+      <column name="Title" not-null="true" />
+    </property>
+    <property name="Details" type="String">
+      <column name="Details" not-null="true" />
+    </property>
+    <property name="CreateDate" type="DateTime">
+      <column name="CreateDate" not-null="true" />
+    </property>
+    <property name="Type" type="Int32">
+      <column name="Type" not-null="true" />
+    </property>
+    <bag name="UserNotification" inverse="true" generic="false">
+      <key>
+        <column name="NotificationId" />
+      </key>
+      <one-to-many class="UserNotification" />
+    </bag>
+  </class>
+  <class name="UserNotification" table="UserNotifications">
+    <id name="UserNotificationId" type="Int32">
+      <column name="UserNotificationId" not-null="true" />
+      <generator class="assigned" />
+    </id>
+    <property name="LastSeen" type="DateTime">
+      <column name="LastSeen" not-null="false" />
+    </property>
+    <many-to-one name="User" class="User">
+      <column name="UserId" not-null="true" />
+    </many-to-one>
+    <many-to-one name="Notification" class="Notification">
+      <column name="NotificationId" not-null="true" />
+    </many-to-one>
+  </class>
+</hibernate-mapping>

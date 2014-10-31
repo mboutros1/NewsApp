@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EntityDeveloper Version="5.7.461.0">
+  <ModelSettings xmlns:ed="http://devart.com/schemas/EntityDeveloper/1.0" ConnectionStringInAppConfig="False" DetectTPTInheritance="True" DefaultCollectionType="Bag">
+    <Connection ConnectionString="Data Source=(local);Initial Catalog=NewsApp;Integrated Security=True;Persist Security Info=True" Provider="System.Data.SqlClient" />
+    <Generation>
+      <GeneratedFiles>
+        <File Name="NewsApp\Model\User.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
+        <File Name="NewsApp\Model\User.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
+        <File Name="NewsApp\Model\Notification.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
+        <File Name="NewsApp\Model\Notification.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
+        <File Name="NewsApp\Model\UserNotification.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
+        <File Name="NewsApp\Model\UserNotification.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
+        <File Name="NewsApp.hbm.xml" />
+        <File Name="NewsApp.User.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
+        <File Name="NewsApp.Notification.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
+        <File Name="NewsApp.UserNotification.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
+        <File Name="IUnitOfWork.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />
+        <File Name="IUnitOfWorkFactory.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />
+        <File Name="IRepository.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />
+        <File Name="MemoryRepository.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />
+        <File Name="NHibernateRepository.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow" />
+        <File Name="NHibernateSessionProvider.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow" />
+        <File Name="NHibernateUnitOfWork.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow" />
+        <File Name="NHibernateUnitOfWorkFactory.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow" />
+      </GeneratedFiles>
+    </Generation>
+    <generator class="assigned" />
+    <DatabaseFirstNamingRules>
+      <EntitySet PluralizationName="Pluralize" />
+      <Class UseSchemaAsPrefix="False" PluralizeCollectionNavigationPropertyName="True" RemoveUnderscores="True" RemoveInvalidCharacters="True" CodeCase="FirstLetterUppercase" AddPrefix="" AddSuffix="" RemovePrefixes="" RemoveSuffixes="" PluralizationName="Singularize" />
+      <Property RemoveUnderscores="True" RemoveInvalidCharacters="True" CodeCase="FirstLetterUppercase" AddPrefix="" AddSuffix="" RemovePrefixes="" RemoveSuffixes="" PluralizationName="Unchanged" />
+    </DatabaseFirstNamingRules>
+    <ModelFirst StorageSynchronizationEnabled="False" TargetProviderName="System.Data.SqlClient">
+      <TargetServer Server="SQL Server" ServerVersion="2000" />
+      <ModelFirstNamingRules>
+        <Table RemoveUnderscores="False" RemoveInvalidCharacters="True" CodeCase="Unchanged" AddPrefix="" AddSuffix="" RemovePrefixes="" RemoveSuffixes="" PluralizationName="Pluralize" />
+        <Column RemoveUnderscores="False" RemoveInvalidCharacters="True" CodeCase="Unchanged" AddPrefix="" AddSuffix="" RemovePrefixes="" RemoveSuffixes="" PluralizationName="Unchanged" />
+      </ModelFirstNamingRules>
+    </ModelFirst>
+    <Diagrams>
+      <Diagram Name="Diagram1" DefaultDiagram="True" />
+    </Diagrams>
+    <Templates>
+      <Template Name="NHibernate" Description="Use this template to generate classes and xml mappings for an NHibernate model." Enabled="True" File=".\NewsApp.NHibernate.tmpl">
+        <ed:Property Name="ValidationFramework" Type="EntityDeveloper.TemplateEngine.ValidationFramework, EntityDeveloper.Common, Version=5.7.461.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <ValidationFramework>None</ValidationFramework>
+        </ed:Property>
+        <ed:Property Name="ValidationErrorMessages" Type="EntityDeveloper.TemplateEngine.ValidationErrorMessages, EntityDeveloper.Common, Version=5.7.461.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <ValidationErrorMessages xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </ed:Property>
+        <ed:Property Name="FilePerClass" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="ModelNameAsFilesPrefix" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="HeaderTimestampVersionControlTag" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string d6p1:nil="true" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance" />
+        </ed:Property>
+        <ed:Property Name="EntitiesOutput" Type="EntityDeveloper.TemplateEngine.OutputInfo, EntityDeveloper.Common, Version=5.7.461.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <OutputInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <Project />
+            <ProjectFolder />
+            <DestinationFolder>C:\Users\Mike\Projects\NewsApp\src\server</DestinationFolder>
+          </OutputInfo>
+        </ed:Property>
+        <ed:Property Name="PropertyChangeNotifiers" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="PropertyChangePartialMethods" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="ImplementValidatable" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="ImplementEquals" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="ImplementCloneable" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="GeneratePartialClass" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="GenerateDataContracts" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="GenerateDummyComments" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="GenerateSerializableAttribute" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="XmlMappingOutput" Type="EntityDeveloper.TemplateEngine.OutputInfo, EntityDeveloper.Common, Version=5.7.461.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <OutputInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <Project />
+            <ProjectFolder />
+            <DestinationFolder />
+          </OutputInfo>
+        </ed:Property>
+        <ed:Property Name="XmlMappingAction" Type="EntityDeveloper.MetadataArtifactProcessing, EntityDeveloper.Orm.Common, Version=5.7.461.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <MetadataArtifactProcessing>CopyToOutputDirectory</MetadataArtifactProcessing>
+        </ed:Property>
+        <ed:Property Name="XmlMappingFilePerClass" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+      </Template>
+      <Template Name="Fluent NHibernate" Description="Use this template to generate a Fluent NHibernate Mapping classes." Enabled="True" File=".\NewsApp.Fluent NHibernate.tmpl">
+        <ed:Property Name="FilePerClass" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="GeneratePartialClass" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>false</boolean>
+        </ed:Property>
+        <ed:Property Name="ModelNameAsFilesPrefix" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="HeaderTimestampVersionControlTag" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string d6p1:nil="true" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance" />
+        </ed:Property>
+        <ed:Property Name="Output" Type="EntityDeveloper.TemplateEngine.OutputInfo, EntityDeveloper.Common, Version=5.7.461.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <OutputInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <Project />
+            <ProjectFolder />
+            <DestinationFolder>C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent</DestinationFolder>
+          </OutputInfo>
+        </ed:Property>
+      </Template>
+      <Template Name="Repository And Unit of Work" Description="Use this template to generate Repositories and a Unit of Work for an NHibernate model." Enabled="True" File=".\NewsApp.Repository And Unit of Work.tmpl">
+        <ed:Property Name="InterfaceLayerOutput" Type="EntityDeveloper.TemplateEngine.OutputInfo, EntityDeveloper.Common, Version=5.7.461.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <OutputInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <Project />
+            <ProjectFolder />
+            <DestinationFolder>C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces</DestinationFolder>
+          </OutputInfo>
+        </ed:Property>
+        <ed:Property Name="DataAccessLayerOutput" Type="EntityDeveloper.TemplateEngine.OutputInfo, EntityDeveloper.Common, Version=5.7.461.0, Culture=neutral, PublicKeyToken=09af7300eec23701">
+          <OutputInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <Project />
+            <ProjectFolder />
+            <DestinationFolder>C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow</DestinationFolder>
+          </OutputInfo>
+        </ed:Property>
+        <ed:Property Name="InterfaceLayerNamespace" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string d6p1:nil="true" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance" />
+        </ed:Property>
+        <ed:Property Name="DataAccessLayerNamespace" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string d6p1:nil="true" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance" />
+        </ed:Property>
+        <ed:Property Name="HeaderTimestampVersionControlTag" Type="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <string d6p1:nil="true" xmlns:d6p1="http://www.w3.org/2001/XMLSchema-instance" />
+        </ed:Property>
+        <ed:Property Name="GenerateMemoryRepository" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="GenerateSessionProvider" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="FluentSessionProvider" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="GenericRepositoryPattern" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+        <ed:Property Name="GeneratePartial" Type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+          <boolean>true</boolean>
+        </ed:Property>
+      </Template>
+    </Templates>
+    <AttributeAssemblies />
+    <Configuration SeparateConfigFile="False" />
+  </ModelSettings>
+</EntityDeveloper>

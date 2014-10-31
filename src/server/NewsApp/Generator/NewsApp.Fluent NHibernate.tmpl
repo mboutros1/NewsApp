@@ -1,0 +1,1854 @@
+<#
+// NHibernate Fluent Mapping template for Devart Entity Developer C# code generation.
+// Copyright (c) 2008-2014 Devart. All rights reserved.
+#>
+<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="EntityDeveloper.Mapping" #>
+<#@ property name="FilePerClass" category="Output" type="System.Boolean" default="True" description="If it is set to True, each model class will be placed to the separate file when generating code, otherwise, all model classes will be placed into a single file." #>
+<#@ property name="GeneratePartialClass" category="Output" type="System.Boolean" default="False" description="If it is set to True, then, for each class in the model, a partial class (%ModelName%.%ClassName%.FluentMapping.cs) will be generated, in which the user can add code that is not overwritten by the designer. If %ModelName%.%ClassName%.FluentMapping.cs was created before, it would be left unchanged. The property can be used, if File Per Class is turned on." #>
+<#@ property name="ModelNameAsFilesPrefix" category="Output" type="System.Boolean" default="True" description="If it is set to True, then the main model file name will be used as a prefix for the names of the files generated for entities. The property can be used, if File Per Class is turned on." #>
+<#@ property name="HeaderTimestampVersionControlTag" category="Generation" type="System.String" description="If this option is set, the standard date/time-stamp in the file header will be replaced with the specified tag (e.g. a version control tag for Subversion, Git, etc.)" #>
+<#@ property name="Output" category="Output" type="OutputInfo" editor="OutputInfoEditor" description="Specifies output for the generated entity classes." #>
+<#
+  // Settings
+  baseFileName = model.FileName + ".FluentMapping";
+  output.Extension = ".cs";
+
+  // Begin generation
+  if (!FilePerClass) {
+    output.PushOutputRedirection(Output, baseFileName + ".Designer");
+    GenerateFileHeader();
+  }
+
+  string defaultNamespace = codeProvider.GetValidIdentifier(model.GetDefaultNamespace());
+
+  //------------------------------------------------------------------------------
+  // Class generation for entities
+  //------------------------------------------------------------------------------
+  var namespaces = from cls in model.Classes.Cast<HibernateClass>()
+    let namespaceName = !String.IsNullOrEmpty(cls.Namespace) ? codeProvider.GetValidIdentifier(cls.Namespace) : defaultNamespace
+    group cls by namespaceName;
+
+  foreach (var _namespace in namespaces) {
+    if (!FilePerClass) {
+#>
+
+namespace <#= _namespace.Key #>
+{
+<#
+    }
+    foreach (HibernateClass cls in _namespace) {
+      if (FilePerClass) {
+        string rootFileName = ModelNameAsFilesPrefix ? model.FileName + "." + cls.Name + ".FluentMapping" : cls.Name + ".FluentMapping";
+        if (GeneratePartialClass) {
+          output.PushOutputRedirection(Output, "", rootFileName, OverwriteMode.None);
+          GenerateFileHeader();
+#>
+
+namespace <#= _namespace.Key #>
+{
+
+    <#= codeProvider.FormatClassAccess(cls.Access) #> partial class <#= codeProvider.GetValidIdentifier(cls.Name) #>Map
+    {
+        partial void ExtendMapping()
+        {
+        }
+    }
+}
+<#
+          output.PopOutputRedirection();
+        }
+        if (GeneratePartialClass)
+          output.PushOutputRedirection(Output, rootFileName, rootFileName + ".Generated");
+        else
+          output.PushOutputRedirection(Output, rootFileName);
+        GenerateFileHeader();
+#>
+
+namespace <#= _namespace.Key #>
+{
+<#
+      }
+#>
+    /// <summary>
+    /// There are no comments for <#= cls.Name #>Map in the schema.
+    /// </summary>
+    <#= codeProvider.FormatClassAccess(cls.Access) #> partial class <#= codeProvider.GetValidIdentifier(cls.Name) #>Map : <#= cls.BaseInheritance == null ? "ClassMap" : "SubclassMap" #><<#= codeProvider.GetValidIdentifier(cls.Name) #>>
+    {
+<#
+
+      // class constructor
+#>
+        /// <summary>
+        /// There are no comments for <#= cls.Name #>Map constructor in the schema.
+        /// </summary>
+        public <#= codeProvider.GetValidIdentifier(cls.Name) #>Map()
+        {
+<#
+      HibernateInheritance inheritance = (HibernateInheritance)cls.BaseInheritance;
+      if (string.IsNullOrEmpty(cls.Subselect)) {
+        if (inheritance == null || inheritance.Type == InheritanceType.TPT || inheritance.Type == InheritanceType.TPC && !cls.IsAbstract && string.IsNullOrEmpty(cls.Subselect)) {
+
+          string schema = cls.Schema;
+          if (string.IsNullOrEmpty(schema))
+            schema = model.DefaultSchema;
+
+           if (!string.IsNullOrEmpty(schema)){
+#>
+              Schema(@"<#= schema #>");
+<#
+          }
+        
+          string table = cls.Table;
+          if (string.IsNullOrEmpty(table))
+            table = cls.GetDefaultTableName();
+#>
+              Table(@"<#= table #>");
+<#
+        }
+      }
+      else {
+#>
+              Subselect(@"<#= cls.Subselect #>");
+<#      
+      }
+
+      if (!string.IsNullOrEmpty(cls.Proxy)){
+#>
+              Proxy("<#= cls.Proxy #>");
+<#
+      }
+      if (cls.DynamicInsert) {
+#>
+              DynamicInsert();
+<#
+      } 
+      if (cls.DynamicUpdate) {
+#>
+              DynamicUpdate();
+<#
+      }
+      if (cls.SelectBeforeUpdate) {
+#>
+              SelectBeforeUpdate();
+<#         
+      }
+      if (inheritance == null) {
+        if (!cls.Mutable) {
+#>
+              ReadOnly();
+<#            
+        }
+        if (cls.Polymorphism != HibernatePolymorphism.Implicit) {
+#>
+              Polymorphism.Explicit();
+<#
+        }
+        if (!string.IsNullOrEmpty(cls.Where)) {
+#>
+              Where("<#= cls.Where #>");
+<#
+        }
+        if (cls.OptimisticLock != HibernateLockMode.Version) {
+#>
+              OptimisticLock.<#= cls.OptimisticLock.ToString() #>();
+<#      }
+      }
+      if (!string.IsNullOrEmpty(cls.Persister)){
+#>
+              Persister("<#= cls.Persister #>");
+<#
+      }
+      if (cls.BatchSize > 1) {
+#>
+              BatchSize(<#= cls.BatchSize.ToString() #>);
+<#
+      }
+      bool? lazy = cls.Lazy;
+      if (lazy == null)
+        lazy = model.DefaultLazy;
+      if (lazy != null && ((bool)lazy)) {
+#>
+              LazyLoad();
+<#
+      }
+      else {
+#>
+              Not.LazyLoad();
+<#
+      }
+
+      if (cls.Cache.Usage.HasValue) {
+        if (cls.Cache.Usage.Value == HibernateCacheUsage.ReadWrite) { #>
+              Cache.ReadWrite()<# if (!string.IsNullOrEmpty(cls.Cache.Region)) { #>.Region(@"<#= cls.Cache.Region #>")<# } #>;
+<#
+        }
+        else
+          if (cls.Cache.Usage.Value == HibernateCacheUsage.ReadOnly) { #>
+              Cache.ReadOnly()<# if (!string.IsNullOrEmpty(cls.Cache.Region)) { #>.Region(@"<#= cls.Cache.Region #>")<# } #>;
+<#
+          }
+          else
+            if (cls.Cache.Usage.Value == HibernateCacheUsage.NonStrictReadWrite) { #>
+              Cache.NonStrictReadWrite()<# if (!string.IsNullOrEmpty(cls.Cache.Region)) { #>.Region(@"<#= cls.Cache.Region #>")<# } #>;
+<#
+            }
+          }
+
+      if (inheritance != null) { // derived class
+
+        HibernateClass baseClass = (HibernateClass)inheritance.BaseClass;
+        HibernateDiscriminator discriminator = baseClass.Discriminator;
+        
+        HibernateClass rootBaseClass = baseClass;
+        while(rootBaseClass.BaseInheritance != null){
+          discriminator = rootBaseClass.Discriminator;
+          rootBaseClass = (HibernateClass)rootBaseClass.BaseInheritance.BaseClass;
+        }
+        
+
+        if (cls.InheritanceModifier == ClassInheritanceModifier.Abstract) {
+#>
+              Abstract();
+<#
+        }
+
+        string formatedDiscriminatorValue = null;
+        if (!string.IsNullOrEmpty(cls.DiscriminatorValue)) {
+          formatedDiscriminatorValue = model.GetModelDescriptor().CanFormatDefaultValue(discriminator.Type, cls.DiscriminatorValue) ? codeProvider.FormatPropertyValue(discriminator.Type, cls.DiscriminatorValue) : null;
+          if (string.IsNullOrEmpty(formatedDiscriminatorValue)) {
+            formatedDiscriminatorValue = codeProvider.FormatStringValue(cls.DiscriminatorValue);
+          }
+        }
+        if (!string.IsNullOrEmpty(formatedDiscriminatorValue)) {
+#>
+              DiscriminatorValue(<#= formatedDiscriminatorValue #>);
+<#
+        }
+
+        if (inheritance.Type == InheritanceType.TPT) {
+          foreach (HibernateColumn column in inheritance.GetKeyColumns()) {
+            string  columnName = column.GetUsedName(new PropertyMappingKey(null, inheritance));
+#>
+              KeyColumn("<#= columnName #>");
+<#
+          }
+        }
+      }
+      else { // class have't base class
+
+        // for TPC inheritance
+        if (cls.InheritanceType == InheritanceType.TPC && cls.DerivedInheritances.Count > 0) {
+#>
+              UseUnionSubclassForInheritanceMapping();
+<#
+        }
+
+        // generate key properties
+        IList<HibernateProperty> key = cls.Properties.Where(p => p.PrimaryKey).Cast<HibernateProperty>().ToArray();
+        if (key.Count > 1 || (key.Count == 1 && key[0].IsComplexType)) {
+         GenerateCompositeId(key);
+        }
+        else {
+          if (key.Count == 1)
+            GenerateId(key[0]);
+        }
+
+        // for TPH inheritance
+        if (cls.InheritanceType == InheritanceType.TPH && cls.DerivedInheritances.Count > 0) {
+
+          string columnName = string.Empty;
+          if (string.IsNullOrEmpty(cls.Discriminator.Formula)) {
+            columnName = cls.Discriminator.Column.GetUsedName();
+          }
+
+          string formatedDiscriminatorValue = null;
+          if (!string.IsNullOrEmpty(cls.DiscriminatorValue)) {
+            formatedDiscriminatorValue = model.GetModelDescriptor().CanFormatDefaultValue(cls.Discriminator.Type, cls.DiscriminatorValue) ? codeProvider.FormatPropertyValue(cls.Discriminator.Type, cls.DiscriminatorValue) : null;
+            if (string.IsNullOrEmpty(formatedDiscriminatorValue)) {
+              formatedDiscriminatorValue = codeProvider.FormatStringValue(cls.DiscriminatorValue);
+            }
+          }
+          string formatedDefaultValue = model.GetModelDescriptor().CanFormatDefaultValue(cls.Discriminator.Type, cls.Discriminator.Column.Default) ? codeProvider.FormatPropertyValue(cls.Discriminator.Type, cls.Discriminator.Column.Default) : null;
+#>
+              DiscriminateSubClassesOnColumn("<#= columnName #>"<#
+          if (!string.IsNullOrEmpty(formatedDiscriminatorValue)) {
+          #>, <#= formatedDiscriminatorValue #><#
+          }
+        #>)<#
+          if (cls.Discriminator.Type != HibernateType.String) {
+          #>.CustomType<<#= codeProvider.GetNullableType(false, cls.Discriminator.Type) #>>()<#
+          }
+        #><#
+          if (cls.Discriminator.Force) {
+          #>.AlwaysSelectWithValue()<#
+          }
+        #><#
+          if (!cls.Discriminator.Insert) {
+          #>.ReadOnly()<#
+          }
+        #><#
+          if (!string.IsNullOrEmpty(cls.Discriminator.Formula)) {
+          #>.Formula("<#= codeProvider.GetQuotedString(cls.Discriminator.Formula) #>")<#
+          } else {#><#
+            if (!string.IsNullOrEmpty(cls.Discriminator.Column.Check)) {
+          #>.Check("<#= cls.Discriminator.Column.Check #>")<#
+            }#><#
+            if (!string.IsNullOrEmpty(formatedDefaultValue)) {
+          #>.Default(<#= formatedDefaultValue #>)<#
+            }
+        #><#
+            if (!string.IsNullOrEmpty(cls.Discriminator.Column.SqlType)) {
+          #>.SqlType("<#= cls.Discriminator.Column.SqlType #>")<#
+            }
+        #><#
+            if (cls.Discriminator.Column.NotNull.HasValue && cls.Discriminator.Column.NotNull.Value) {
+          #>.Not.Nullable()<#
+            }
+        #><#
+            if (cls.Discriminator.Column.Length.HasValue && cls.Discriminator.Column.Length.Value > 0) {
+          #>.Length(<#= cls.Discriminator.Column.Length.ToString() #>)<#
+            }
+        #><#
+            if (cls.Discriminator.Column.Precision.HasValue && cls.Discriminator.Column.Precision.Value > 0) {
+          #>.Precision(<#= cls.Discriminator.Column.Precision.ToString() #>)<#
+            }
+        #><#
+            if (cls.Discriminator.Column.Scale.HasValue && cls.Discriminator.Column.Scale.Value > 0) {
+          #>.Scale(<#= cls.Discriminator.Column.Scale.ToString() #>)<#
+            }
+        #><#
+            if (cls.Discriminator.Column.Unique) {
+          #>.Unique()<#
+            }
+        #><#
+            if (!string.IsNullOrEmpty(cls.Discriminator.Column.UniqueKey)) {
+          #>.UniqueKey("<#= cls.Discriminator.Column.UniqueKey #>")<#
+            }
+        #><#
+          }
+        #>;
+<#
+        }
+      }
+
+      // generate properties mapping
+      foreach (HibernateProperty property in cls.Properties.Where(p => !p.PrimaryKey && ((HibernateProperty)p).JoinTable == null)) {
+        if (!property.IsComplexType) {
+#>
+              <# GeneratePropertyMap(property, new PropertyMappingKey(null), 2); #>;
+<#
+        }
+         else {
+#>
+              <# GenerateComponentPropertyMap(property, new PropertyMappingKey(null), 0, false); #>;
+<#
+        }
+      }
+
+      // generate navigation properties mapping
+      foreach (HibernateRelationProperty relationProperty in cls.RelationProperties.Where(p => ((HibernateRelationProperty)p).JoinTable == null)) {
+        if (relationProperty.Generate) {
+#>
+              <# GenerateRelationPropertyMapping(relationProperty, _namespace.Key, null, 0); #>
+<#
+        }
+      }
+
+     if (cls.AllowsJoin()) {
+       foreach (HibernateJoinTable join in cls.JoinTables) {
+#>
+              <# GenerateJoinTableMap(join, _namespace.Key); #>;
+<#
+       }
+     }
+
+      // generate filter apply
+     if (cls.Filter != null) {
+        string filterName = codeProvider.GetValidIdentifier(cls.Filter.FilterDef.Name);
+        if (!string.Equals(defaultNamespace, _namespace.Key))
+          filterName = defaultNamespace + "." + filterName;
+#>
+              ApplyFilter<<#= filterName #>>(<# if (!string.IsNullOrEmpty(cls.Filter.Condition)) { #>@"<#= cls.Filter.Condition #>"<# } #>);
+
+<#          
+      }
+#>
+              ExtendMapping();
+        }
+
+        #region Partial Methods
+
+        partial void ExtendMapping();
+
+        #endregion
+    }
+
+<#
+      if (FilePerClass) {
+#>
+}
+<#
+        output.PopOutputRedirection();
+      }
+    
+    } // End of class generation
+
+    if (!FilePerClass) {
+#>
+}
+<#
+    }
+  } // End of namespace generation
+
+// =====================================================================================
+// Filters generation
+// =====================================================================================  
+
+  if (((HibernateContextModel)model).Filters.Count > 0) {
+    if (FilePerClass) {
+      output.PushOutputRedirection(Output, baseFileName + ".Filters");
+      GenerateFileHeader();
+    }
+#>
+
+namespace <#= defaultNamespace #>
+{
+<#
+
+    foreach (HibernateFilterDef filterDef in ((HibernateContextModel)model).Filters) {
+#>
+    /// <summary>
+    /// There are no comments for <#= filterDef.Name #> in the schema.
+    /// </summary>
+    public class <#= codeProvider.GetValidIdentifier(filterDef.Name) #> : FilterDefinition
+    {
+<#
+
+      // filter class constructor
+#>
+        /// <summary>
+        /// There are no comments for <#= filterDef.Name #> constructor in the schema.
+        /// </summary>
+        public <#= codeProvider.GetValidIdentifier(filterDef.Name) #>()
+        {
+              WithName(@"<#= filterDef.Name #>")<#
+      // generate filter parameters
+      foreach (HibernateFilterDefParameter parameter in filterDef.Parameters) {
+#>
+
+                .AddParameter(@"<#= parameter.Name #>",NHibernate.NHibernateUtil.<#= parameter.Type #>)<# }#>;
+<#
+      if (!string.IsNullOrEmpty(filterDef.Condition)) {
+#>
+              WithCondition(@"<#= filterDef.Condition #>");
+<#
+      }
+#>
+        }
+    }
+
+<#
+      if (FilePerClass) {
+#>
+}
+<#
+        output.PopOutputRedirection();
+      }
+    
+    } // End of filter class generation
+
+    if (!FilePerClass) {
+#>
+}
+<#
+    }
+  }
+
+  output.PopOutputRedirection();
+  // End of generation
+#>
+<#+
+  private string baseFileName = string.Empty;
+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Method GenerateFileHeader()
+  // Comments and namespaces for each generated file.
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private void GenerateFileHeader() {
+#>
+//------------------------------------------------------------------------------
+// This is auto-generated code.
+//------------------------------------------------------------------------------
+// This code was generated by Entity Developer tool using NHibernate Fluent Mapping template.
+// <#= String.IsNullOrEmpty(HeaderTimestampVersionControlTag) ? "Code is generated on: " + DateTime.Now : HeaderTimestampVersionControlTag #>
+//
+// Changes to this file may cause incorrect behavior and will be lost if
+// the code is regenerated.
+//------------------------------------------------------------------------------
+
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Collections.Generic;
+using FluentNHibernate.Mapping;
+using FluentNHibernate.MappingModel.Collections;
+<#+
+  }
+#>
+<#+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Method GenerateId(HibernateProperty property)
+  // Generate Id for entity class.
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private void GenerateId(HibernateProperty property) {
+
+    string columnName = property.Column.GetUsedName();
+    HibernateAccessMode? access = property.Access;
+    if (access == null)
+        access = model.DefaultAccess;
+
+    IdGenerator generator = property.IdGenerator;
+    if (generator == null)
+      generator = model.Settings.DefaultIdentityGenerator;
+    
+     string formatedDefaultValue = model.GetModelDescriptor().CanFormatDefaultValue(property.Type, property.Column.Default) ? codeProvider.FormatPropertyValue(property.Type, property.Column.Default) : null;
+#>
+              Id(x => x.<#= codeProvider.GetValidIdentifier(property.Name) #>)<#+
+          if (!string.IsNullOrEmpty(columnName)) {#>
+
+                .Column("<#= columnName #>")<#+
+          }
+        #><#+
+          if (property.Type != null) {#>
+
+                .CustomType("<#= GetMappingPropertyType(property) #>")<#+
+          }
+        #><#+
+          if (!string.IsNullOrEmpty(property.UnsavedValue)) {
+            if (property.UnsavedValue == "any" || property.UnsavedValue == "none") {
+            }
+            else 
+              if (property.UnsavedValue == "null") { #>
+
+                .UnsavedValue(null)<#+
+              }
+              else {#>
+
+                .UnsavedValue(<#= property.UnsavedValue #>)<#+
+              }
+          }
+        #><#+
+          if (access != null) {
+            if (access == HibernateAccessMode.Nosetter) { #>
+
+                .Access.ReadOnly()<#+
+            }
+            if (access == HibernateAccessMode.None) { #>
+
+                .Access.None()<#+
+            }
+            if (access == HibernateAccessMode.Property) { #>
+
+                .Access.Property()<#+
+            }
+            if (access == HibernateAccessMode.Field) { #>
+
+                .Access.PascalCaseField(Prefix.Underscore)<#+
+            }
+          }
+        #><#+
+            if (!string.IsNullOrEmpty(property.Column.Check)) { #>
+
+                .Check("<#= property.Column.Check #>")<#+
+            }#><#+
+            if (!string.IsNullOrEmpty(formatedDefaultValue)) { #>
+
+                .Default(<#= formatedDefaultValue #>)<#+
+            }
+        #><#+
+            if (!string.IsNullOrEmpty(property.Column.SqlType)) { #>
+
+                .CustomSqlType("<#= property.Column.SqlType #>")<#+
+            }
+        #><#+
+            if (property.Column.NotNull.HasValue && property.Column.NotNull.Value) { #>
+
+                .Not.Nullable()<#+
+            }
+        #><#+
+            if (property.Column.Length.HasValue && property.Column.Length.Value > 0) { #>
+
+                .Length(<#= property.Column.Length.ToString() #>)<#+
+            }
+        #><#+
+            if (property.Column.Precision.HasValue && property.Column.Precision.Value > 0) { #>
+
+                .Precision(<#= property.Column.Precision.ToString() #>)<#+
+            }
+        #><#+
+            if (property.Column.Scale.HasValue && property.Column.Scale.Value > 0) { #>
+
+                .Scale(<#= property.Column.Scale.ToString() #>)<#+
+            }
+        #><#+
+          if (!string.IsNullOrEmpty(property.Column.Index)) { #>
+
+                .Index("<#= property.Column.Index #>")<#+
+          }
+        #><#+
+            if (property.Column.Unique) { #>
+
+                .Unique()<#+
+            }
+        #><#+
+            if (!string.IsNullOrEmpty(property.Column.UniqueKey)) { #>
+
+                .UniqueKey("<#= property.Column.UniqueKey #>")<#+
+            }
+        #><#+
+          // ID Generator
+          if (generator != null) {
+            if (generator is EntityDeveloper.NHibernate.AssignedGenerator) { #>
+
+                .GeneratedBy.Assigned()<#+
+            }
+            else
+            if (generator is EntityDeveloper.NHibernate.ForeignGenerator) {
+              EntityDeveloper.NHibernate.ForeignGenerator foreignGenerator = (EntityDeveloper.NHibernate.ForeignGenerator)generator; #>
+                
+                .GeneratedBy.Foreign("<#= foreignGenerator.Property #>")<#+
+            }
+            else
+            if (generator is EntityDeveloper.NHibernate.GuidGenerator) { #>
+                
+                .GeneratedBy.Guid()<#+
+            }
+            else
+            if (generator is EntityDeveloper.NHibernate.GuidCombGenerator) { #>
+                
+                .GeneratedBy.GuidComb()<#+
+            }
+            else
+            if (generator is EntityDeveloper.NHibernate.HiLoGenerator) {
+              EntityDeveloper.NHibernate.HiLoGenerator tableHiLoGenerator = (EntityDeveloper.NHibernate.HiLoGenerator)generator;#>
+                
+                .GeneratedBy.HiLo(@"<#= tableHiLoGenerator.Table #>", @"<#= tableHiLoGenerator.Column #>", @"<#= tableHiLoGenerator.MaxLo.ToString() #>", @"<#= tableHiLoGenerator.Where.ToString() #>")<#+
+            }
+            else
+            if (generator is EntityDeveloper.NHibernate.IdentityGenerator) { #>
+                
+                .GeneratedBy.Identity()<#+
+            }
+            else
+            if (generator is EntityDeveloper.NHibernate.IncrementGenerator) { #>
+                
+                .GeneratedBy.Increment()<#+
+            }
+            else
+            if (generator is EntityDeveloper.NHibernate.NativeGenerator) { #>
+                
+                .GeneratedBy.Native()<#+
+            }
+            else
+            if (generator is EntityDeveloper.NHibernate.SeqHiLoGenerator) {
+              EntityDeveloper.NHibernate.SeqHiLoGenerator sequenceHiLoGenerator = (EntityDeveloper.NHibernate.SeqHiLoGenerator)generator;#>
+                
+                .GeneratedBy.SeqHiLo("<#= sequenceHiLoGenerator.Sequence #>", "<#= sequenceHiLoGenerator.MaxLo.ToString() #>")<#+
+            }
+            else
+            if (generator is EntityDeveloper.NHibernate.SequenceGenerator) {
+              EntityDeveloper.NHibernate.SequenceGenerator sequenceGenerator = (EntityDeveloper.NHibernate.SequenceGenerator)generator; #>
+                
+                .GeneratedBy.Sequence("<#= sequenceGenerator.Sequence #>")<#+
+            }
+            else
+            if (generator is EntityDeveloper.NHibernate.UuidHexGenerator) {
+              EntityDeveloper.NHibernate.UuidHexGenerator uuidHexGenerator = (EntityDeveloper.NHibernate.UuidHexGenerator)generator; #>
+                
+                .GeneratedBy.UuidHex("<#= uuidHexGenerator.Format #>"<#+
+                if (!string.IsNullOrEmpty(uuidHexGenerator.Separator)) { #>
+                  
+                  , a => a.AddParam("Separator", "<#= uuidHexGenerator.Separator #>")<#+
+                }#>
+              )<#+
+            }
+            else
+            if (generator is EntityDeveloper.NHibernate.UuidStringGenerator) { #>
+              
+                .GeneratedBy.UuidString()<#+
+            }
+            else
+            if (generator is CustomGenerator) {
+              CustomGenerator customGenerator = (CustomGenerator)generator; #>
+              
+                .GeneratedBy.Custom("<#= customGenerator.Class #>"<#+
+                if (customGenerator.Parameters.Count > 0) {
+                #>, a => a<#+
+                  foreach (KeyValuePair<string, string> param in customGenerator.Parameters) { #>
+                  
+                  .AddParam("<#= param.Key #>", "<#= param.Value #>")<#+
+                  }
+                }
+              #>)<#+
+            }
+          }
+        #>;
+<#+
+  }
+#>
+<#+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Method CompositeId(HibernateProperty property)
+  // Generate composite id for entity class.
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private void GenerateCompositeId(IList<HibernateProperty> id) {
+
+    HibernateProperty complexTypeProperty = null;
+    HibernateComplexType complexType = null;
+    string unsavedValue = null;
+    HibernateAccessMode? access = null;
+    PropertyMappingKey key = new PropertyMappingKey(null);
+    IList keyProperties = (IList)id;
+
+    if (id.Count == 1) {
+        complexTypeProperty = id[0];
+        complexType = (HibernateComplexType)complexTypeProperty.Type;
+        unsavedValue = complexTypeProperty.UnsavedValue;
+        access = complexTypeProperty.Access;
+        key = new PropertyMappingKey(new object[] { complexTypeProperty });
+        keyProperties = (IList)complexType.Properties;
+    }
+#>
+              CompositeId<#+
+          if (complexTypeProperty != null) {
+          #><<#= codeProvider.GetValidIdentifier(HibernateClass.GetFullName(complexType.Name, complexType.Namespace, complexType.Assembly)) #>>(x => x.<#= codeProvider.GetValidIdentifier(complexTypeProperty.Name) #>)<#+
+          }
+          else {
+          #>()<#+
+          } 
+        #><#+
+          if (!string.IsNullOrEmpty(unsavedValue)) {
+            if (unsavedValue == "any" || unsavedValue == "none") {
+            }
+            else 
+              if (unsavedValue == "null") {#>
+
+                .UnsavedValue(null)<#+
+              }
+              else { #>
+
+                .UnsavedValue(<#= unsavedValue #>)<#+
+              }
+          }
+        #><#+
+          if (access != null) {
+            if (access == HibernateAccessMode.Nosetter) { #>
+
+                .Access.ReadOnly()<#+
+            }
+            if (access == HibernateAccessMode.None) { #>
+
+                .Access.None()<#+
+            }
+            if (access == HibernateAccessMode.Property) { #>
+
+                .Access.Property()<#+
+            }
+            if (access == HibernateAccessMode.Field) { #>
+
+                .Access.PascalCaseField(Prefix.Underscore)<#+
+            }
+          }
+        #><#+
+          foreach (HibernateProperty property in keyProperties) {
+            
+            HibernateColumn column = property.GetColumn(key);
+            string columnName = column.GetUsedName(key);
+            HibernateAccessMode? propAccess = property.Access;
+            if (propAccess == null)
+              propAccess = model.DefaultAccess;
+            #>
+
+                .KeyProperty(x => x.<#= codeProvider.GetValidIdentifier(property.Name) #>, set => {<#+
+            if (property.Type != null) { #>
+
+                    set.Type("<#= GetMappingPropertyType(property) #>");<#+
+            }
+            if (!string.IsNullOrEmpty(columnName)) { #>
+
+                    set.ColumnName("<#= columnName #>");<#+
+            }
+            if (column.Length.HasValue && column.Length.Value > 0) { #>
+
+                    set.Length(<#= column.Length.ToString() #>);<#+
+            }
+            if (propAccess != null) {
+              if (propAccess == HibernateAccessMode.Nosetter) { #>
+
+                    set.Access.ReadOnly();<#+
+              }
+              if (propAccess == HibernateAccessMode.None) { #>
+
+                    set.Access.None();<#+
+              }
+              if (propAccess == HibernateAccessMode.Property) { #>
+
+                    set.Access.Property();<#+
+              }
+              if (propAccess == HibernateAccessMode.Field) { #>
+
+                    set.Access.PascalCaseField(Prefix.Underscore);<#+
+              }
+            }
+            #> } )<#+
+          }
+        #>;
+<#+
+  }
+#>
+<#+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Method GeneratePropertyMap(HibernateProperty property)
+  // Generate property map for entity class.
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private void GeneratePropertyMap(HibernateProperty property, PropertyMappingKey key, int ident) {
+    
+    HibernateColumn column = property.GetColumn(key);
+
+    // no mapping for complex type property
+    if (column == null)
+      return;
+
+    string columnName = column.GetUsedName(key);
+    bool isVersion = !property.IsComplexParent && property == ((HibernateClass)property.ParentClass).VersionProperty && ((HibernateClass)property.ParentClass).BaseInheritance == null;
+
+    HibernateAccessMode? access = property.Access;
+    if (access == null)
+        access = model.DefaultAccess;
+#><#= isVersion ? "Version" : "Map" #>(x => x.<#= codeProvider.GetValidIdentifier(property.Name) #>)<#+
+          output.Indent += ident;
+          if (!string.IsNullOrEmpty(columnName) && string.IsNullOrEmpty(property.Formula)) { #>
+
+        .Column("<#= columnName #>")<#+
+          }    
+        #><#+
+          if (property.Type != null) { #>
+
+        .CustomType("<#= GetMappingPropertyType(property) #>")<#+
+          }
+        #><#+
+          if (access != null) {
+            if (access == HibernateAccessMode.Nosetter) { #>
+
+        .Access.ReadOnly()<#+
+            }
+            else
+            if (access == HibernateAccessMode.None) { #>
+
+        .Access.None()<#+
+            }
+            else
+            if (access == HibernateAccessMode.Property) { #>
+
+        .Access.Property()<#+
+            }
+            else
+            if (access == HibernateAccessMode.Field) { #>
+
+        .Access.PascalCaseField(Prefix.Underscore)<#+
+            }
+          }
+        #><#+
+          if (!isVersion && !property.OptimisticLock) { #>
+
+        .Not.OptimisticLock()<#+
+          }
+        #><#+
+          if (!isVersion && !property.Insert) { #>
+
+        .Not.Insert()<#+
+          }
+        #><#+
+          if (!isVersion && !property.Update) { #>
+
+        .Not.Update()<#+
+          }
+        #><#+
+          if (isVersion && !string.IsNullOrEmpty(property.UnsavedValue)) {
+            if (property.UnsavedValue == "any" || property.UnsavedValue == "none") {
+            }
+            else 
+              if (property.UnsavedValue == "null") { #>
+
+        .UnsavedValue(null)<#+
+              }
+              else { #>
+
+        .UnsavedValue(<#= property.UnsavedValue #>)<#+
+              }
+          }
+        #><#+
+          if (property.Generated != null) {
+            if (property.Generated == HibernatePropertyGenerated.Never ) { #>
+
+        .Generated.Never()<#+
+            }
+            else
+            if (property.Generated == HibernatePropertyGenerated.Always) { #>
+
+        .Generated.Always()<#+
+            }
+            else
+            if (property.Generated == HibernatePropertyGenerated.Insert) { #>
+
+        .Generated.Insert()<#+
+            }
+          }
+        #><#+
+          // formula
+          if (!isVersion && !string.IsNullOrEmpty(property.Formula)) { #>
+
+        .Formula("<#= codeProvider.GetQuotedString(property.Formula) #>")<#+
+          }
+          else {
+            // column
+            
+            if (!string.IsNullOrEmpty(column.Check)) { #>
+
+        .Check("<#= column.Check #>")<#+
+            }#><#+
+            if (isVersion) {
+              string formatedDefaultValue = model.GetModelDescriptor().CanFormatDefaultValue(property.Type, column.Default) ? codeProvider.FormatPropertyValue(property.Type, column.Default) : null;
+              if (!string.IsNullOrEmpty(formatedDefaultValue)) { #>
+
+        .Default(<#= formatedDefaultValue #>)<#+
+              }
+            }
+            else
+              if (!string.IsNullOrEmpty(column.Default)) { #>
+
+        .Default(@"<#= column.Default #>")<#+
+              }
+        #><#+
+            if (!string.IsNullOrEmpty(column.SqlType)) { #>
+
+        .CustomSqlType("<#= column.SqlType #>")<#+
+            }
+        #><#+
+            if (column.NotNull.HasValue && column.NotNull.Value) { #>
+
+        .Not.Nullable()<#+
+            }
+        #><#+
+            if (column.Length.HasValue && column.Length.Value > 0) { #>
+
+        .Length(<#= column.Length.ToString() #>)<#+
+            }
+        #><#+
+            if (column.Precision.HasValue && column.Precision.Value > 0) { #>
+
+        .Precision(<#= column.Precision.ToString() #>)<#+
+            }
+        #><#+
+            if (column.Scale.HasValue && column.Scale .Value> 0) { #>
+
+        .Scale(<#= column.Scale.ToString() #>)<#+
+            }
+        #><#+
+          if (!string.IsNullOrEmpty(column.Index)) { #>
+
+        .Index("<#= column.Index #>")<#+
+          }
+        #><#+
+            if (column.Unique) { #>
+
+        .Unique()<#+
+            }
+        #><#+
+            if (!string.IsNullOrEmpty(column.UniqueKey)) { #>
+
+        .UniqueKey("<#= column.UniqueKey #>")<#+
+            }
+          } // end column
+          output.Indent -= ident;
+        #>
+<#+
+  }
+#>
+<#+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Method GenerateComponentPropertyMap(HibernateProperty property, PropertyMappingKey key)
+  // Generate component map for complex type properties.
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private void GenerateComponentPropertyMap(HibernateProperty property, PropertyMappingKey key, int identLavel, bool mappingOnly) {
+    
+    HibernateComplexType type = (HibernateComplexType)property.Type;
+    HibernateAccessMode? access = property.Access;
+    string actionVarName = codeProvider.GetValidIdentifier("a" + key.ToString().Replace('/', '_') + property.Name);
+    key = new PropertyMappingKey(key.PropertyPath, property);
+    if (access == null)
+        access = model.DefaultAccess;
+#>Component(x => x.<#= codeProvider.GetValidIdentifier(property.Name) #><#+
+          if (type.Properties.Count > 0) {
+            #>,<#+
+            output.Indent += identLavel;
+            #>
+
+                        <#= actionVarName #> => {
+            <#+
+            if (!mappingOnly && access != null) {
+              if (access == HibernateAccessMode.Nosetter) {
+                #>            <#= actionVarName #>.Access.ReadOnly();
+                <#+
+              }
+              else
+              if (access == HibernateAccessMode.None) {
+                #>            <#= actionVarName #>.Access.None();
+                <#+
+              }
+              else
+              if (access == HibernateAccessMode.Property) {
+                #>            <#= actionVarName #>.Access.Property();
+                <#+
+              }
+              else
+              if (access == HibernateAccessMode.Field) {
+                #>            <#= actionVarName #>.Access.PascalCaseField(Prefix.Underscore);
+                <#+
+              }
+            }
+            #><#+
+              if (!mappingOnly && !property.OptimisticLock) {
+                #>        <#= actionVarName #>.Not.OptimisticLock();
+                <#+
+              }
+            #><#+
+              if (!mappingOnly && !property.Insert) {
+                #>        <#= actionVarName #>.Not.Insert();
+                <#+
+              }
+            #><#+
+              if (!mappingOnly && !property.Update) {
+                #>        <#= actionVarName #>.Not.Update();
+                <#+
+            }
+
+            if (type.Parent.Generate) {
+                #>        <#= actionVarName #>.ParentReference(p => p.<#= codeProvider.GetValidIdentifier(type.Parent.Name) #>);
+                <#+          
+            }
+          
+            // generate properties mapping
+            foreach (HibernateProperty p in type.Properties) {
+              if (!p.IsComplexType) {
+                #>        <#= actionVarName #>.<#+ GeneratePropertyMap(p, key, 5 * (identLavel + 1) ); #>;
+                <#+
+              }
+              else {
+                #>        <#= actionVarName #>.<#+ GenerateComponentPropertyMap(p, key, identLavel + 1, mappingOnly); #>;
+                <#+
+              }
+            }
+
+            // generate navigation properties mapping
+            string defaultNamespace = codeProvider.GetValidIdentifier(model.GetDefaultNamespace());
+            string typeNamespace = !String.IsNullOrEmpty(type.Namespace) ? codeProvider.GetValidIdentifier(type.Namespace) : defaultNamespace;
+            foreach (HibernateRelationProperty relationProperty in type.RelationProperties.Where(r => r.Generate)) {
+
+              // parent of the collection of components
+              if (relationProperty.IsParentOfComponentsCollection)
+                continue;
+
+              // not mapped
+              if (relationProperty.RelationPropertyMapping.GetSource(key) == null || ((HibernateRelationProperty)relationProperty.OppositeRelationProperty).RelationPropertyMapping.GetSource(key) == null) 
+                continue;
+
+
+                #>        <#= actionVarName #>.<#+ GenerateRelationPropertyMapping(relationProperty, typeNamespace, key, 5 * (identLavel + 1));#>
+                <#+
+            }
+          #>        }<#+
+            output.Indent -= identLavel;
+          }#>)<#+
+  }
+#>
+<#+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Method GenerateJoinTableMap(HibernateProperty property, PropertyMappingKey key)
+  // Generate join table for class.
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private void GenerateJoinTableMap(HibernateJoinTable join, string classNamespace) {
+
+      string schema = join.Schema;
+      if (string.IsNullOrEmpty(schema))
+        schema = model.DefaultSchema;
+#>Join("<#= join.Table #>", j => {
+                <#+
+      if (!string.IsNullOrEmpty(schema)){
+                #>        j.Schema("<#= schema #>");
+                <#+
+      }
+
+      if (join.Fetch != HibernateRelationFetch.Join) { 
+        if (join.Fetch == HibernateRelationFetch.Select) {
+                #>        j.Fetch.Select();
+                <#+
+        }
+        else
+        if (join.Fetch == HibernateRelationFetch.Subselect) {
+                #>        j.Fetch.Subselect();
+                <#+
+        }
+      }
+
+      if (join.Inverse) {
+                #>        j.Inverse();
+                <#+
+      }
+
+      if (join.Optional) {
+                #>        j.Optional();
+                <#+
+      }
+
+      foreach (HibernateColumn column in join.GetKeyColumns()) {
+                #>        j.KeyColumn("<#= column.GetUsedName() #>");
+                <#+
+      }
+
+      // generate properties mapping
+      PropertyMappingKey key = new PropertyMappingKey(null);
+      foreach (HibernateProperty p in join.BaseClass.Properties.OfType<HibernateProperty>().Where(p => !p.PrimaryKey && p != join.BaseClass.VersionProperty && !p.NaturalId && p.JoinTable == join)) {
+        if (!p.IsComplexType) {
+                #>        j.<#+ GeneratePropertyMap(p, key, 5); #>;
+                <#+
+        }
+        else {
+                #>        j.<#+ GenerateComponentPropertyMap(p, key, 2, true); #>;
+                <#+
+        }
+      }
+
+      // generate relation properties mapping
+      foreach (HibernateRelationProperty relationProperty in join.BaseClass.RelationProperties.OfType<HibernateRelationProperty>().Where(p => p.Generate && p.JoinTable == join)) {
+                #>        j.<#+ GenerateRelationPropertyMapping(relationProperty, classNamespace, null, 5); #>
+                <#+
+      }
+          #>        })<#+
+    }
+#>
+<#+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Method GenerateCollectionComponentMap
+  // Generate collection component map for navigation properties.
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private void GenerateCollectionComponentMap(HibernateComplexType type, PropertyMappingKey key, HibernateRelationProperty relationProperty) {
+
+    bool manyToMany = relationProperty.OppositeRelationProperty.Multiplicity == Multiplicity.Many;
+    if (type.Properties.Count > 0 || manyToMany) {
+#>Component(c => {
+                <#+
+
+      // generate properties mapping
+      foreach (HibernateProperty p in type.Properties) {
+        if (!p.IsComplexType) {
+                #>        c.<#+ GeneratePropertyMap(p, key, 5); #>;
+                <#+
+        }
+        else {
+                #>        c.<#+ GenerateComponentPropertyMap(p, key, 2, true); #>;
+                <#+
+        }
+      }
+          // many to many
+      if (manyToMany) {
+       string columnName = null;
+       HibernateColumn childColumn = relationProperty.GetColumns(null).FirstOrDefault();
+       if (childColumn != null)
+         columnName = childColumn.GetUsedName(new PropertyMappingKey(null, relationProperty));
+
+                #>        c.References<<#= codeProvider.GetValidIdentifier(HibernateClass.GetFullName(relationProperty.RelationClass.Name, ((IHibernateClass)relationProperty.RelationClass).Namespace, ((IHibernateClass)relationProperty.RelationClass).Assembly)) #>>(r => r.<#= codeProvider.GetValidIdentifier(relationProperty.Name) #><#+ if (!string.IsNullOrEmpty(columnName)) { #>, "<#= columnName #>"<#+ } #>);
+                <#+
+      }
+      else {
+        if (relationProperty.OppositeRelationProperty.Generate) {
+                #>        c.ParentReference(p => p.<#= codeProvider.GetValidIdentifier(relationProperty.OppositeRelationProperty.Name) #>);
+                <#+          
+        }
+      }
+          #>        })<#+
+    }
+  }
+#>
+<#+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Method GenerateRelationPropertyMaping(HibernateRelationProperty property, string classNamespace, PropertyMappingKey mappingKey)
+  // Navigation property mapping generation for entity classes.
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private void GenerateRelationPropertyMapping(HibernateRelationProperty relationProperty, string classNamespace, PropertyMappingKey mappingKey, int identLavel) {
+
+    if (relationProperty.Multiplicity == Multiplicity.Many) {
+        GenerateCollactionRelationPropertyMapping(relationProperty, classNamespace, mappingKey, identLavel);
+    }
+    else {
+      HibernateRelationProperty oppositeRelationProperty = (HibernateRelationProperty)relationProperty.OppositeRelationProperty;
+      HibernateRelationPropertyMappingObject mappingObject = relationProperty.RelationPropertyMapping.GetSource(mappingKey);
+      if (oppositeRelationProperty.Multiplicity != Multiplicity.Many && !(mappingObject.Constrained && mappingObject.SeparateFK))
+        GenerateHasOneRelationPropertyMapping(relationProperty, mappingKey, identLavel);
+      else
+        GenerateReferencesRelationPropertyMapping(relationProperty, mappingKey, identLavel);
+    }
+  }
+#>
+<#+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Method GenerateHasOneRelationPropertyMaping(HibernateRelationProperty property)
+  // Generate HasOne navigation property mapping for one-to-one relation.
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private void GenerateHasOneRelationPropertyMapping(HibernateRelationProperty relationProperty, PropertyMappingKey mappingKey, int identLavel) {
+
+    HibernateAccessMode? access = relationProperty.Access;
+    if (access == null)
+        access = model.DefaultAccess;
+
+    HibernateRelationCascade? cascade = relationProperty.Cascade;
+    if (cascade == null)
+        cascade = model.DefaultCascade;
+    
+    HibernateRelationLazy lazyLoad;
+    if (relationProperty.Lazy == null)
+      lazyLoad = model.DefaultLazy ? HibernateRelationLazy.True : HibernateRelationLazy.False;
+    else
+      lazyLoad = (HibernateRelationLazy)relationProperty.Lazy;
+
+    HibernateRelationProperty oppositeRelationProperty = (HibernateRelationProperty)relationProperty.OppositeRelationProperty;
+    BaseClass cls = relationProperty.RelationClass;
+    HibernateRelationPropertyMappingObject mappingObject = relationProperty.RelationPropertyMapping.GetSource(mappingKey);
+    HibernateRelationPropertyMappingObject oppositeMappingObject = oppositeRelationProperty.RelationPropertyMapping.GetSource(mappingKey);
+#>HasOne(x => x.<#= codeProvider.GetValidIdentifier(relationProperty.Name) #>)<#+
+               output.Indent += identLavel; #>
+
+                .Class<<#= codeProvider.GetValidIdentifier(HibernateClass.GetFullName(cls.Name, ((IHibernateClass)cls).Namespace, ((IHibernateClass)cls).Assembly)) #>>()<#+
+          if (access != null) {
+            if (access == HibernateAccessMode.Nosetter) { #>
+
+                .Access.ReadOnly()<#+
+            }
+            if (access == HibernateAccessMode.None) { #>
+
+                .Access.None()<#+
+            }
+            if (access == HibernateAccessMode.Property) { #>
+
+                .Access.Property()<#+
+            }
+            if (access == HibernateAccessMode.Field) { #>
+
+                .Access.PascalCaseField(Prefix.Underscore)<#+
+            }
+          }
+        #><#+
+          if (cascade != null) {
+            if (cascade == HibernateRelationCascade.None) { #>
+
+                .Cascade.None()<#+
+            }
+            else
+            if (cascade == HibernateRelationCascade.All) { #>
+
+                .Cascade.All()<#+
+            }
+            else
+            if (cascade == HibernateRelationCascade.SaveUpdate) { #>
+
+                .Cascade.SaveUpdate()<#+
+            }
+            else
+            if (cascade == HibernateRelationCascade.Delete) { #>
+
+                .Cascade.Delete()<#+
+            }
+          }
+        #><#+
+          if (lazyLoad == HibernateRelationLazy.True) { #>
+
+                .LazyLoad()<#+
+          }
+          else {#>
+
+                .Not.LazyLoad()<#+
+          }
+        #><#+
+          if (mappingObject.Constrained) { #>
+
+                .Constrained()<#+
+          }
+        #><#+
+          if (oppositeRelationProperty.Generate && oppositeMappingObject.Constrained && oppositeMappingObject.SeparateFK) { #>
+
+                .PropertyRef(p => p.<#= codeProvider.GetValidIdentifier(oppositeRelationProperty.Name) #>)<#+
+          }
+        #><#+
+          if (relationProperty.Fetch != HibernateRelationFetch.Select) { 
+            if (relationProperty.Fetch == HibernateRelationFetch.Join) { #>
+
+                .Fetch.Join()<#+
+            }
+          }
+        #>;
+<#+
+          output.Indent -= identLavel;
+  }
+#>
+<#+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Method GenerateReferencesRelationPropertyMaping(HibernateRelationProperty property)
+  // Generate References navigation property mapping for one-to-many relation.
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private void GenerateReferencesRelationPropertyMapping(HibernateRelationProperty relationProperty, PropertyMappingKey mappingKey, int identLavel) {
+
+    HibernateAccessMode? access = relationProperty.Access;
+    if (access == null)
+        access = model.DefaultAccess;
+
+    HibernateRelationCascade? cascade = relationProperty.Cascade;
+    if (cascade == null)
+        cascade = model.DefaultCascade;
+    
+    HibernateRelationLazy lazyLoad;
+    if (relationProperty.Lazy == null)
+      lazyLoad = model.DefaultLazy ? HibernateRelationLazy.True : HibernateRelationLazy.False;
+    else
+      lazyLoad = (HibernateRelationLazy)relationProperty.Lazy;
+
+    HibernateRelationProperty oppositeRelationProperty = (HibernateRelationProperty)relationProperty.OppositeRelationProperty;
+    BaseClass cls = relationProperty.RelationClass;
+    HibernateRelationPropertyMappingObject mappingObject = relationProperty.RelationPropertyMapping.GetSource(mappingKey);
+    HibernateRelationPropertyMappingObject oppositeMappingObject = oppositeRelationProperty.RelationPropertyMapping.GetSource(mappingKey);
+
+#>References(x => x.<#= codeProvider.GetValidIdentifier(relationProperty.Name) #>)<#+
+               output.Indent += identLavel; #>
+
+                .Class<<#= codeProvider.GetValidIdentifier(HibernateClass.GetFullName(cls.Name, ((IHibernateClass)cls).Namespace, ((IHibernateClass)cls).Assembly)) #>>()<#+
+          if (access != null) {
+            if (access == HibernateAccessMode.Nosetter) { #>
+
+                .Access.ReadOnly()<#+
+            }
+            if (access == HibernateAccessMode.None) { #>
+
+                .Access.None()<#+
+            }
+            if (access == HibernateAccessMode.Property) { #>
+
+                .Access.Property()<#+
+            }
+            if (access == HibernateAccessMode.Field) { #>
+
+                .Access.PascalCaseField(Prefix.Underscore)<#+
+            }
+          }
+        #><#+
+          if (cascade != null) {
+            if (cascade == HibernateRelationCascade.None) { #>
+
+                .Cascade.None()<#+
+            }
+            else
+            if (cascade == HibernateRelationCascade.All) { #>
+
+                .Cascade.All()<#+
+            }
+            else
+            if (cascade == HibernateRelationCascade.SaveUpdate) { #>
+
+                .Cascade.SaveUpdate()<#+
+            }
+            else
+            if (cascade == HibernateRelationCascade.Delete) { #>
+
+                .Cascade.Delete()<#+
+            }
+          }
+        #><#+
+          if (lazyLoad == HibernateRelationLazy.True) { #>
+
+                .LazyLoad()<#+
+          }
+          else { #>
+
+                .Not.LazyLoad()<#+
+          }
+        #><#+
+          if (mappingObject.PropertyRef != null) { #>
+
+                .PropertyRef(p => p.<#= codeProvider.GetValidIdentifier(mappingObject.PropertyRef.Name) #>)<#+
+          }
+        #><#+
+          if (relationProperty.Fetch != HibernateRelationFetch.Select) { 
+            if (relationProperty.Fetch == HibernateRelationFetch.Join) { #>
+
+                .Fetch.Join()<#+
+            }
+          }
+        #><#+
+          if (!relationProperty.OptimisticLock) { #>
+
+                .Not.OptimisticLock()<#+
+          }
+        #><#+
+          if (!relationProperty.Insert) { #>
+
+                .Not.Insert()<#+
+          }
+        #><#+
+          if (!relationProperty.Update) { #>
+
+                .Not.Update()<#+
+          }
+        #><#+
+          if (relationProperty.Unique) { #>
+
+                .Unique()<#+
+          }
+        #><#+
+          if (relationProperty.NotFound != HibernateRelationNotFound.Exception) { 
+            if (relationProperty.NotFound == HibernateRelationNotFound.Ignore) { #>
+
+                .NotFound.Ignore()<#+
+            }
+          }
+        #><#+
+          IList<HibernateColumn> columns = relationProperty.GetColumns(mappingKey);
+          if (columns.Count > 0) { #>
+
+                .Columns(<#+
+            bool first = true;
+            foreach (HibernateColumn column in columns) { 
+              string columnName = column.GetUsedName(new PropertyMappingKey(null, relationProperty));
+                         #><#+ if (!first) { #>, <#+ } #>"<#= columnName #>"<#+
+              first = false;
+            }
+            #>)<#+
+          }
+        #>;
+<#+
+           output.Indent -= identLavel;
+  }
+#>
+<#+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Method GenerateCollactionRelationPropertyMapping(HibernateRelationProperty property)
+  // Generate collaction navigation property mapping for many relation property.
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private void GenerateCollactionRelationPropertyMapping(HibernateRelationProperty relationProperty, string classNamespace, PropertyMappingKey mappingKey, int identLavel) {
+
+    HibernateAccessMode? access = relationProperty.Access;
+    if (access == null)
+      access = model.DefaultAccess;
+
+    HibernateRelationCascade? cascade = relationProperty.Cascade;
+    if (cascade == null)
+      cascade = model.DefaultCascade;
+    
+    HibernateRelationLazy lazyLoad;
+    if (relationProperty.Lazy == null)
+      lazyLoad = model.DefaultLazy ? HibernateRelationLazy.True : HibernateRelationLazy.False;
+    else
+      lazyLoad = (HibernateRelationLazy)relationProperty.Lazy;
+
+    string indexColumnName = relationProperty.IndexColumn.Name;
+    if (string.IsNullOrEmpty(indexColumnName))
+      indexColumnName = relationProperty.IndexColumn.GetUsedName();
+    string indexType;
+    if (relationProperty.IndexType is BaseClass)
+      indexType = codeProvider.GetValidIdentifier(HibernateClass.GetFullName(((BaseClass)relationProperty.IndexType).Name, ((IHibernateClass)relationProperty.IndexType).Namespace, ((IHibernateClass)relationProperty.IndexType).Assembly));
+    else 
+      indexType = codeProvider.GetNullableType(false, relationProperty.IndexType);
+
+    HibernateAssociation association = (HibernateAssociation)relationProperty.Association;
+    HibernateRelationProperty oppositeRelationProperty = (HibernateRelationProperty)relationProperty.OppositeRelationProperty;
+    BaseClass cls = relationProperty.RelationClass;
+
+    HibernateRelationPropertyMappingObject mappingObject = relationProperty.RelationPropertyMapping.GetSource(mappingKey);
+    HibernateProperty propertyRef = oppositeRelationProperty.PropertyRef;
+    if (mappingKey != null && mappingKey.PropertyPath.Count > 0)
+      propertyRef = mappingObject.PropertyRef;
+
+    if (oppositeRelationProperty.Multiplicity == Multiplicity.Many && association.ManyToManyComponent != null)
+      cls = association.ManyToManyComponent;
+#><#= oppositeRelationProperty.Multiplicity != Multiplicity.Many ? "HasMany" : "HasManyToMany" #><<#= codeProvider.GetValidIdentifier(HibernateClass.GetFullName(cls.Name, ((IHibernateClass)cls).Namespace, ((IHibernateClass)cls).Assembly)) #>>(x => x.<#= codeProvider.GetValidIdentifier(relationProperty.Name) #>)<#+
+          
+          output.Indent += identLavel;
+          if (access != null) {
+            if (access == HibernateAccessMode.Nosetter) { #>
+
+                .Access.ReadOnly()<#+
+            }
+            if (access == HibernateAccessMode.None) { #>
+
+                .Access.None()<#+
+            }
+            if (access == HibernateAccessMode.Property) { #>
+
+                .Access.Property()<#+
+            }
+            if (access == HibernateAccessMode.Field) { #>
+
+                .Access.PascalCaseField(Prefix.Underscore)<#+
+            }
+          }
+        #><#+
+          switch (relationProperty.CollectionType) {
+            case HibernateCollectionType.Set: #>
+
+                .AsSet(<#+
+              if (!string.IsNullOrEmpty(relationProperty.Sort)) {
+                if (string.Equals(relationProperty.Sort, "unsorted", StringComparison.InvariantCultureIgnoreCase)) {
+                #>SortType.Unsorted<#+
+                }
+                else 
+                if (string.Equals(relationProperty.Sort, "natural", StringComparison.InvariantCultureIgnoreCase)) {
+                #>SortType.Natural<#+
+                }
+              }
+            #>)<#+
+            break;
+            case HibernateCollectionType.Bag: #>
+
+                .AsBag()<#+
+            break;
+            case HibernateCollectionType.Idbag: #>
+
+                .AsBag()<#+
+            break;
+            case HibernateCollectionType.Map: #>
+
+                .AsMap<<#= indexType #>>("<#= indexColumnName #>"<#+
+              if (!string.IsNullOrEmpty(relationProperty.Sort)) {
+                if (string.Equals(relationProperty.Sort, "unsorted", StringComparison.InvariantCultureIgnoreCase)) {
+                #>, SortType.Unsorted<#+
+                }
+                else 
+                if (string.Equals(relationProperty.Sort, "natural", StringComparison.InvariantCultureIgnoreCase)) {
+                #>, SortType.Natural<#+
+                }
+              }
+            #>)<#+
+            break;
+            case HibernateCollectionType.List: #>
+
+                .AsList(index => {
+                                   index.Column("<#= indexColumnName #>");
+                                   index.Type<<#= indexType #>>();
+                                 })<#+
+            break;
+            case HibernateCollectionType.Array: 
+              HibernateProperty indexProperty = cls.Properties.FirstOrDefault(p => p.PrimaryKey && object.Equals(p.Type, relationProperty.IndexType)) as HibernateProperty;
+              if (indexProperty != null) { #>
+
+                .AsArray<<#= indexType #>>(child => child.<#= codeProvider.GetValidIdentifier(indexProperty.Name) #>, map => map.Column("<#= indexColumnName #>").Type<<#= indexType #>>())<#+
+              }
+            break;
+          }
+        #><#+
+            if (relationProperty.RelationClass is ComplexType && oppositeRelationProperty.Multiplicity != Multiplicity.Many) { #>
+
+                .<#+ GenerateCollectionComponentMap((HibernateComplexType)relationProperty.RelationClass, new PropertyMappingKey(null, relationProperty), relationProperty); #><#+
+              string table = mappingObject.Table;
+              if (string.IsNullOrEmpty(table))
+                table = association.GetDefaultTableName();
+        
+              if (!string.IsNullOrEmpty(mappingObject.Schema)) { #>
+
+                .Schema("<#= mappingObject.Schema #>")<#+
+              }
+              if (!string.IsNullOrEmpty(table)) { #>
+
+                .Table("<#= table #>")<#+
+              }
+            }
+        #><#+
+          if (cascade != null) {
+            if (cascade == HibernateRelationCascade.None) { #>
+
+                .Cascade.None()<#+
+            }
+            else
+            if (cascade == HibernateRelationCascade.All) { #>
+
+                .Cascade.All()<#+
+            }
+            else
+            if (cascade == HibernateRelationCascade.SaveUpdate) { #>
+
+                .Cascade.SaveUpdate()<#+
+            }
+            else
+            if (cascade == HibernateRelationCascade.Delete) { #>
+
+                .Cascade.Delete()<#+
+            }
+            else
+            if (cascade == HibernateRelationCascade.AllDeleteOrphan) { #>
+
+                .Cascade.AllDeleteOrphan()<#+
+            }
+            else
+            if (cascade == HibernateRelationCascade.DeleteOrphan) { #>
+
+                .Cascade.DeleteOrphan()<#+
+            }
+          }
+        #><#+
+          if (relationProperty.CollectionType != HibernateCollectionType.Array) {
+            if (lazyLoad == HibernateRelationLazy.True) { #>
+
+                .LazyLoad()<#+
+            }
+            if (lazyLoad == HibernateRelationLazy.False) { #>
+
+                .Not.LazyLoad()<#+
+            }
+            if (lazyLoad == HibernateRelationLazy.Extra) { #>
+
+                .ExtraLazyLoad()<#+
+            }
+          }
+        #><#+
+          if (propertyRef != null) { #>
+
+                .PropertyRef("<#= codeProvider.GetValidIdentifier(propertyRef.Name) #>")<#+
+          }
+        #><#+
+          if (relationProperty.Fetch != HibernateRelationFetch.Select) { 
+            if (relationProperty.Fetch == HibernateRelationFetch.Join) { #>
+
+                .Fetch.Join()<#+
+            }
+          }
+        #><#+
+		  if (cls is HibernateClass) {
+            if (!relationProperty.OptimisticLock) { #>
+
+                // .OptimisticLock.None() /*bug (or missing feature) in Fluent NHibernate*/ <#+
+            }
+            else { #>
+
+                // .OptimisticLock.<#= ((HibernateClass)cls).OptimisticLock.ToString() #>() /*bug (or missing feature) in Fluent NHibernate*/<#+
+            }
+		  }
+        #><#+
+          if (relationProperty.NotFound != HibernateRelationNotFound.Exception) { 
+            if (relationProperty.NotFound == HibernateRelationNotFound.Ignore) { #>
+
+                .NotFound.Ignore()<#+
+            }
+          }
+        #><#+
+          if (oppositeRelationProperty.Generate && (oppositeRelationProperty.Multiplicity != Multiplicity.Many || relationProperty.Inverse)) { #>
+
+                .Inverse()<#+
+          }
+        #><#+
+          if (!String.IsNullOrEmpty(relationProperty.OrderBy)) { #>
+
+                .OrderBy("<#= relationProperty.OrderBy #>")<#+
+          }
+        #><#+
+          if (!String.IsNullOrEmpty(relationProperty.Where)) { #>
+
+                .Where("<#= relationProperty.Where #>")<#+
+          }
+        #><#+
+          if (relationProperty.BatchSize > 1) { #>
+
+                .BatchSize(<#= relationProperty.BatchSize.ToString() #>)<#+
+          }
+        #><#+
+          if (relationProperty.CollectionType != HibernateCollectionType.Array) { 
+            if (relationProperty.Generic) { #>
+
+                .Generic()<#+
+             }
+             else {#>
+
+                .Not.Generic()<#+
+             }
+          }
+        #><#+
+          if (oppositeRelationProperty.Multiplicity == Multiplicity.Many) {
+          // many-to-many relation
+
+            if (association.ManyToManyComponent != null) { #>
+
+                .<#+ GenerateCollectionComponentMap(association.ManyToManyComponent, new PropertyMappingKey(null, association), relationProperty); #><#+
+            }
+
+            if (mappingObject.PropertyRef != null) { #>
+
+                .ChildPropertyRef("<#= codeProvider.GetValidIdentifier(mappingObject.PropertyRef.Name) #>")<#+
+            }
+
+            string table = mappingObject.Table;
+            if (string.IsNullOrEmpty(table))
+              table = association.GetDefaultTableName();
+        
+            if (!string.IsNullOrEmpty(mappingObject.Schema)) { #>
+
+                .Schema("<#= mappingObject.Schema #>")<#+
+            }
+            if (!string.IsNullOrEmpty(table)) { #>
+
+                .Table("<#= table #>")<#+
+            }
+            if (relationProperty.Fetch2 != HibernateRelationFetch.Select) { 
+              if (relationProperty.Fetch2 == HibernateRelationFetch.Join) { #>
+
+                .FetchType.Join()<#+
+              }
+            }
+
+            IList<HibernateColumn> childColumns = relationProperty.GetColumns(null);
+            foreach (HibernateColumn column in childColumns) { 
+              string columnName = column.GetUsedName(new PropertyMappingKey(null, relationProperty));#>
+
+                .ChildKeyColumns.Add("<#= columnName #>", mapping => mapping.Name("<#= columnName #>")<#+
+                if (!string.IsNullOrEmpty(column.SqlType)) { #>
+
+                                                                     .SqlType("<#= column.SqlType #>")<#+
+                }
+                #><#+
+                if (column.NotNull.HasValue && column.NotNull.Value) { #>
+
+                                                                     .Not.Nullable()<#+
+                }
+                else {#>
+
+                                                                     .Nullable()<#+
+                } 
+                #><#+
+                if (column.Length.HasValue && column.Length.Value > 0) { #>
+
+                                                                     .Length(<#= column.Length.ToString() #>)<#+
+                }
+                #><#+
+                if (!string.IsNullOrEmpty(column.Index)) { #>
+
+                                                                     .Index("<#= column.Index #>")<#+
+                }
+                #><#+
+                if (column.Unique) { #>
+
+                                                                     .Unique()<#+
+                }
+                #><#+
+                if (!string.IsNullOrEmpty(column.UniqueKey)) { #>
+
+                                                                     .UniqueKey("<#= column.UniqueKey #>")<#+
+                }#>)<#+
+              }
+          }
+        #><#+
+          IList<HibernateColumn> columns = oppositeRelationProperty.GetColumns(mappingKey);
+          foreach (HibernateColumn column in columns) { 
+            string columnName = column.GetUsedName(new PropertyMappingKey(null, oppositeRelationProperty));#>
+
+                .<#= oppositeRelationProperty.Multiplicity != Multiplicity.Many ? "KeyColumns" : "ParentKeyColumns" #>.Add("<#= columnName #>", mapping => mapping.Name("<#= columnName #>")<#+
+              if (!string.IsNullOrEmpty(column.SqlType)) { #>
+
+                                                                     .SqlType("<#= column.SqlType #>")<#+
+              }
+              #><#+
+              if (column.NotNull.HasValue && column.NotNull.Value) { #>
+
+                                                                     .Not.Nullable()<#+
+              }
+              else {#>
+
+                                                                     .Nullable()<#+
+              } 
+              #><#+
+              if (column.Length.HasValue && column.Length.Value > 0) { #>
+
+                                                                     .Length(<#= column.Length.ToString() #>)<#+
+              }
+              #><#+
+              if (!string.IsNullOrEmpty(column.Index)) { #>
+
+                                                                     .Index("<#= column.Index #>")<#+
+              }
+              #><#+
+              if (column.Unique) { #>
+
+                                                                     .Unique()<#+
+              }
+              #><#+
+              if (!string.IsNullOrEmpty(column.UniqueKey)) { #>
+
+                                                                     .UniqueKey("<#= column.UniqueKey #>")<#+
+              }#>)<#+
+          }
+        #><#+
+            // generate filter apply
+            if (relationProperty.Filter != null) {
+              string filterName = codeProvider.GetValidIdentifier(relationProperty.Filter.FilterDef.Name);
+              string defaultNamespace = codeProvider.GetValidIdentifier(model.GetDefaultNamespace());
+              if (!string.Equals(defaultNamespace, classNamespace))
+                filterName = defaultNamespace + "." + filterName; #>
+                
+                .ApplyFilter<<#= filterName #>>(<#+ if (!string.IsNullOrEmpty(relationProperty.Filter.Condition)) { #>@"<#= relationProperty.Filter.Condition #>"<#+ } #>)<#+
+            } #>;
+<#+
+       output.Indent -= identLavel;
+  }
+#>
+<#+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Utility methods
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  // Method GetPropertyType
+  private string GetMappingPropertyType(HibernateProperty prop) {
+
+    if (prop.IsEnumType) {
+      HibernateEnumStorageMode enumStorageMode = prop.EnumStorageMode.HasValue ? prop.EnumStorageMode.Value : model.DefaultEnumStorageMode;
+      if (enumStorageMode == HibernateEnumStorageMode.String)
+        return HibernateClass.GetFullName(((HibernateEnumType)prop.Type).Name + "EnumStringType", ((HibernateEnumType)prop.Type).NamespaceUsed, ((HibernateEnumType)prop.Type).AssemblyUsed);
+      else
+        return ((HibernateEnumType)prop.Type).FullName;
+   }
+    else
+      return prop.Type.ToString();
+  }
+#>

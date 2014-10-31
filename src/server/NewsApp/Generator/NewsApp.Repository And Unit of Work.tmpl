@@ -1,0 +1,790 @@
+<#
+// Generates Repositories and a Unit of Work for NHibernate model.
+// Copyright (c) 2008-2014 Devart. All rights reserved.
+#>
+<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ property name="InterfaceLayerOutput" category="Output" type="OutputInfo" editor="OutputInfoEditor" description="Specifies output for the generated interface layer classes." #>
+<#@ property name="DataAccessLayerOutput" category="Output" type="OutputInfo" editor="OutputInfoEditor" description="Specifies output for the generated data access layer classes for NHibernate model." #>
+<#@ property name="InterfaceLayerNamespace" category="Generation" type="System.String" description="Specifies namespace for the generated interface layer classes." #>
+<#@ property name="DataAccessLayerNamespace" category="Generation" type="System.String" description="Specifies namespace for the generated data access layer classes for NHibernate model." #>
+<#@ property name="HeaderTimestampVersionControlTag" category="Generation" type="System.String" description="If this option is set, the standard date/time-stamp in the file header will be replaced with the specified tag (e.g. a version control tag for Subversion, Git, etc.)" #>
+<#@ property name="GenerateMemoryRepository" category="Generation" type="System.Boolean" default="False" description="If True, the MemoryRepository class code will be generated." #>
+<#@ property name="GenerateSessionProvider" category="NHibernate" type="System.Boolean" default="True" description="If True, the NHibernateSessionProvider class code for creating a default NHibernate session will be generated." #>
+<#@ property name="FluentSessionProvider" category="NHibernate" type="System.Boolean" default="False" description="If True, the generated NHibernateSessionProvider will use FluentNHibernate when creating a session." #>
+<#@ property name="GenericRepositoryPattern" category="Generation" type="System.Boolean" default="False" description="Defines whether to generate the implementation of the generic repository pattern and IRepository<T> and whether the IRepository<T> interface will contain the method, returning IQueryable<T>. No separate interface and repository class will be generated for entities." #>
+<#@ property name="GeneratePartial" category="Output" type="System.Boolean" default="True" description="If it is set to True, then, for each repository interface and class in case of non-generic repository pattern implementation generation, a partial interface and class will be generated, in which the user can add code that is not overwritten by the designer." #>
+<#@ extended name="GenerateRepository" owner="Class" type="System.Boolean" default="True" description="Defines whether to generate interface and repository class for entity in case of non-generic repository pattern implementation generation." #>
+<#
+  // Settings
+  output.Extension = ".cs";
+  string interfaceLayerNamespace = !string.IsNullOrEmpty(InterfaceLayerNamespace) ? codeProvider.GetValidIdentifier(InterfaceLayerNamespace) : codeProvider.GetValidIdentifier(model.GetDefaultNamespace());
+  string dataAccessLayerNamespace = !string.IsNullOrEmpty(DataAccessLayerNamespace) ? codeProvider.GetValidIdentifier(DataAccessLayerNamespace) : codeProvider.GetValidIdentifier(model.GetDefaultNamespace());
+
+  // IUnitOfWork interface generation
+  GenerateIUnitOfWork(interfaceLayerNamespace);
+
+  // IUnitOfWorkFactory interface generation
+  GenerateIUnitOfWorkFactory(interfaceLayerNamespace);
+
+  // IRepository interface generation
+  GenerateIRepository(interfaceLayerNamespace);
+
+  // MemoryRepository class generation
+  if (GenerateMemoryRepository)
+    GenerateMemoryRepositoryClass(interfaceLayerNamespace);
+
+  if (!GenericRepositoryPattern)
+    GenerateEntityRepositoryInterfaces(interfaceLayerNamespace);
+
+  // NHibernateRepository class generation
+  GenerateNHibernateRepository(dataAccessLayerNamespace, interfaceLayerNamespace);
+
+  // NHibernateSessionProvider class generation
+  if (GenerateSessionProvider)
+    GenerateNHibernateSessionProvider(dataAccessLayerNamespace, FluentSessionProvider);
+ 
+  // UnitOfWork class generation for model
+  GenerateNHibernateUnitOfWork(dataAccessLayerNamespace, interfaceLayerNamespace);
+
+  // UnitOfWorkFactory class generation for model
+  GenerateNHibernateUnitOfWorkFactory(dataAccessLayerNamespace, interfaceLayerNamespace);
+
+  if (!GenericRepositoryPattern)
+    GenerateEntityRepositoryClasses(dataAccessLayerNamespace, interfaceLayerNamespace);
+#>
+<#+
+  //------------------------------------------------------------------------------
+  // IUnitOfWork interface generation
+  //------------------------------------------------------------------------------
+  private void GenerateIUnitOfWork(string _namespace) {
+    output.PushOutputRedirection(InterfaceLayerOutput, "IUnitOfWork");
+    GenerateFileHeader(true);
+#>
+using System;
+
+namespace <#= _namespace #>
+{
+    public partial interface IUnitOfWork : IDisposable
+    {
+        void Save();
+    }
+}
+<#+
+    output.PopOutputRedirection();
+  }
+#>
+<#+
+  //------------------------------------------------------------------------------
+  // IUnitOfWorkFactory interface generation
+  //------------------------------------------------------------------------------
+  private void GenerateIUnitOfWorkFactory(string _namespace) {
+    output.PushOutputRedirection(InterfaceLayerOutput, "IUnitOfWorkFactory");
+    GenerateFileHeader(true);
+#>
+namespace <#= _namespace #>
+{
+    public partial interface IUnitOfWorkFactory
+    {
+        IUnitOfWork Create();
+    }
+}
+<#+
+    output.PopOutputRedirection();
+  }
+#>
+<#+
+  //------------------------------------------------------------------------------
+  // IRepository interface generation
+  //------------------------------------------------------------------------------
+  private void GenerateIRepository(string _namespace) {
+    output.PushOutputRedirection(InterfaceLayerOutput, "IRepository");
+    GenerateFileHeader(true);
+#>
+using System;
+using System.Collections.Generic;
+
+namespace <#= _namespace #>
+{
+    public partial interface IRepository<T>
+    {
+<#+
+  if (GenericRepositoryPattern) {
+#>
+        System.Linq.IQueryable<T> All();
+<#+
+  }
+#>
+        void Add(T entity);
+        void Remove(T entity);
+    }
+}
+<#+
+    output.PopOutputRedirection();
+  }
+#>
+<#+
+  //------------------------------------------------------------------------------
+  // MemoryRepository class generation
+  //------------------------------------------------------------------------------
+  private void GenerateMemoryRepositoryClass(string _namespace) {
+    output.PushOutputRedirection(InterfaceLayerOutput, "MemoryRepository");
+    GenerateFileHeader(true);
+#>
+using System;
+using System.Collections.Generic;
+<#+
+  if (GenericRepositoryPattern) {
+#>
+using System.Linq;
+<#+
+  }
+#>
+
+namespace <#= _namespace #>
+{
+    public partial class MemoryRepository<T> : IRepository<T>
+    {
+        public MemoryRepository()
+        {
+        }
+
+        public MemoryRepository(IEnumerable<T> entities)
+        {
+            if (entities != null)
+            {
+                foreach (var entity in entities)
+                {
+                    Add(entity);
+                }
+            }
+        }
+
+        public MemoryRepository(params T[] entities)
+        {
+            if (entities != null)
+            {
+                foreach (var entity in entities)
+                {
+                    Add(entity);
+                }
+            }
+        }
+
+        protected List<T> objectSet = new List<T>();
+
+<#+
+  if (GenericRepositoryPattern) {
+#>
+        public virtual IQueryable<T> All()
+        {
+            return objectSet.AsQueryable();
+        }
+
+<#+
+  }
+#>
+        public virtual void Add(T entity)
+        {
+            objectSet.Add(entity);
+        }
+
+        public virtual void Remove(T entity)
+        {
+            objectSet.Remove(entity);
+        }
+	  }
+}
+<#+
+    output.PopOutputRedirection();
+  }
+#>
+<#+
+  //------------------------------------------------------------------------------
+  // NHibernateRepository class generation
+  //------------------------------------------------------------------------------
+  private void GenerateNHibernateRepository(string _namespace, string interfaceLayerNamespace) {
+    output.PushOutputRedirection(DataAccessLayerOutput, "NHibernateRepository");
+    GenerateFileHeader(true);
+#>
+using System;
+using System.Collections.Generic;
+using NHibernate;
+<#+
+  if (GenericRepositoryPattern) {
+#>
+using System.Linq;
+using NHibernate.Linq;
+<#+
+  }
+
+  if (!string.Equals(_namespace, interfaceLayerNamespace)) {
+#>
+using <#= interfaceLayerNamespace #>;
+<#+
+  }
+#>
+
+namespace <#= _namespace #>
+{
+    public partial class NHibernateRepository<T> : IRepository<T>
+    {
+        protected ISession session;
+
+        public NHibernateRepository(ISession session)
+        {
+
+            if (session == null)
+            {
+                throw new ArgumentNullException("session");
+            }
+            this.session = session;
+        }
+
+<#+
+  if (GenericRepositoryPattern) {
+#>
+        public virtual IQueryable<T> All()
+        {
+
+            return (from entity in session.Query<T>() select entity);
+        }
+
+<#+
+  }
+#>
+        public virtual void Add(T entity)
+        {
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity");
+            }
+
+            if (!session.Transaction.IsActive)
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+				        {
+                    session.Save(entity);
+                    transaction.Commit();
+				        }
+            }
+            else
+                session.Save(entity);
+        }
+
+        public virtual void Remove(T entity)
+        {
+
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity");
+            }
+
+            if (!session.Transaction.IsActive)
+            {
+                using (ITransaction transaction = session.BeginTransaction())
+				        {
+                    session.Delete(entity);
+                    transaction.Commit();
+				        }
+            }
+            else
+                session.Delete(entity);
+        }
+	}
+}
+<#+
+    output.PopOutputRedirection();
+  }
+#>
+<#+
+  //------------------------------------------------------------------------------
+  // NHibernateSessionProvider class generation
+  //------------------------------------------------------------------------------
+  private void GenerateNHibernateSessionProvider(string _namespace, bool isFluentNHibernate) {
+    output.PushOutputRedirection(DataAccessLayerOutput, "NHibernateSessionProvider");
+    GenerateFileHeader(true);
+#>
+using NHibernate;
+using NHibernate.Cfg;
+<#+
+  if (isFluentNHibernate) {
+#>
+using FluentNHibernate.Cfg;
+<#+
+  }
+#>
+
+namespace <#= _namespace #>
+{
+    public class NHibernateSessionProvider
+    {
+
+        private static Configuration configuration;
+        private static ISessionFactory sessionFactory;
+
+        private NHibernateSessionProvider()
+        {
+        }
+
+        public static Configuration Configuration
+        {
+            get
+            {
+                if (configuration == null)
+                {
+                    configuration = new Configuration();
+                    configuration.Configure();
+<#+
+  if (!isFluentNHibernate && string.IsNullOrEmpty(model.DefaultAssembly)) {
+#>
+                    configuration.AddAssembly(typeof(NHibernateSessionProvider).Assembly);
+<#+
+  }
+#>
+                }
+                return configuration;
+            }
+        }
+
+        public static ISessionFactory SessionFactory
+        {
+            get
+            {
+                if (sessionFactory == null)
+                {
+<#+
+  if (isFluentNHibernate) {
+#>
+                    sessionFactory = FluentNHibernate.Cfg.Fluently.Configure(Configuration).Mappings(m => m.FluentMappings.AddFromAssemblyOf<NHibernateSessionProvider>()).BuildSessionFactory();
+<#+
+  } 
+  else {
+#>
+                    sessionFactory = Configuration.BuildSessionFactory();
+<#+
+  }
+#>
+                }
+                return sessionFactory;
+            }
+        }
+
+        public static ISession GetSession()
+        {
+
+            return SessionFactory.OpenSession();
+        }
+    }
+}
+<#+
+    output.PopOutputRedirection();
+  }
+#>
+<#+
+  //------------------------------------------------------------------------------
+  // NHibernateUnitOfWork class generation
+  //------------------------------------------------------------------------------
+  private void GenerateNHibernateUnitOfWork(string _namespace, string interfaceLayerNamespace) {
+    output.PushOutputRedirection(DataAccessLayerOutput, "NHibernateUnitOfWork");
+    GenerateFileHeader(true);
+#>
+using System;
+using System.Collections.Generic;
+using NHibernate;
+using NHibernate.Cfg;
+<#+
+  if (!string.Equals(_namespace, interfaceLayerNamespace)) {
+#>
+using <#= interfaceLayerNamespace #>;
+<#+
+  }
+#>
+
+namespace <#= _namespace #>
+{
+    public partial class NHibernateUnitOfWork : IUnitOfWork
+    {
+        protected ISession _session = null;
+        protected ITransaction _transaction = null;
+<#+
+  if (GenerateSessionProvider) {
+#>
+
+        public NHibernateUnitOfWork()
+            : this(NHibernateSessionProvider.SessionFactory.OpenSession()) 
+        {
+        }
+<#+
+  }
+#>
+        
+        public NHibernateUnitOfWork(ISession session)
+        {
+            if (session == null)
+            {
+                throw new ArgumentNullException("session");
+            }
+            _session = session;
+            BeginTransaction();
+        }
+
+        public ISession Session
+        {
+            get
+            {
+                return _session;
+            }
+        }
+
+        protected virtual void BeginTransaction()
+        {
+            if (_session == null)
+                throw new InvalidOperationException("Session has not been initialized.");
+            _transaction = _session.BeginTransaction();
+        }
+
+        private void CloseTransaction()
+        {
+            if (_transaction != null)
+            {
+                _transaction.Dispose();
+                _transaction = null;
+            }
+        }
+
+        private void CloseSession()
+        {
+            if (_session != null)
+            {
+                _session.Close();
+                _session.Dispose();
+                _session = null;
+            }
+        }
+
+        #region IDisposable Methods
+
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    CloseTransaction();
+                    CloseSession();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion
+
+        #region IUnitOfWork Members
+
+        public virtual void Save()
+        {
+            if (_session == null)
+                throw new InvalidOperationException("Session has not been initialized.");
+            if (_transaction == null || !_transaction.IsActive)
+                throw new InvalidOperationException("No transaction is active.");
+            _transaction.Commit();
+        }
+        #endregion
+    }
+}
+<#+
+    output.PopOutputRedirection();
+  }
+#>
+<#+
+  //------------------------------------------------------------------------------
+  // NHibernateUnitOfWorkFactory class generation
+  //------------------------------------------------------------------------------
+  private void GenerateNHibernateUnitOfWorkFactory(string _namespace, string interfaceLayerNamespace) {
+    output.PushOutputRedirection(DataAccessLayerOutput, "NHibernateUnitOfWorkFactory");
+    GenerateFileHeader(true);
+#>
+using System;
+using NHibernate;
+<#+
+    if (!string.Equals(_namespace, interfaceLayerNamespace)) {
+#>
+using <#= interfaceLayerNamespace #>;
+<#+
+    }
+#>
+
+namespace <#= _namespace #>
+{
+    public partial class NHibernateUnitOfWorkFactory : IUnitOfWorkFactory
+    {
+        protected ISession _session = null;
+<#+
+    if (GenerateSessionProvider) {
+#>
+
+        public NHibernateUnitOfWorkFactory()
+            : this(NHibernateSessionProvider.SessionFactory.OpenSession())
+        {
+        }
+<#+
+    }
+#>
+        
+        public NHibernateUnitOfWorkFactory(ISession session)
+        {
+            if (session == null)
+            {
+                throw new ArgumentNullException("session");
+            }
+            _session = session;
+        }
+
+        #region IUnitOfWorkFactory Members
+
+        public virtual IUnitOfWork Create()
+        {
+            if (_session == null)
+                throw new InvalidOperationException("Session has not been initialized.");
+            return new NHibernateUnitOfWork(_session);
+        }
+        #endregion
+    }
+}
+<#+
+    output.PopOutputRedirection();
+  }
+#>
+<#+
+  //------------------------------------------------------------------------------
+  // Generation repository interfaces for entities in case of non-generic repository pattern implementation
+  //------------------------------------------------------------------------------
+  private void GenerateEntityRepositoryInterfaces(string _namespace) {
+    
+    string defaultModelNamespace = codeProvider.GetValidIdentifier(model.GetDefaultNamespace());
+    foreach (HibernateClass cls in model.Classes.Where(c => (bool)c.GetProperty("GenerateRepository"))) {
+
+      string fullClassName = codeProvider.GetValidIdentifier(cls.Name);
+      string classNamespace = !String.IsNullOrEmpty(cls.Namespace) ? codeProvider.GetValidIdentifier(cls.Namespace) : defaultModelNamespace;
+      if (!string.Equals(_namespace, classNamespace))
+        fullClassName = classNamespace + "." + fullClassName;
+
+      string rootFileName  = "I" + cls.Name + "Repository";
+      if (GeneratePartial) {
+        output.PushOutputRedirection(InterfaceLayerOutput, "", rootFileName, OverwriteMode.None);
+        GenerateFileHeader(false);
+#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace <#= _namespace #>
+{
+    public partial interface I<#= cls.Name #>Repository
+    {
+    }
+}
+<#+
+        output.PopOutputRedirection();
+        output.PushOutputRedirection(InterfaceLayerOutput, rootFileName, rootFileName + ".Generated");
+      }
+      else {
+        output.PushOutputRedirection(InterfaceLayerOutput, rootFileName);
+      }
+      GenerateFileHeader(true);
+#>
+using System;
+using System.Collections.Generic;
+
+namespace <#= _namespace #>
+{
+    public partial interface I<#= cls.Name #>Repository : IRepository<<#= fullClassName #>>
+    {
+        ICollection<<#= fullClassName #>> GetAll();
+<#+
+      List<string> lst = new List<string>();
+      foreach (HibernateProperty prop in cls.AllProperties.Where(p => p.PrimaryKey))
+        lst.Add(string.Format("{0} _{1}", GetPropertyTypeName(prop, _namespace, defaultModelNamespace), prop.Name));
+#>
+        <#= fullClassName #> GetByKey(<#= codeProvider.Join(", ", lst.ToArray()) #>);
+    }
+}
+<#+
+      output.PopOutputRedirection();
+    }
+  }
+#>
+<#+
+  //------------------------------------------------------------------------------
+  // Generation repository classes for entities in case of non-generic repository pattern implementation
+  //------------------------------------------------------------------------------
+  private void GenerateEntityRepositoryClasses(string _namespace, string interfaceLayerNamespace) {
+    
+    string baseFilesName = model.FileName;
+    string defaultModelNamespace = codeProvider.GetValidIdentifier(model.GetDefaultNamespace());
+    foreach (HibernateClass cls in model.Classes.Where(c => (bool)c.GetProperty("GenerateRepository"))) {
+
+      string fullClassName = codeProvider.GetValidIdentifier(cls.Name);
+      string classNamespace = !String.IsNullOrEmpty(cls.Namespace) ? codeProvider.GetValidIdentifier(cls.Namespace) : defaultModelNamespace;
+      if (!string.Equals(_namespace, classNamespace))
+        fullClassName = classNamespace + "." + fullClassName;
+
+      string rootFileName  = baseFilesName + "." + cls.Name + "Repository";
+      if (GeneratePartial) {
+        output.PushOutputRedirection(DataAccessLayerOutput, "", rootFileName, OverwriteMode.None);
+        GenerateFileHeader(false);
+#>
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using NHibernate;
+using NHibernate.Linq;
+<#+
+  if (!string.Equals(_namespace, interfaceLayerNamespace)) {
+#>
+using <#= interfaceLayerNamespace #>;
+<#+
+  }
+#>
+
+namespace <#= _namespace #>
+{
+    public partial class <#= cls.Name #>Repository
+    {
+    }
+}
+<#+
+        output.PopOutputRedirection();
+        output.PushOutputRedirection(DataAccessLayerOutput, rootFileName, rootFileName + ".Generated");
+      }
+      else {
+        output.PushOutputRedirection(DataAccessLayerOutput, rootFileName);
+      }
+      GenerateFileHeader(true);
+#>
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using NHibernate;
+using NHibernate.Linq;
+<#+
+  if (!string.Equals(_namespace, interfaceLayerNamespace)) {
+#>
+using <#= interfaceLayerNamespace #>;
+<#+
+  }
+#>
+
+namespace <#= _namespace #>
+{
+    public partial class <#= cls.Name #>Repository : NHibernateRepository<<#= fullClassName #>>, I<#= cls.Name #>Repository
+    {
+        public <#= cls.Name #>Repository(ISession session) : base(session)
+        {
+        }
+
+        public virtual ICollection<<#= fullClassName #>> GetAll()
+        {
+            return session.CreateQuery(string.Format("from <#= cls.Name #>")).List<<#= fullClassName #>>();
+        }
+
+<#+
+      List<string> lst = new List<string>();
+      foreach (HibernateProperty prop in cls.AllProperties.Where(p => p.PrimaryKey))
+        lst.Add(string.Format("{0} _{1}", GetPropertyTypeName(prop, _namespace, defaultModelNamespace), prop.Name));
+#>
+        public virtual <#= fullClassName #> GetByKey(<#= codeProvider.Join(", ", lst.ToArray()) #>)
+        {
+<#+
+        if (cls.AllProperties.Count(p => p.PrimaryKey) == 1) {
+#>
+            return session.Get<<#= fullClassName #>>(_<#= cls.AllProperties.First(p => p.PrimaryKey).Name #>);
+<#+
+        }
+        else
+        {
+          List<string> condition = new List<string>();
+          foreach (HibernateProperty prop in cls.AllProperties.Where(p => p.PrimaryKey))
+            condition.Add(string.Format("e.{0} == _{0}", prop.Name));
+#>
+            return session.Query<<#= fullClassName #>>().SingleOrDefault(e => <#= codeProvider.Join(" && ", condition.ToArray()) #>);
+<#+
+        }
+#>
+        }
+    }
+}
+<#+
+      output.PopOutputRedirection();
+    }
+  }
+#>
+<#+
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  //  files header generation
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private void GenerateFileHeader(bool isAutoGenerated) {
+#>
+<#+
+  if (isAutoGenerated) {
+#>
+//------------------------------------------------------------------------------
+// This is auto-generated code.
+<#+
+  }
+#>
+//------------------------------------------------------------------------------
+// This code was generated by Entity Developer tool using the template for generating Repositories and a Unit of Work for NHibernate model.
+// <#= String.IsNullOrEmpty(HeaderTimestampVersionControlTag) ? "Code is generated on: " + DateTime.Now : HeaderTimestampVersionControlTag #>
+//
+<#+
+  if (isAutoGenerated) {
+#>
+// Changes to this file may cause incorrect behavior and will be lost if
+// the code is regenerated.
+<#+
+  }
+#>
+//------------------------------------------------------------------------------
+<#+
+  }
+#>
+<#+ 
+  //////////////////////////////////////////////////////////////////////////////////
+  //
+  // Method GetRelationTypeName(HebirnateProperty property, string parentNamespace, string defaultNamespace)
+  // Returns the type name of property.
+  //
+  //////////////////////////////////////////////////////////////////////////////////
+  private string GetPropertyTypeName(HibernateProperty property, string parentNamespace, string defaultNamespace) {
+
+        string propertyDataType = string.Empty;
+        if (property.IsComplexType || property.IsEnumType) {
+          string nspace = !string.IsNullOrEmpty(((IHibernateClass)property.Type).Namespace) ? codeProvider.GetValidIdentifier(((IHibernateClass)property.Type).Namespace) : defaultNamespace;
+          propertyDataType = codeProvider.GetValidIdentifier(property.Type.ToString());
+          if (nspace != parentNamespace)
+            propertyDataType = nspace + "." + propertyDataType;
+          if (property.IsEnumType && property.Nullable)
+            propertyDataType = codeProvider.FormatNullable(propertyDataType);
+          }
+        else
+          propertyDataType = codeProvider.GetNullableType(property.Nullable, property.Type);
+
+     return propertyDataType;
+   }
+#>
