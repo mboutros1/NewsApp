@@ -7,6 +7,9 @@
     <property name="DeviceId" type="String" p1:ValidateRequired="True" p1:Guid="94f62061-1973-4019-a808-0b900d93e9ed">
       <column name="" />
     </property>
+    <property name="DeviceType" type="String" p1:ValidateRequired="True" p1:Guid="b14f2100-c850-477f-b629-5e78aa38edcb">
+      <column name="" />
+    </property>
     <bag name="UserNotifications" inverse="true" generic="true" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="6838389c-5451-4ffe-b137-0a5d49b1d23c">
       <key>
         <column name="" />
@@ -42,6 +45,9 @@
       <column name="" />
     </id>
     <property name="LastSeen" type="DateTime" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="7af9fc03-b032-44a2-8830-a3a68e011457">
+      <column name="" />
+    </property>
+    <property name="SendDate" type="DateTime" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="7c2bd41d-b2ce-4928-9214-e4a8b8fe7e23">
       <column name="" />
     </property>
     <many-to-one name="User" class="User" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="fdc40fec-c507-4d16-86a6-88f781df0415">

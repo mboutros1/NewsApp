@@ -52,6 +52,16 @@ namespace NewsApp.Model
 
     
         /// <summary>
+        /// There are no comments for SendDate in the schema.
+        /// </summary>
+        public virtual System.Nullable<System.DateTime> SendDate
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
         /// There are no comments for User in the schema.
         /// </summary>
         public virtual User User

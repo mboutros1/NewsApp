@@ -53,6 +53,16 @@ namespace NewsApp.Model
 
     
         /// <summary>
+        /// There are no comments for DeviceType in the schema.
+        /// </summary>
+        public virtual string DeviceType
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
         /// There are no comments for UserNotifications in the schema.
         /// </summary>
         public virtual IList<UserNotification> UserNotifications
