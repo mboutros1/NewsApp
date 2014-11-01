@@ -53,6 +53,10 @@
     <Compile Include="Mapping\Fluent\NewsApp.User.FluentMapping.cs" />
     <Compile Include="Mapping\Fluent\NewsApp.UserNotification.FluentMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="NHibernateRepository.cs" />
+    <Compile Include="NHibernateSessionProvider.cs" />
+    <Compile Include="NHibernateUnitOfWork.cs" />
+    <Compile Include="NHibernateUnitOfWorkFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -62,6 +66,9 @@
       <Project>{ea161ec5-089f-48a5-b571-7dff11d2f877}</Project>
       <Name>NewsApp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Uow\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

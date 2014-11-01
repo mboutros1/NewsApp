@@ -18,20 +18,27 @@ namespace NewsAppModel.Services
         public int Register(int userId, string deviceId, string deviceType)
         {
             User fst = _userRepository.All().FirstOrDefault(m => m.UserId == userId);
-            fst = fst ?? new User {DeviceId = deviceId};
+            fst = fst ?? new User { DeviceId = deviceId };
+            var now = DateTime.Now;
+            ; if (fst.DeviceId != deviceId)
+            {
+                if (fst.UserId != 0)
+                    fst.LastModified = now;
+                fst.DeviceId = deviceId;
+            }
+            fst.DeviceType = deviceType;
+            if (fst.CreateDate == DateTime.MinValue) fst.CreateDate = now;
             if (fst.UserId == 0)
                 _userRepository.Add(fst);
-            fst.DeviceId = deviceId;
-            fst.DeviceType = deviceType;
             _uow.Save();
             return fst.UserId;
         }
 
         public User GetById(int userId)
         {
-            var user =  _userRepository.All().FirstOrDefault(m => m.UserId == userId);
-            if(user ==null) 
-                throw  new InvalidOperationException("User Not found");
+            var user = _userRepository.All().FirstOrDefault(m => m.UserId == userId);
+            if (user == null)
+                throw new InvalidOperationException("User Not found");
             return user;
         }
     }

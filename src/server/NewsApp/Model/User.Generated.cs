@@ -63,6 +63,26 @@ namespace NewsApp.Model
 
     
         /// <summary>
+        /// There are no comments for CreateDate in the schema.
+        /// </summary>
+        public virtual System.DateTime CreateDate
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
+        /// There are no comments for LastModified in the schema.
+        /// </summary>
+        public virtual System.Nullable<System.DateTime> LastModified
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
         /// There are no comments for UserNotifications in the schema.
         /// </summary>
         public virtual IList<UserNotification> UserNotifications

@@ -1,47 +1,47 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- * gggg
- */
+
 var app = {
     // Application Constructor
-    initialize: function() {
+    initialize:function () {
         this.bindEvents();
+        this.user = new User();
+        this.baseUrl = $("#txtUrl").val();
     },
     // Bind Event Listeners
     //
     // Bind any events that are required on startup. Common events are:
     // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function() {
+    bindEvents:function () {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
+    addlog:function (log) {
+        $("#result").html($("#result").html() + "<br/>" + log);
+    },
+    storeToken:function (deviceId) {
+        $.ajax({url:app.baseUrl + 'Home/Register',
+            dataType:'json', success:function (e) {
+                app.user.userId = parseInt(e);
+                app.user.save();
+            }, contentType:'application/json',
+            type:'POST', error:oops, async:true,
+            data:JSON.stringify({userId:app.user.userId, deviceId:deviceId, deviceType:cordova.platformId})
+        })
+    },
+
     // deviceready Event Handler
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
+    onDeviceReady:function () {
         app.receivedEvent('deviceready');
-        window.plugins.pushNotification.register( function(status) {
-                                                 app.myLog.value+=JSON.stringify(['registerDevice status: ', status])+"\n";
-                                                 app.storeToken(status.deviceToken);
-                                                 },function(st){console.log(st);},{alert:true} );
+        window.plugins.pushNotification.register(function (status) {
+            app.last = status;
+            app.storeToken(status);
+        }, function (st) {
+            console.log(st);
+        }, {alert:true});
     },
     // Update DOM on a Received Event
-    receivedEvent: function(id) {
+    receivedEvent:function (id) {
         var parentElement = document.getElementById(id);
         var listeningElement = parentElement.querySelector('.listening');
         var receivedElement = parentElement.querySelector('.received');
