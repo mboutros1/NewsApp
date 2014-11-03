@@ -1,4 +1,3 @@
-
 var app = {
     // Application Constructor
     initialize:function () {
@@ -22,7 +21,9 @@ var app = {
                 app.user.userId = parseInt(e);
                 app.user.save();
             }, contentType:'application/json',
-            type:'POST', error:oops, async:true,
+            type:'POST', error:function (st) {
+                console.log(st)
+            }, async:true,
             data:JSON.stringify({userId:app.user.userId, deviceId:deviceId, deviceType:cordova.platformId})
         })
     },
