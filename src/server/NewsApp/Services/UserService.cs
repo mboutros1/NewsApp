@@ -28,7 +28,7 @@ namespace NewsAppModel.Services
             }
             fst.DeviceType = deviceType;
             if (fst.CreateDate == DateTime.MinValue) fst.CreateDate = now;
-            if (fst.UserId == 0)
+            //if (fst.UserId == 0)
                 _userRepository.Add(fst);
             _uow.Save();
             return fst;
