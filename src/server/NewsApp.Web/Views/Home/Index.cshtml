@@ -18,6 +18,20 @@
     <input type="text" id="userId" name="userId" />
     <input type="text" id="deviceId" name="deviceId" />
     <input type="text" id="deviceType" name="deviceType" />
-    <input type="submit"  value="submit" />
+    <input type="submit" value="submit" />
+
+}
+
+@using (Ajax.BeginForm("TestSend", "Home", new AjaxOptions
+        {
+            LoadingElementDuration = 500,
+            LoadingElementId = "Progress",
+            InsertionMode = InsertionMode.Replace,
+            OnComplete = "$('form').cleanDirty();window.location=window.location",
+            HttpMethod = "POST"
+
+        }))
+{
+    <input type="submit" value="test Send To First User" />
 
 }

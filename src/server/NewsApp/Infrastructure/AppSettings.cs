@@ -24,7 +24,14 @@ namespace NewsAppModel.Infrastructure
         {
             get { return _settings["NewsAppConnectionString"]; }
         }
-
+        public string P12FileLocation
+        {
+            get { return _settings["P12FileLocation"]; }
+        }
+        public string P12FilePassword
+        {
+            get { return _settings["P12FilePassword"]; }
+        }
         public static void Init(NameValueCollection settings)
         {
             Instance = new AppSettings {_settings = settings};

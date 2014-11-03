@@ -30,14 +30,12 @@ namespace NewsApp.Controllers
         }
         public JsonResult Register(int userId, string deviceId, string deviceType)
         {
-            var id = _userService.Register(userId, deviceId, deviceType);
-      
-            return Json(new User(),JsonRequestBehavior.AllowGet);
+            return Json(_userService.Register(userId, deviceId, deviceType), JsonRequestBehavior.AllowGet);
         }
         public ActionResult TestSendById(int userId)
         {
             var user = _userService.GetById(userId);
-            var notification = _notificationRepository.All().FirstOrDefault();  
+            var notification = _notificationRepository.All().FirstOrDefault();
             if (notification == null)
                 throw new InvalidOperationException("no notifications in the database, please create one");
             _notificationService.SendNotification(user, notification);
@@ -52,7 +50,7 @@ namespace NewsApp.Controllers
             if (notification == null)
                 throw new InvalidOperationException("no notifications in the database, please create one");
             _notificationService.SendNotification(user, notification);
-          return View();
+            return View();
         }
     }
 }

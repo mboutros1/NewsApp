@@ -15,7 +15,7 @@ namespace NewsAppModel.Services
             _uow = uow;
         }
 
-        public int Register(int userId, string deviceId, string deviceType)
+        public User Register(int userId, string deviceId, string deviceType)
         {
             User fst = _userRepository.All().FirstOrDefault(m => m.UserId == userId);
             fst = fst ?? new User { DeviceId = deviceId };
@@ -31,7 +31,7 @@ namespace NewsAppModel.Services
             if (fst.UserId == 0)
                 _userRepository.Add(fst);
             _uow.Save();
-            return fst.UserId;
+            return fst;
         }
 
         public User GetById(int userId)

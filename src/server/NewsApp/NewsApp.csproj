@@ -52,11 +52,9 @@
     <Compile Include="Model\UserNotification.Generated.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\NotificationService.cs" />
-    <Compile Include="Services\Providers\AndriodProvider.cs" />
-    <Compile Include="Services\Providers\BlackVerryProvider.cs" />
     <Compile Include="Services\Providers\IDeviceProvider.cs" />
-    <Compile Include="Services\Providers\IOSProvider.cs" />
-    <Compile Include="Services\Providers\WindowsPhoneProvider.cs" />
+    <Compile Include="Services\Providers\INotificationPayload.cs" />
+    <Compile Include="Services\Providers\NotificationAlert.cs" />
     <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup />
