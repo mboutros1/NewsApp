@@ -20,43 +20,64 @@ using FluentNHibernate.MappingModel.Collections;
 namespace NewsApp.Model
 {
     /// <summary>
-    /// There are no comments for UserMap in the schema.
+    /// There are no comments for ChurchMap in the schema.
     /// </summary>
-    public partial class UserMap : ClassMap<User>
+    public partial class ChurchMap : ClassMap<Church>
     {
         /// <summary>
-        /// There are no comments for UserMap constructor in the schema.
+        /// There are no comments for ChurchMap constructor in the schema.
         /// </summary>
-        public UserMap()
+        public ChurchMap()
         {
-              Table(@"Users");
+              Table(@"Churches");
               LazyLoad();
-              Id(x => x.UserId)
-                .Column("UserId")
+              Id(x => x.ChurchId)
+                .Column("ChurchId")
                 .CustomType("Int32")
                 .Access.Property()                
                 .GeneratedBy.Identity();
-              Map(x => x.DeviceId)    
-                .Column("DeviceId")
+              Map(x => x.DisplayName)    
+                .Column("DisplayName")
                 .CustomType("String")
                 .Access.Property()
                 .Generated.Never();
-              Map(x => x.DeviceType)    
-                .Column("DeviceType")
+              Map(x => x.Address)    
+                .Column("Address")
                 .CustomType("String")
                 .Access.Property()
                 .Generated.Never();
-              Map(x => x.CreateDate)    
-                .Column("CreateDate")
-                .CustomType("DateTime")
+              Map(x => x.ZipCode)    
+                .Column("ZipCode")
+                .CustomType("String")
                 .Access.Property()
                 .Generated.Never();
-              Map(x => x.LastModified)    
-                .Column("LastModified")
-                .CustomType("DateTime")
+              Map(x => x.State)    
+                .Column("State")
+                .CustomType("String")
                 .Access.Property()
                 .Generated.Never();
-              HasMany<UserNotification>(x => x.UserNotifications)
+              Map(x => x.City)    
+                .Column("City")
+                .CustomType("String")
+                .Access.Property()
+                .Generated.Never();
+              Map(x => x.Country)    
+                .Column("Country")
+                .CustomType("String")
+                .Access.Property()
+                .Generated.Never()
+                .Default(@"'US'");
+              Map(x => x.Latitude)    
+                .Column("Latitude")
+                .CustomType("Int64")
+                .Access.Property()
+                .Generated.Never();
+              Map(x => x.Longitude)    
+                .Column("Longitude")
+                .CustomType("Int64")
+                .Access.Property()
+                .Generated.Never();
+              HasMany<Notification>(x => x.Notifications)
                 .Access.Property()
                 .AsBag()
                 .Cascade.None()
@@ -64,21 +85,20 @@ namespace NewsApp.Model
                 // .OptimisticLock.Version() /*bug (or missing feature) in Fluent NHibernate*/
                 .Inverse()
                 .Generic()
-                .KeyColumns.Add("UserId", mapping => mapping.Name("UserId")
+                .KeyColumns.Add("ChurchId", mapping => mapping.Name("ChurchId")
                                                                      .Nullable());
-              HasManyToMany<Church>(x => x.Churches)
+              HasManyToMany<User>(x => x.Users)
                 .Access.Property()
                 .AsBag()
                 .Cascade.None()
                 .LazyLoad()
                 // .OptimisticLock.Version() /*bug (or missing feature) in Fluent NHibernate*/
-                .Inverse()
                 .Generic()
                 .Table("Users_Churches")
                 .FetchType.Join()
-                .ChildKeyColumns.Add("ChurchId", mapping => mapping.Name("ChurchId")
+                .ChildKeyColumns.Add("UserId", mapping => mapping.Name("UserId")
                                                                      .Nullable())
-                .ParentKeyColumns.Add("UserId", mapping => mapping.Name("UserId")
+                .ParentKeyColumns.Add("ChurchId", mapping => mapping.Name("ChurchId")
                                                                      .Nullable());
               ExtendMapping();
         }

@@ -23,6 +23,14 @@
       </key>
       <one-to-many class="UserNotification" />
     </bag>
+    <bag name="Churches" table="Users_Churches" inverse="true" generic="true">
+      <key>
+        <column name="UserId" />
+      </key>
+      <many-to-many class="Church" fetch="join">
+        <column name="ChurchId" />
+      </many-to-many>
+    </bag>
   </class>
   <class name="Notification" table="Notifications">
     <id name="NotificationId" type="Int32">
@@ -41,6 +49,9 @@
     <property name="Type" type="Int32">
       <column name="Type" not-null="true" />
     </property>
+    <many-to-one name="Chruch" class="Church">
+      <column name="ChurchId" not-null="true" />
+    </many-to-one>
     <bag name="UserNotification" inverse="true" generic="false">
       <key>
         <column name="NotificationId" />
@@ -65,5 +76,49 @@
     <many-to-one name="Notification" class="Notification">
       <column name="NotificationId" not-null="true" />
     </many-to-one>
+  </class>
+  <class name="Church" table="Churches">
+    <id name="ChurchId" type="Int32">
+      <column name="ChurchId" not-null="true" />
+      <generator class="identity" />
+    </id>
+    <property name="DisplayName" type="String">
+      <column name="DisplayName" not-null="true" />
+    </property>
+    <property name="Address" type="String">
+      <column name="Address" not-null="true" />
+    </property>
+    <property name="ZipCode" type="String">
+      <column name="ZipCode" not-null="true" />
+    </property>
+    <property name="State" type="String">
+      <column name="State" not-null="true" />
+    </property>
+    <property name="City" type="String">
+      <column name="City" not-null="true" />
+    </property>
+    <property name="Country" type="String">
+      <column name="Country" default="'US'" not-null="true" />
+    </property>
+    <property name="Latitude" type="Int64">
+      <column name="Latitude" not-null="false" />
+    </property>
+    <property name="Longitude" type="Int64">
+      <column name="Longitude" not-null="false" />
+    </property>
+    <bag name="Users" table="Users_Churches" generic="true">
+      <key>
+        <column name="ChurchId" not-null="true" />
+      </key>
+      <many-to-many class="User" fetch="join">
+        <column name="UserId" not-null="true" />
+      </many-to-many>
+    </bag>
+    <bag name="Notifications" inverse="true" generic="true">
+      <key>
+        <column name="ChurchId" />
+      </key>
+      <one-to-many class="Notification" />
+    </bag>
   </class>
 </hibernate-mapping>

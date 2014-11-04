@@ -44,6 +44,8 @@
     <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\IUnitOfWork.cs" />
     <Compile Include="Infrastructure\IUnitOfWorkFactory.cs" />
+    <Compile Include="Model\Church.cs" />
+    <Compile Include="Model\Church.Generated.cs" />
     <Compile Include="Model\Notification.cs" />
     <Compile Include="Model\Notification.Generated.cs" />
     <Compile Include="Model\User.cs" />

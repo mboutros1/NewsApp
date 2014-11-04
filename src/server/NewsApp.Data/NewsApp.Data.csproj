@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mapping\Fluent\NewsApp.Church.FluentMapping.cs" />
     <Compile Include="Mapping\Fluent\NewsApp.Notification.FluentMapping.cs" />
     <Compile Include="Mapping\Fluent\NewsApp.User.FluentMapping.cs" />
     <Compile Include="Mapping\Fluent\NewsApp.UserNotification.FluentMapping.cs" />

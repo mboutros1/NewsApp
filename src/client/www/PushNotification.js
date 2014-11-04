@@ -63,7 +63,34 @@ PushNotification.prototype.setApplicationIconBadgeNumber = function(successCallb
 
     cordova.exec(successCallback, errorCallback, "PushPlugin", "setApplicationIconBadgeNumber", [{badge: badge}]);
 };
+// Call this to retreive pending notification received while the application is in background or at launch
+PushNotification.prototype.getPendingNotifications = function(callback) {
+    cordova.exec(callback, callback, "PushNotification", "getPendingNotifications", []);
+};
 
+// Call this to get a detailed status of remoteNotifications
+PushNotification.prototype.getRemoteNotificationStatus = function(callback) {
+    console.log("Callback is " +callback);
+    cordova.exec(callback, callback, "PushNotification", "getRemoteNotificationStatus", []);
+};
+// Call this to clear all notifications from the notification center
+PushNotification.prototype.cancelAllLocalNotifications = function(callback) {
+    cordova.exec(callback, callback, "PushNotification", "cancelAllLocalNotifications", []);
+};
+
+// Call this to retreive the original device unique id
+// @warning As of today, usage is deprecated and requires explicit consent from the user
+PushNotification.prototype.getDeviceUniqueIdentifier = function(callback) {
+    cordova.exec(callback, callback, "PushNotification", "getDeviceUniqueIdentifier", []);
+};
+
+// Event spawned when a notification is received while the application is active
+PushNotification.prototype.notificationCallback = function(notification) {
+    var ev = document.createEvent('HTMLEvents');
+    ev.notification = notification;
+    ev.initEvent('push-notification', true, true, arguments);
+    document.dispatchEvent(ev);
+};
 //-------------------------------------------------------------------
 
 if(!window.plugins) {

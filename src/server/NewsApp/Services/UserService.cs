@@ -12,6 +12,7 @@ namespace NewsAppModel.Services
         public UserService(IRepository<User> userRepository, IUnitOfWork uow)
         {
             _userRepository = userRepository;
+            ;
             _uow = uow;
         }
 

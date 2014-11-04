@@ -23,6 +23,14 @@
       </key>
       <one-to-many class="UserNotification" />
     </bag>
+    <bag name="Churches" table="" inverse="true" generic="true" p1:AssociationGuid="3c2e6149-b0ad-4722-9987-814987c52f7d" p1:Guid="813f7685-ab77-4f55-8318-ad43ae009a08">
+      <key>
+        <column name="" />
+      </key>
+      <many-to-many class="Church" fetch="join">
+        <column name="" />
+      </many-to-many>
+    </bag>
   </class>
   <class name="Notification" table="" p1:Guid="82568817-20a1-45ab-b37f-9c53867a1b67">
     <id name="NotificationId" type="Int32" p1:ValidateRequired="True" p1:Guid="7c3b0be8-5bea-4e89-9735-2c4b29f32eb2">
@@ -41,6 +49,9 @@
     <property name="Type" type="Int32" p1:ValidateRequired="True" p1:Guid="20e776c6-2008-49a8-a88a-efd396a76a17">
       <column name="" />
     </property>
+    <many-to-one name="Chruch" class="Church" p1:AssociationGuid="1770c555-17df-4e8b-8c1a-fee8ee6ad1d5" p1:Guid="7344652d-84c3-47f6-910e-6cbe0ccfaac6">
+      <column name="" />
+    </many-to-one>
     <bag name="UserNotification" inverse="true" generic="false" p1:AssociationGuid="d943f797-51d1-44ee-bb90-357ac0983cae" p1:Guid="d510dd24-ac04-4e29-bbe7-2d4d13cc40d9">
       <key>
         <column name="" />
@@ -65,5 +76,49 @@
     <many-to-one name="Notification" class="Notification" p1:AssociationGuid="d943f797-51d1-44ee-bb90-357ac0983cae" p1:Guid="86335692-0f91-448a-9b15-4e511fa6b2b1">
       <column name="" />
     </many-to-one>
+  </class>
+  <class name="Church" table="" p1:Guid="81899ee8-6080-44cb-a218-549ca2924bf2">
+    <id name="ChurchId" type="Int32" p1:ValidateRequired="True" p1:Guid="e9045dee-9220-45ea-9ca9-99155d7aaee9">
+      <column name="" />
+      <generator class="identity" />
+    </id>
+    <property name="DisplayName" type="String" p1:ValidateRequired="True" p1:Guid="852a842e-74d3-4190-b3c3-318db9d45a2c">
+      <column name="" />
+    </property>
+    <property name="Address" type="String" p1:ValidateRequired="True" p1:Guid="ae9bb031-cc04-4efe-bb58-d7cef0ce4741">
+      <column name="" />
+    </property>
+    <property name="ZipCode" type="String" p1:ValidateRequired="True" p1:Guid="10e642a6-4e93-4d47-9b80-094f68d1fa5a">
+      <column name="" />
+    </property>
+    <property name="State" type="String" p1:ValidateRequired="True" p1:Guid="00f88bdc-827a-47be-9156-121111c04ef9">
+      <column name="" />
+    </property>
+    <property name="City" type="String" p1:ValidateRequired="True" p1:Guid="1acbaa72-55ad-41e7-ba20-af621434de7e">
+      <column name="" />
+    </property>
+    <property name="Country" type="String" p1:ValidateRequired="True" p1:Guid="3227bfba-6bab-433c-a163-07319b9e3637">
+      <column name="" default="'US'" />
+    </property>
+    <property name="Latitude" type="Int64" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="fe603dc4-4179-41dc-acaf-a287c9a09f99">
+      <column name="" />
+    </property>
+    <property name="Longitude" type="Int64" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="e012b6ab-c5c5-4af5-ad9f-5ec4b9d6d291">
+      <column name="" />
+    </property>
+    <bag name="Users" table="" generic="true" p1:AssociationGuid="3c2e6149-b0ad-4722-9987-814987c52f7d" p1:Guid="eb57b47c-7603-4d13-9805-f3cc7945fb26">
+      <key>
+        <column name="" />
+      </key>
+      <many-to-many class="User" fetch="join">
+        <column name="" />
+      </many-to-many>
+    </bag>
+    <bag name="Notifications" inverse="true" generic="true" p1:AssociationGuid="1770c555-17df-4e8b-8c1a-fee8ee6ad1d5" p1:Guid="7e1dd338-1065-45fd-aa79-49775d7ad9f5">
+      <key>
+        <column name="" />
+      </key>
+      <one-to-many class="Notification" />
+    </bag>
   </class>
 </hibernate-mapping>

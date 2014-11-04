@@ -54,7 +54,7 @@ var app = {
             // Could pop an alert here if app is open and you still wanted to see your alert
             //navigator.notification.alert("Received notification - fired Push Event " + JSON.stringify(['push-//notification!', event]));
         });
-        document.removeEventListener('deviceready', this.deviceready, false);
+        document.removeEventListener(this.deviceready,'deviceready',  false);
     },
     receiveStatus: function() {
         var pushNotification = window.plugins.pushNotification;
@@ -79,5 +79,30 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
+    },
+    onNotificationGCM: function(e) {
+        switch( e.event )
+        {
+            case 'registered':
+                if ( e.regid.length > 0 )
+                {
+                    console.log("Regid " + e.regid);
+                    alert('registration id = '+e.regid);
+                }
+                break;
+
+            case 'message':
+                // this is the actual push notification. its format depends on the data model from the push server
+                alert('message = '+e.message+' msgcnt = '+e.msgcnt);
+                break;
+
+            case 'error':
+                alert('GCM error = '+e.msg);
+                break;
+
+            default:
+                alert('An unknown GCM event has occurred');
+                break;
+        }
     }
 };

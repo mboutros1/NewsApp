@@ -28,6 +28,7 @@ namespace NewsApp.Model
         public User()
         {
             this.UserNotifications = new List<UserNotification>();
+            this.Churches = new List<Church>();
             OnCreated();
         }
 
@@ -86,6 +87,16 @@ namespace NewsApp.Model
         /// There are no comments for UserNotifications in the schema.
         /// </summary>
         public virtual IList<UserNotification> UserNotifications
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
+        /// There are no comments for Churches in the schema.
+        /// </summary>
+        public virtual IList<Church> Churches
         {
             get;
             set;
