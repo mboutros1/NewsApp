@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using NewsApp.Configuration;
+using NewsApp.Notifications;
 using NewsAppModel.Infrastructure;
 using Ninject;
 
@@ -34,6 +35,12 @@ namespace NewsApp
             }
             AppSettings.Init(nv);
             DependencyResolver.SetResolver(new NinjectMvcDiResolver(Factory.kernel));
+            AppController.Start();
+        }
+
+        protected void Application_Stop()
+        {
+            AppController.End();
         }
         protected void Application_BeginRequest(object sender, EventArgs e)
         {

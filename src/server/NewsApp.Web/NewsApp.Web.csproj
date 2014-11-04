@@ -78,6 +78,10 @@
     <Reference Include="Ninject.Web.Common">
       <HintPath>..\packages\Ninject.Web.Common.3.2.3.0\lib\net40-full\Ninject.Web.Common.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Plugins\ApplePush\bin\Debug\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -222,6 +226,9 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="App_Data\AppSettings.config" />
+    <Content Include="App_Data\NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
@@ -265,13 +272,13 @@
       <Project>{e0575696-8872-4109-a00f-0d6eaf80bc1d}</Project>
       <Name>NewsApp.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NewsApp.Notifications\NewsApp.Notifications.csproj">
+      <Project>{a91e03ef-6532-4896-89c4-9fcec1d8d4db}</Project>
+      <Name>NewsApp.Notifications</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NewsApp\NewsApp.csproj">
       <Project>{ea161ec5-089f-48a5-b571-7dff11d2f877}</Project>
       <Name>NewsApp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Plugins\ApplePush\MGB.AppleNotification.csproj">
-      <Project>{a91e03ef-6532-4896-89c4-9fcec1d8d4db}</Project>
-      <Name>MGB.AppleNotification</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

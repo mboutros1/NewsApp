@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using MGB.AppleNotification;
 using NewsApp.Model;
+using NewsApp.Notifications;
 using NewsAppModel.Services;
 using NewsAppModel.Services.Providers;
 using NHibernate;
@@ -37,7 +37,7 @@ namespace NewsApp.Configuration
     {
         public static Type[] GetBindings(this IKernel kernel)
         {
-            return ((Multimap<Type, IBinding>) typeof (KernelBase)
+            return ((Multimap<Type, IBinding>)typeof(KernelBase)
                 .GetField("bindings", BindingFlags.NonPublic | BindingFlags.Instance)
                 .GetValue(kernel)).Select(x => x.Key).ToArray();
         }

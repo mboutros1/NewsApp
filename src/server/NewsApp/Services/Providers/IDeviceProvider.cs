@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace NewsAppModel.Services.Providers
+﻿namespace NewsAppModel.Services.Providers
 {
     public interface IDeviceProvider
     {
-        INotificationPayload SendNotification(string deviceId, string notification, int badge,
-            string sound);
-        INotificationPayload SendNotification(INotificationPayload notficNotificationPayload);
-        void SendNotification(List<INotificationPayload> notficNotificationPayload);
         string Type { get; }
+
+        void SendNotification(string deviceId, string notification, int badge,
+            string sound);
     }
 
     public static class DeviceProviderExtension
@@ -21,6 +15,5 @@ namespace NewsAppModel.Services.Providers
         //{
         //    sender.SendNotification(new );
         //}
-
     }
 }
