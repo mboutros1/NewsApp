@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using NewsAppModel.Infrastructure;
+using NLog;
 using PushSharp;
 using PushSharp.Apple;
 using PushSharp.Core;
@@ -69,46 +70,46 @@ namespace NewsApp.Notifications
             INotification notification)
         {
             //Currently this event will only ever happen for Android GCM
-            Console.WriteLine("Device Registration Changed:  Old-> " + oldSubscriptionId + "  New-> " +
+            Logger.Info("Device Registration Changed:  Old-> " + oldSubscriptionId + "  New-> " +
                               newSubscriptionId + " -> " + notification);
         }
 
         private static void NotificationSent(object sender, INotification notification)
         {
-            Console.WriteLine("Sent: " + sender + " -> " + notification);
+            Logger.Info("Sent: " + sender + " -> " + notification);
         }
 
         private static void NotificationFailed(object sender, INotification notification,
             Exception notificationFailureException)
         {
-            Console.WriteLine("Failure: " + sender + " -> " + notificationFailureException.Message + " -> " +
+            Logger.Info("Failure: " + sender + " -> " + notificationFailureException.Message + " -> " +
                               notification);
         }
-
         private static void ChannelException(object sender, IPushChannel channel, Exception exception)
         {
-            Console.WriteLine("Channel Exception: " + sender + " -> " + exception);
+            Logger.Info("Channel Exception: " + sender + " -> " + exception);
         }
-
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        //   
         private static void ServiceException(object sender, Exception exception)
         {
-            Console.WriteLine("Service Exception: " + sender + " -> " + exception);
+            Logger.Info("Service Exception: " + sender + " -> " + exception);
         }
 
         private static void DeviceSubscriptionExpired(object sender, string expiredDeviceSubscriptionId,
             DateTime timestamp, INotification notification)
         {
-            Console.WriteLine("Device Subscription Expired: " + sender + " -> " + expiredDeviceSubscriptionId);
+            Logger.Info("Device Subscription Expired: " + sender + " -> " + expiredDeviceSubscriptionId);
         }
 
         private static void ChannelDestroyed(object sender)
         {
-            Console.WriteLine("Channel Destroyed for: " + sender);
+            Logger.Info("Channel Destroyed for: " + sender);
         }
 
         private static void ChannelCreated(object sender, IPushChannel pushChannel)
         {
-            Console.WriteLine("Channel Created for: " + sender);
+            Logger.Info("Channel Created for: " + sender);
         }
     }
 }

@@ -9,10 +9,10 @@ namespace NewsApp.Notifications
         public void SendNotification(string deviceId, string notification, int badge, string sound)
         {
             AppController.PushProBroker.QueueNotification(new AppleNotification()
-                .ForDeviceToken(deviceId)
-                .WithAlert(notification)
-                .WithBadge(7)
-                .WithSound("sound.caf"));
+                 .ForDeviceToken(deviceId)
+                 .WithAlert(notification)
+                 .WithBadge(1)
+                 .WithSound("default"));
         }
 
 

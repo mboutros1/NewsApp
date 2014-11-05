@@ -16,21 +16,23 @@ namespace NewsApp.Controllers
         private readonly UserService _userService;
         private readonly IRepository<Notification> _notificationRepository;
         private readonly IRepository<User> _userRepository;
-        public HomeController(NotificationService notificationService, UserService userService, IRepository<Notification> notificationRepository, IRepository<User> userRepository)
+        private readonly IUnitOfWork _uow;
+        public HomeController(NotificationService notificationService, UserService userService, IRepository<Notification> notificationRepository, IRepository<User> userRepository, IUnitOfWork uow)
         {
             _notificationService = notificationService;
             _userService = userService;
             _notificationRepository = notificationRepository;
             _userRepository = userRepository;
+            _uow = uow;
         }
 
         public ActionResult Index()
         {
             return View();
         }
-        public JsonResult Register(int userId, string deviceId, string deviceType)
+        public JsonResult Register(int? userId, string deviceId, string deviceType)
         {
-            return Json(_userService.Register(userId, deviceId, deviceType), JsonRequestBehavior.AllowGet);
+            return Json(_userService.Register(userId.GetValueOrDefault(), deviceId, deviceType), JsonRequestBehavior.AllowGet);
         }
         public ActionResult TestSendById(int userId)
         {
@@ -43,13 +45,15 @@ namespace NewsApp.Controllers
         }
         public ActionResult TestSend()
         {
-            var user = _userRepository.All().FirstOrDefault();
-            if (user == null)
+            var users = _userRepository.All().ToList();
+            if (users.Count == 0)
                 throw new InvalidOperationException("no users in the database, please create one");
             var notification = _notificationRepository.All().FirstOrDefault();
             if (notification == null)
                 throw new InvalidOperationException("no notifications in the database, please create one");
-            _notificationService.SendNotification(user, notification);
+            foreach (var user in users)
+                _notificationService.SendNotification(user, notification);
+            _uow.Save();
             return View();
         }
     }

@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -8,80 +7,95 @@
     <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
     <meta name="viewport"
           content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi"/>
-    <link rel="stylesheet" type="text/css" href="css/index.css"/>
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css"/>
     <title>Hello World</title>
 </head>
 <body>
-<div class="app" data-role="page" id="npage">
-    <div data-role="header"><h1>News</h1></div>
-    <div data-role="content">
-        <div><input type='text' id="txtUrl" value="http://192.168.113.1/">
+    <div  data-role="page" id="feedPage">
+        <div data-role="header"><h1>Feed</h1></div>
+        <div data-role="content">
+            <input type='text' id="txtUrl" value="http://192.168.113.1/">
             <ul id="btnList" data-role="listview" data-inset="true">
-                <li>asdf
-                </li>
-                <li>asdf
-                </li>
-                <li>d
-                </li>
-                <li>
+                <li>item
                 </li>
             </ul>
-            <fieldset>
-                <button onclick="app.register()">Register for Notifications</button>
-                <button onclick="app.receiveStatus()">Remote Notification Status</button>
-                <button onclick="app.getPending()">Get Pending Notifications</button>
-                <textarea id="log" readonly></textarea>
-
-            </fieldset>
             <div id="result"></div>
         </div>
-        <div data-role="footer">
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to sss s s Device</p>
-                <p class="event received">Device is ds Ready</p>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar" class="event" data-grid="d">
+                <ul>
+                    <li><a href="#feedPage" id="chat" data-icon="cloud">Feed</a></li>
+                    <li><a href="#notPage" id="email" data-icon="mail">Notification</a></li>
+                    <li><a href="#streamPage" id="skull" data-icon="video">Live Stream</a></li>
+                    <li><a href="#morePage" id="beer" data-icon="bullets">More</a></li>
+                </ul>
+            </div> 
+        </div>
+
+    </div>
+    <div data-role="page" id="notPage">
+        <div data-role="header"><h1>Notifications</h1></div>
+        <div data-role="content">
+             <ul id="btnList" data-role="listview" data-inset="true">
+                <li>
+                    item
+                </li>
+            </ul>
+            <div id="result"></div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar" class="event" data-grid="d">
+                <ul>
+                    <li><a href="#feedPage" id="chat" data-icon="cloud">Feed</a></li>
+                    <li><a href="#notPage" id="email" data-icon="mail">Notification</a></li>
+                    <li><a href="#streamPage" id="skull" data-icon="video">Live Stream</a></li>
+                    <li><a href="#morePage" id="beer" data-icon="bullets">More</a></li>
+                </ul>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="PushNotification.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
-
-    <script type="text/javascript" src="js/user.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript">
-        app.initialize();
-        $(function () {
-            var baseUrl = $("#txtUrl").val();
-
-            function addUser(d) {
-                console.log(d);
-                console.log('sdddd');
-            }
-
-            function oops(d) {
-                $("#result").text(d);
-            }
-
-            var d = {userId:0, deviceId:'asdsd', deviceType:'desk'};
-            $("#btnRequest").click(function () {
-                $.ajax({url:baseUrl + 'Home/Register?callback_name=addUser',
-                    dataType:'jsonp', success:addUser, contentType:'application/json',
-                    type:'POST', jsonpCallback:'addUser', error:oops,
-                    data:d
-                })
-            });
-            $("#btnRequest2").click(function () {
-                $.ajax({url:baseUrl + 'Home/Register',
-                    dataType:'json', success:addUser, contentType:'application/json',
-                    type:'POST', error:oops,
-                    data:JSON.stringify(d)
-                })
-            });
-        })
-
-    </script>
+    <div data-role="page" id="streamPage">
+        <div data-role="header"><h1>Live Stream</h1></div>
+        <div data-role="content">
+              
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar" class="event" data-grid="d">
+                <ul>
+                    <li><a href="#feedPage" id="chat" data-icon="cloud">Feed</a></li>
+                    <li><a href="#notPage" id="email" data-icon="mail">Notification</a></li>
+                    <li><a href="#streamPage" id="skull" data-icon="video">Live Stream</a></li>
+                    <li><a href="#morePage" id="beer" data-icon="bullets">More</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div data-role="page" id="morePage">
+        <div data-role="header"><h1>More</h1></div>
+        <div data-role="content">
+            <ul id="btnList" data-role="listview" data-inset="true">
+                <li>
+                    item
+                </li>
+            </ul>
+            <div id="result"></div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar" class="event" data-grid="d">
+                <ul>
+                    <li><a href="#feedPage" id="chat" data-icon="cloud">Feed</a></li>
+                    <li><a href="#notPage" id="email" data-icon="mail">Notification</a></li>
+                    <li><a href="#streamPage" id="skull" data-icon="video">Live Stream</a></li>
+                    <li><a href="#morePage" id="beer" data-icon="bullets">More</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/user.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
 </body>
 </html>

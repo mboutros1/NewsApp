@@ -25,7 +25,6 @@ namespace NewsAppModel.Services
                 throw new InvalidOperationException("Device Not Supported");
             provider.SendNotification(user.DeviceId, notification.Title,1,"default");
             _userNotificationRepository.Add(new UserNotification(){Notification = notification,SendDate = DateTime.Now,User = user});
-            _uow.Save();
         }
 
     }

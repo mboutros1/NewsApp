@@ -74,6 +74,10 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\Libraries\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=3.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NLog.3.1.0.0\lib\net40\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="PushSharp.Amazon.Adm">
       <HintPath>..\..\lib\PushSharp.Amazon.Adm.dll</HintPath>
     </Reference>
@@ -145,6 +149,13 @@
       <Project>{ea161ec5-089f-48a5-b571-7dff11d2f877}</Project>
       <Name>NewsApp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
