@@ -17,7 +17,13 @@
     <property name="LastModified" type="DateTime" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="1d2c26de-2763-4406-b6a2-2dac14476d96">
       <column name="" />
     </property>
-    <bag name="UserNotifications" inverse="true" generic="true" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="6838389c-5451-4ffe-b137-0a5d49b1d23c">
+    <property name="Avatar" type="String" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="7a8e206a-17bc-433c-84b2-0b59e44ef774">
+      <column name="" />
+    </property>
+    <property name="Name" type="String" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="3176f6ee-650c-464e-9cc8-284e5a06b01c">
+      <column name="" />
+    </property>
+    <bag name="Notifications" inverse="true" generic="true" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="6838389c-5451-4ffe-b137-0a5d49b1d23c">
       <key>
         <column name="" />
       </key>
@@ -31,25 +37,58 @@
         <column name="" />
       </many-to-many>
     </bag>
+    <bag name="Comments" inverse="true" generic="true" p1:AssociationGuid="7e7fa471-8001-4337-a6b6-a42a81f1f3a8" p1:Guid="a54407ae-877d-494d-8e25-556d88c03a21">
+      <key>
+        <column name="" />
+      </key>
+      <one-to-many class="Comment" />
+    </bag>
+    <bag name="CreatedNotifications" inverse="true" generic="true" p1:AssociationGuid="09a5e895-0cd5-41b8-b01d-9b2aaffa25d1" p1:Guid="0bd394e7-8e7a-42e1-9340-5870c90ea2d6">
+      <key>
+        <column name="" />
+      </key>
+      <one-to-many class="NewsFeed" />
+    </bag>
+    <bag name="Subscriptions" inverse="true" generic="true" p1:AssociationGuid="c5ae2797-32c7-4ed2-8331-00baa1a841e5" p1:Guid="d0f4480c-a546-49b7-92cd-8531acecd41e">
+      <key>
+        <column name="" />
+      </key>
+      <one-to-many class="UserSubscription" />
+    </bag>
   </class>
-  <class name="Notification" table="" p1:Guid="82568817-20a1-45ab-b37f-9c53867a1b67">
-    <id name="NotificationId" type="Int32" p1:ValidateRequired="True" p1:Guid="7c3b0be8-5bea-4e89-9735-2c4b29f32eb2">
+  <class name="NewsFeed" table="" p1:Guid="82568817-20a1-45ab-b37f-9c53867a1b67">
+    <id name="NewsFeedId" type="Int32" p1:ValidateRequired="True" p1:Guid="7c3b0be8-5bea-4e89-9735-2c4b29f32eb2">
       <column name="" />
       <generator class="identity" />
     </id>
-    <property name="Title" type="String" p1:ValidateRequired="True" p1:Guid="e56949ac-2b8d-4ef8-9f1b-ff8615167c45">
+    <property name="Body" type="String" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="90ac2d56-b0b4-4a50-868f-ee6d599a0858">
       <column name="" />
     </property>
-    <property name="Details" type="String" p1:ValidateRequired="True" p1:Guid="217d61e6-ec74-4d8c-b6cd-078fb060a32d">
+    <property name="Title" type="String" p1:ValidateRequired="True" p1:Guid="e56949ac-2b8d-4ef8-9f1b-ff8615167c45">
       <column name="" />
     </property>
     <property name="CreateDate" type="DateTime" p1:ValidateRequired="True" p1:Guid="78221907-a584-4092-80db-1b6ea1d8f204">
       <column name="" />
     </property>
-    <property name="Type" type="Int32" p1:ValidateRequired="True" p1:Guid="20e776c6-2008-49a8-a88a-efd396a76a17">
+    <property name="SubscriptionType" type="Int32" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="20e776c6-2008-49a8-a88a-efd396a76a17">
+      <column name="" />
+    </property>
+    <property name="Likes" type="Int32" p1:ValidateRequired="True" p1:Guid="e0198c20-ad00-4f46-b47a-703d3ce4616f">
+      <column name="" />
+    </property>
+    <property name="Images" type="String" p1:ValidateRequired="True" p1:Guid="0c3b462a-57d9-4e6d-acbc-c8d29369bba0">
+      <column name="" />
+    </property>
+    <property name="ScheduleDate" type="DateTime" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="c6361c5d-272a-4b66-9451-7b5472f19bb8">
+      <column name="" />
+    </property>
+    <property name="IsSent" type="Boolean" p1:ValidateRequired="True" p1:Guid="3599fa68-e697-4645-a73d-0a8e30302ba1">
       <column name="" />
     </property>
     <many-to-one name="Chruch" class="Church" p1:AssociationGuid="1770c555-17df-4e8b-8c1a-fee8ee6ad1d5" p1:Guid="7344652d-84c3-47f6-910e-6cbe0ccfaac6">
+      <column name="" />
+    </many-to-one>
+    <many-to-one name="CreatedBy" class="User" p1:AssociationGuid="09a5e895-0cd5-41b8-b01d-9b2aaffa25d1" p1:Guid="20162122-e1df-4b55-893e-94a06c93fca4">
       <column name="" />
     </many-to-one>
     <bag name="UserNotification" inverse="true" generic="false" p1:AssociationGuid="d943f797-51d1-44ee-bb90-357ac0983cae" p1:Guid="d510dd24-ac04-4e29-bbe7-2d4d13cc40d9">
@@ -57,6 +96,12 @@
         <column name="" />
       </key>
       <one-to-many class="UserNotification" />
+    </bag>
+    <bag name="Comments" inverse="true" generic="true" p1:AssociationGuid="6bf8916e-666d-4b38-8509-b51a6063132d" p1:Guid="1e414e81-8415-4cb0-beb0-e2c8090bc755">
+      <key>
+        <column name="" />
+      </key>
+      <one-to-many class="Comment" />
     </bag>
   </class>
   <class name="UserNotification" table="" p1:Guid="378b61e1-c386-4644-9388-8df729feb64f">
@@ -67,13 +112,13 @@
     <property name="LastSeen" type="DateTime" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="7af9fc03-b032-44a2-8830-a3a68e011457">
       <column name="" />
     </property>
-    <property name="SendDate" type="DateTime" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="7c2bd41d-b2ce-4928-9214-e4a8b8fe7e23">
+    <property name="SentDate" type="DateTime" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="7c2bd41d-b2ce-4928-9214-e4a8b8fe7e23">
       <column name="" />
     </property>
     <many-to-one name="User" class="User" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="fdc40fec-c507-4d16-86a6-88f781df0415">
       <column name="" />
     </many-to-one>
-    <many-to-one name="Notification" class="Notification" p1:AssociationGuid="d943f797-51d1-44ee-bb90-357ac0983cae" p1:Guid="86335692-0f91-448a-9b15-4e511fa6b2b1">
+    <many-to-one name="Notification" class="NewsFeed" p1:AssociationGuid="d943f797-51d1-44ee-bb90-357ac0983cae" p1:Guid="86335692-0f91-448a-9b15-4e511fa6b2b1">
       <column name="" />
     </many-to-one>
   </class>
@@ -118,7 +163,40 @@
       <key>
         <column name="" />
       </key>
-      <one-to-many class="Notification" />
+      <one-to-many class="NewsFeed" />
     </bag>
+  </class>
+  <class name="Comment" table="" p1:Guid="a51b7c9c-b937-4122-a519-842d4cdf028c">
+    <id name="CommentId" type="Int32" p1:ValidateRequired="True" p1:Guid="2236e218-6ae9-44a7-9278-5fb6fef2fb3a">
+      <column name="" />
+      <generator class="identity" />
+    </id>
+    <property name="Body" type="String" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="e0d66b47-f07d-4027-92d8-6d7f0aecb100">
+      <column name="" />
+    </property>
+    <property name="CreateDate" type="DateTime" p1:ValidateRequired="True" p1:Guid="4c8306f3-185e-41b5-ab55-5a3d98724dd4">
+      <column name="" />
+    </property>
+    <property name="Images" type="String" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="1de1dd58-87bc-4e8d-bb0a-d3f2cc7968a5">
+      <column name="" />
+    </property>
+    <many-to-one name="NewsFeed" class="NewsFeed" p1:AssociationGuid="6bf8916e-666d-4b38-8509-b51a6063132d" p1:Guid="57688409-bdf4-4bca-92de-79c7b61c4ae3">
+      <column name="" />
+    </many-to-one>
+    <many-to-one name="User" class="User" p1:AssociationGuid="7e7fa471-8001-4337-a6b6-a42a81f1f3a8" p1:Guid="0f9f21b4-ef6b-4414-b38f-aadb56c5fd2f">
+      <column name="" />
+    </many-to-one>
+  </class>
+  <class name="UserSubscription" table="" p1:Guid="1c8b7e90-5a7b-425b-8c46-b0c11fcd49b5">
+    <id name="UserSubscriptionId" type="Int32" p1:ValidateRequired="True" p1:Guid="8eb2d2b0-cd9b-4cbf-bbbc-1044961581fc">
+      <column name="" />
+      <generator class="identity" />
+    </id>
+    <property name="SubscriptionType" type="String" p1:ValidateRequired="True" p1:Guid="e09f9d05-f747-4c27-87fb-f3bb9ac18cc6">
+      <column name="" />
+    </property>
+    <many-to-one name="User" class="User" p1:AssociationGuid="c5ae2797-32c7-4ed2-8331-00baa1a841e5" p1:Guid="a051812a-b777-4655-adff-cdf68e6acb64">
+      <column name="" />
+    </many-to-one>
   </class>
 </hibernate-mapping>

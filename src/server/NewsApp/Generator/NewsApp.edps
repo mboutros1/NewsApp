@@ -6,17 +6,23 @@
       <GeneratedFiles>
         <File Name="NewsApp\Model\User.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
         <File Name="NewsApp\Model\User.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
-        <File Name="NewsApp\Model\Notification.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
-        <File Name="NewsApp\Model\Notification.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
+        <File Name="NewsApp\Model\NewsFeed.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
+        <File Name="NewsApp\Model\NewsFeed.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
         <File Name="NewsApp\Model\UserNotification.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
         <File Name="NewsApp\Model\UserNotification.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
         <File Name="NewsApp\Model\Church.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
         <File Name="NewsApp\Model\Church.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
+        <File Name="NewsApp\Model\Comment.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
+        <File Name="NewsApp\Model\Comment.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
+        <File Name="NewsApp\Model\UserSubscription.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
+        <File Name="NewsApp\Model\UserSubscription.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
         <File Name="NewsApp.hbm.xml" />
         <File Name="NewsApp.User.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
-        <File Name="NewsApp.Notification.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
+        <File Name="NewsApp.NewsFeed.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
         <File Name="NewsApp.UserNotification.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
         <File Name="NewsApp.Church.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
+        <File Name="NewsApp.Comment.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
+        <File Name="NewsApp.UserSubscription.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
         <File Name="IUnitOfWork.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />
         <File Name="IUnitOfWorkFactory.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />
         <File Name="IRepository.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />

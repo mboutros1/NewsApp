@@ -28,8 +28,8 @@ namespace NewsApp.Model
         public Church()
         {
             this.Country = @"US";
-            this.Notifications = new List<Notification>();
             this.Users = new List<User>();
+            this.Notifications = new List<NewsFeed>();
             OnCreated();
         }
 
@@ -125,9 +125,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for Notifications in the schema.
+        /// There are no comments for Users in the schema.
         /// </summary>
-        public virtual IList<Notification> Notifications
+        public virtual IList<User> Users
         {
             get;
             set;
@@ -135,9 +135,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for Users in the schema.
+        /// There are no comments for Notifications in the schema.
         /// </summary>
-        public virtual IList<User> Users
+        public virtual IList<NewsFeed> Notifications
         {
             get;
             set;

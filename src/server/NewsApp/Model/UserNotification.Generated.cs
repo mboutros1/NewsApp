@@ -52,9 +52,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for SendDate in the schema.
+        /// There are no comments for SentDate in the schema.
         /// </summary>
-        public virtual System.Nullable<System.DateTime> SendDate
+        public virtual System.Nullable<System.DateTime> SentDate
         {
             get;
             set;
@@ -74,7 +74,7 @@ namespace NewsApp.Model
         /// <summary>
         /// There are no comments for Notification in the schema.
         /// </summary>
-        public virtual Notification Notification
+        public virtual NewsFeed Notification
         {
             get;
             set;

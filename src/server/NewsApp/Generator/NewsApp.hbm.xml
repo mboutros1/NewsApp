@@ -17,7 +17,13 @@
     <property name="LastModified" type="DateTime">
       <column name="LastModified" not-null="false" />
     </property>
-    <bag name="UserNotifications" inverse="true" generic="true">
+    <property name="Avatar" type="String">
+      <column name="Avatar" not-null="false" />
+    </property>
+    <property name="Name" type="String">
+      <column name="Name" not-null="false" />
+    </property>
+    <bag name="Notifications" inverse="true" generic="true">
       <key>
         <column name="UserId" />
       </key>
@@ -31,32 +37,71 @@
         <column name="ChurchId" />
       </many-to-many>
     </bag>
+    <bag name="Comments" inverse="true" generic="true">
+      <key>
+        <column name="UserId" />
+      </key>
+      <one-to-many class="Comment" />
+    </bag>
+    <bag name="CreatedNotifications" inverse="true" generic="true">
+      <key>
+        <column name="UserId" />
+      </key>
+      <one-to-many class="NewsFeed" />
+    </bag>
+    <bag name="Subscriptions" inverse="true" generic="true">
+      <key>
+        <column name="UserId" />
+      </key>
+      <one-to-many class="UserSubscription" />
+    </bag>
   </class>
-  <class name="Notification" table="Notifications">
-    <id name="NotificationId" type="Int32">
-      <column name="NotificationId" not-null="true" />
+  <class name="NewsFeed" table="NewsFeeds">
+    <id name="NewsFeedId" type="Int32">
+      <column name="NewsFeedId" not-null="true" />
       <generator class="identity" />
     </id>
+    <property name="Body" type="String">
+      <column name="Body" not-null="false" />
+    </property>
     <property name="Title" type="String">
       <column name="Title" not-null="true" />
-    </property>
-    <property name="Details" type="String">
-      <column name="Details" not-null="true" />
     </property>
     <property name="CreateDate" type="DateTime">
       <column name="CreateDate" not-null="true" />
     </property>
-    <property name="Type" type="Int32">
-      <column name="Type" not-null="true" />
+    <property name="SubscriptionType" type="Int32">
+      <column name="SubscriptionType" not-null="false" />
+    </property>
+    <property name="Likes" type="Int32">
+      <column name="Likes" not-null="true" />
+    </property>
+    <property name="Images" type="String">
+      <column name="Images" not-null="true" />
+    </property>
+    <property name="ScheduleDate" type="DateTime">
+      <column name="ScheduleDate" not-null="false" />
+    </property>
+    <property name="IsSent" type="Boolean">
+      <column name="IsSent" not-null="true" />
     </property>
     <many-to-one name="Chruch" class="Church">
       <column name="ChurchId" not-null="true" />
     </many-to-one>
+    <many-to-one name="CreatedBy" class="User">
+      <column name="UserId" not-null="true" />
+    </many-to-one>
     <bag name="UserNotification" inverse="true" generic="false">
       <key>
-        <column name="NotificationId" />
+        <column name="NewsFeedId" />
       </key>
       <one-to-many class="UserNotification" />
+    </bag>
+    <bag name="Comments" inverse="true" generic="true">
+      <key>
+        <column name="NewsFeedId" />
+      </key>
+      <one-to-many class="Comment" />
     </bag>
   </class>
   <class name="UserNotification" table="UserNotifications">
@@ -67,14 +112,14 @@
     <property name="LastSeen" type="DateTime">
       <column name="LastSeen" not-null="false" />
     </property>
-    <property name="SendDate" type="DateTime">
-      <column name="SendDate" not-null="false" />
+    <property name="SentDate" type="DateTime">
+      <column name="SentDate" not-null="false" />
     </property>
     <many-to-one name="User" class="User">
       <column name="UserId" not-null="true" />
     </many-to-one>
-    <many-to-one name="Notification" class="Notification">
-      <column name="NotificationId" not-null="true" />
+    <many-to-one name="Notification" class="NewsFeed">
+      <column name="NewsFeedId" not-null="true" />
     </many-to-one>
   </class>
   <class name="Church" table="Churches">
@@ -118,7 +163,40 @@
       <key>
         <column name="ChurchId" />
       </key>
-      <one-to-many class="Notification" />
+      <one-to-many class="NewsFeed" />
     </bag>
+  </class>
+  <class name="Comment" table="Comments">
+    <id name="CommentId" type="Int32">
+      <column name="CommentId" not-null="true" />
+      <generator class="identity" />
+    </id>
+    <property name="Body" type="String">
+      <column name="Body" not-null="false" />
+    </property>
+    <property name="CreateDate" type="DateTime">
+      <column name="CreateDate" not-null="true" />
+    </property>
+    <property name="Images" type="String">
+      <column name="Images" not-null="false" />
+    </property>
+    <many-to-one name="NewsFeed" class="NewsFeed">
+      <column name="NewsFeedId" not-null="true" />
+    </many-to-one>
+    <many-to-one name="User" class="User">
+      <column name="UserId" not-null="true" />
+    </many-to-one>
+  </class>
+  <class name="UserSubscription" table="UserSubscriptions">
+    <id name="UserSubscriptionId" type="Int32">
+      <column name="UserSubscriptionId" not-null="true" />
+      <generator class="identity" />
+    </id>
+    <property name="SubscriptionType" type="String">
+      <column name="SubscriptionType" not-null="true" />
+    </property>
+    <many-to-one name="User" class="User">
+      <column name="UserId" not-null="true" />
+    </many-to-one>
   </class>
 </hibernate-mapping>

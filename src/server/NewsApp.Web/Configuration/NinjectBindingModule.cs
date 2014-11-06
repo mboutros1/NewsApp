@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using NewsApp.Data;
 using NewsApp.Model;
 using NewsApp.Notifications;
+using NewsAppModel.Model;
 using NewsAppModel.Services;
 using NewsAppModel.Services.Providers;
 using NHibernate;
@@ -29,7 +31,8 @@ namespace NewsApp.Configuration
             Bind<NotificationService>().ToSelf().InRequestScope();
             Bind<UserService>().ToSelf().InRequestScope();
             Bind<IDeviceProvider>().To<AppleNotifier>().InSingletonScope();
-            Bind<ISession>().ToMethod(m => NHibernateSessionProvider.GetSession());
+            Bind<ISession>().ToMethod(m => NHibernateSessionProvider.GetSession()).InRequestScope();
+            Rebind<INewsFeedRepository>().To<NewsFeedRepository>().InRequestScope();
         }
     }
 

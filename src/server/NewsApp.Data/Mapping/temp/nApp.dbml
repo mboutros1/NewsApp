@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="NewsApp" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="dbo.Churches" Member="Churches">
+    <Type Name="Churches">
+      <Column Name="ChurchId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DisplayName" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="Address" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="ZipCode" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="State" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="City" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="Country" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="Latitude" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Column Name="Longitude" Type="System.Int64" DbType="BigInt" CanBeNull="true" />
+      <Association Name="FK_Notifications_Churches_0" Member="Notifications" ThisKey="ChurchId" OtherKey="ChurchId" Type="Notifications" DeleteRule="NO ACTION" />
+      <Association Name="FK_Users_Churches_Churches_1" Member="Users_Churches" ThisKey="ChurchId" OtherKey="ChurchId" Type="Users_Churches" DeleteRule="NO ACTION" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Comments" Member="Comments">
+    <Type Name="Comments">
+      <Column Name="CommentId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Body" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Column Name="CreateDate" Type="System.DateTime" DbType="DateTime2(7) NOT NULL" CanBeNull="false" />
+      <Column Name="Images" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Column Name="NotificationId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="FK_Comments_Notifications_0" Member="Notifications" ThisKey="NotificationId" OtherKey="NotificationId" Type="Notifications" IsForeignKey="true" />
+      <Association Name="FK_Comments_Users_1" Member="Users" ThisKey="UserId" OtherKey="UserId" Type="Users" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.NewsFeeds" Member="NewsFeeds">
+    <Type Name="NewsFeeds">
+      <Column Name="NewsFeedId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="Body" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Column Name="Images" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Column Name="CreateDate" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="NotificationId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="FK_NewsFeeds_Notifications_0" Member="Notifications" ThisKey="NotificationId" OtherKey="NotificationId" Type="Notifications" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Notifications" Member="Notifications">
+    <Type Name="Notifications">
+      <Column Name="NotificationId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="Details" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="CreateDate" Type="System.DateTime" DbType="DateTime2(7) NOT NULL" CanBeNull="false" />
+      <Column Name="Type" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Likes" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Images" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="ScheduleDate" Type="System.DateTime" DbType="DateTime2(7)" CanBeNull="true" />
+      <Column Name="IsSent" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="ChurchId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="FK_Comments_Notifications_0" Member="Comments" ThisKey="NotificationId" OtherKey="NotificationId" Type="Comments" DeleteRule="NO ACTION" />
+      <Association Name="FK_NewsFeeds_Notifications_0" Member="NewsFeeds" ThisKey="NotificationId" OtherKey="NotificationId" Type="NewsFeeds" DeleteRule="NO ACTION" />
+      <Association Name="FK_Notifications_Churches_0" Member="Churches" ThisKey="ChurchId" OtherKey="ChurchId" Type="Churches" IsForeignKey="true" />
+      <Association Name="FK_UserNotifications_Notifications_1" Member="UserNotifications" ThisKey="NotificationId" OtherKey="NotificationId" Type="UserNotifications" DeleteRule="NO ACTION" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserNotifications" Member="UserNotifications">
+    <Type Name="UserNotifications">
+      <Column Name="UserNotificationId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="LastSeen" Type="System.DateTime" DbType="DateTime2(7)" CanBeNull="true" />
+      <Column Name="SentDate" Type="System.DateTime" DbType="DateTime2(7)" CanBeNull="true" />
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="NotificationId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="FK_UserNotifications_Notifications_1" Member="Notifications" ThisKey="NotificationId" OtherKey="NotificationId" Type="Notifications" IsForeignKey="true" />
+      <Association Name="FK_UserNotifications_Users_0" Member="Users" ThisKey="UserId" OtherKey="UserId" Type="Users" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Users" Member="Users">
+    <Type Name="Users">
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DeviceId" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="DeviceType" Type="System.String" DbType="VarChar(8000) NOT NULL" CanBeNull="false" />
+      <Column Name="CreateDate" Type="System.DateTime" DbType="DateTime2(7) NOT NULL" CanBeNull="false" />
+      <Column Name="LastModified" Type="System.DateTime" DbType="DateTime2(7)" CanBeNull="true" />
+      <Column Name="Avatar" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(8000)" CanBeNull="true" />
+      <Association Name="FK_Comments_Users_1" Member="Comments" ThisKey="UserId" OtherKey="UserId" Type="Comments" DeleteRule="NO ACTION" />
+      <Association Name="FK_UserNotifications_Users_0" Member="UserNotifications" ThisKey="UserId" OtherKey="UserId" Type="UserNotifications" DeleteRule="NO ACTION" />
+      <Association Name="FK_Users_Churches_Users_0" Member="Users_Churches" ThisKey="UserId" OtherKey="UserId" Type="Users_Churches" DeleteRule="NO ACTION" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Users_Churches" Member="Users_Churches">
+    <Type Name="Users_Churches">
+      <Column Name="UserId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ChurchId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="FK_Users_Churches_Churches_1" Member="Churches" ThisKey="ChurchId" OtherKey="ChurchId" Type="Churches" IsForeignKey="true" />
+      <Association Name="FK_Users_Churches_Users_0" Member="Users" ThisKey="UserId" OtherKey="UserId" Type="Users" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.fn_diagramobjects" Method="Fn_diagramobjects" IsComposable="true">
+    <Return Type="System.Int32" DbType="Int" />
+  </Function>
+  <Function Name="dbo.sp_alterdiagram" Method="Sp_alterdiagram">
+    <Parameter Name="diagramname" Type="System.String" DbType="NVarChar(128)" />
+    <Parameter Name="owner_id" Type="System.Int32" DbType="Int" />
+    <Parameter Name="version" Type="System.Int32" DbType="Int" />
+    <Parameter Name="definition" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" />
+    <Return Type="System.Int32" DbType="Int" />
+  </Function>
+  <Function Name="dbo.sp_creatediagram" Method="Sp_creatediagram">
+    <Parameter Name="diagramname" Type="System.String" DbType="NVarChar(128)" />
+    <Parameter Name="owner_id" Type="System.Int32" DbType="Int" />
+    <Parameter Name="version" Type="System.Int32" DbType="Int" />
+    <Parameter Name="definition" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" />
+    <Return Type="System.Int32" DbType="Int" />
+  </Function>
+  <Function Name="dbo.sp_dropdiagram" Method="Sp_dropdiagram">
+    <Parameter Name="diagramname" Type="System.String" DbType="NVarChar(128)" />
+    <Parameter Name="owner_id" Type="System.Int32" DbType="Int" />
+    <Return Type="System.Int32" DbType="Int" />
+  </Function>
+  <Function Name="dbo.sp_helpdiagramdefinition" Method="Sp_helpdiagramdefinition">
+    <Parameter Name="diagramname" Type="System.String" DbType="NVarChar(128)" />
+    <Parameter Name="owner_id" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_helpdiagramdefinitionResult">
+      <Column Name="version" Member="Version" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="definition" Member="Definition" Type="System.Data.Linq.Binary" DbType="VarBinary(MAX)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_helpdiagrams" Method="Sp_helpdiagrams">
+    <Parameter Name="diagramname" Type="System.String" DbType="NVarChar(128)" />
+    <Parameter Name="owner_id" Type="System.Int32" DbType="Int" />
+    <ElementType Name="Sp_helpdiagramsResult">
+      <Column Name="Database" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
+      <Column Name="ID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Owner" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
+      <Column Name="OwnerID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.sp_renamediagram" Method="Sp_renamediagram">
+    <Parameter Name="diagramname" Type="System.String" DbType="NVarChar(128)" />
+    <Parameter Name="owner_id" Type="System.Int32" DbType="Int" />
+    <Parameter Name="new_diagramname" Type="System.String" DbType="NVarChar(128)" />
+    <Return Type="System.Int32" DbType="Int" />
+  </Function>
+</Database>

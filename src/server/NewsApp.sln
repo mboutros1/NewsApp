@@ -34,6 +34,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "www", "http://localhost:101
 		SlnRelativePath = "..\client\www\"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsApp.Tests", "NewsApp.Tests\NewsApp.Tests.csproj", "{BCF20C42-8EDA-485D-AA7A-AB2414AFAF1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,16 @@ Global
 		{32257CDC-063E-4D75-94D7-FDB6D87E81CC}.Release|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{32257CDC-063E-4D75-94D7-FDB6D87E81CC}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
 		{32257CDC-063E-4D75-94D7-FDB6D87E81CC}.Release|x86.ActiveCfg = Debug|Any CPU
+		{BCF20C42-8EDA-485D-AA7A-AB2414AFAF1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCF20C42-8EDA-485D-AA7A-AB2414AFAF1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCF20C42-8EDA-485D-AA7A-AB2414AFAF1E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BCF20C42-8EDA-485D-AA7A-AB2414AFAF1E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BCF20C42-8EDA-485D-AA7A-AB2414AFAF1E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BCF20C42-8EDA-485D-AA7A-AB2414AFAF1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCF20C42-8EDA-485D-AA7A-AB2414AFAF1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCF20C42-8EDA-485D-AA7A-AB2414AFAF1E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BCF20C42-8EDA-485D-AA7A-AB2414AFAF1E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BCF20C42-8EDA-485D-AA7A-AB2414AFAF1E}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
