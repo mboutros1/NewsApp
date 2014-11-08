@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\LocalHelper.cs" />
     <Compile Include="Infrastructure\AppSettings.cs" />
     <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\IUnitOfWork.cs" />
@@ -62,6 +63,8 @@
     <Compile Include="Model\NewsFeedRepository.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\User.Generated.cs" />
+    <Compile Include="Model\UserDevice.cs" />
+    <Compile Include="Model\UserDevice.Generated.cs" />
     <Compile Include="Model\UserNotification.cs" />
     <Compile Include="Model\UserNotification.Generated.cs" />
     <Compile Include="Model\UserSubscription.cs" />

@@ -5,11 +5,8 @@
       <column name="UserId" not-null="true" />
       <generator class="identity" />
     </id>
-    <property name="DeviceId" type="String">
-      <column name="DeviceId" not-null="true" />
-    </property>
-    <property name="DeviceType" type="String">
-      <column name="DeviceType" not-null="true" />
+    <property name="Email" type="String">
+      <column name="Email" not-null="false" />
     </property>
     <property name="CreateDate" type="DateTime">
       <column name="CreateDate" not-null="true" />
@@ -22,6 +19,9 @@
     </property>
     <property name="Name" type="String">
       <column name="Name" not-null="false" />
+    </property>
+    <property name="BirthDay" type="Date">
+      <column name="BirthDay" not-null="false" />
     </property>
     <bag name="Notifications" inverse="true" generic="true">
       <key>
@@ -55,6 +55,12 @@
       </key>
       <one-to-many class="UserSubscription" />
     </bag>
+    <bag name="Devices" inverse="true" cascade="all-delete-orphan" generic="true">
+      <key>
+        <column name="UserId" />
+      </key>
+      <one-to-many class="UserDevice" />
+    </bag>
   </class>
   <class name="NewsFeed" table="NewsFeeds">
     <id name="NewsFeedId" type="Int32">
@@ -85,11 +91,11 @@
     <property name="IsSent" type="Boolean">
       <column name="IsSent" not-null="true" />
     </property>
-    <many-to-one name="Chruch" class="Church">
-      <column name="ChurchId" not-null="true" />
-    </many-to-one>
     <many-to-one name="CreatedBy" class="User">
       <column name="UserId" not-null="true" />
+    </many-to-one>
+    <many-to-one name="Chruch" class="Church">
+      <column name="ChurchId" not-null="true" />
     </many-to-one>
     <bag name="UserNotification" inverse="true" generic="false">
       <key>
@@ -180,11 +186,11 @@
     <property name="Images" type="String">
       <column name="Images" not-null="false" />
     </property>
-    <many-to-one name="NewsFeed" class="NewsFeed">
-      <column name="NewsFeedId" not-null="true" />
-    </many-to-one>
     <many-to-one name="User" class="User">
       <column name="UserId" not-null="true" />
+    </many-to-one>
+    <many-to-one name="NewsFeed" class="NewsFeed">
+      <column name="NewsFeedId" not-null="true" />
     </many-to-one>
   </class>
   <class name="UserSubscription" table="UserSubscriptions">
@@ -196,6 +202,21 @@
       <column name="SubscriptionType" not-null="true" />
     </property>
     <many-to-one name="User" class="User">
+      <column name="UserId" not-null="true" />
+    </many-to-one>
+  </class>
+  <class name="UserDevice" table="UserDevices">
+    <id name="UserDeviceId" type="String">
+      <column name="UserDeviceId" not-null="true" />
+      <generator class="assigned" />
+    </id>
+    <property name="Type" type="String">
+      <column name="Type" not-null="true" />
+    </property>
+    <property name="LastLogin" type="DateTime">
+      <column name="LastLogin" not-null="true" />
+    </property>
+    <many-to-one name="User" class="User" cascade="all">
       <column name="UserId" not-null="true" />
     </many-to-one>
   </class>

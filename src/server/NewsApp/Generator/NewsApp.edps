@@ -16,6 +16,8 @@
         <File Name="NewsApp\Model\Comment.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
         <File Name="NewsApp\Model\UserSubscription.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
         <File Name="NewsApp\Model\UserSubscription.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
+        <File Name="NewsApp\Model\UserDevice.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
+        <File Name="NewsApp\Model\UserDevice.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
         <File Name="NewsApp.hbm.xml" />
         <File Name="NewsApp.User.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
         <File Name="NewsApp.NewsFeed.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
@@ -23,6 +25,7 @@
         <File Name="NewsApp.Church.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
         <File Name="NewsApp.Comment.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
         <File Name="NewsApp.UserSubscription.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
+        <File Name="NewsApp.UserDevice.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
         <File Name="IUnitOfWork.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />
         <File Name="IUnitOfWorkFactory.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />
         <File Name="IRepository.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />

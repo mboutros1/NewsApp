@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsApp", "NewsApp\NewsApp.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsApp.Web", "NewsApp.Web\NewsApp.Web.csproj", "{A39F708A-A25B-4FB8-9496-183CCB268FD7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PushPlugins", "PushPlugins", "{0A877726-02AC-49B3-9FFC-989C008911D3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewsApp.Notifications", "NewsApp.Notifications\NewsApp.Notifications.csproj", "{A91E03EF-6532-4896-89C4-9FCEC1D8D4DB}"
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "www", "http://localhost:10134", "{32257CDC-063E-4D75-94D7-FDB6D87E81CC}"

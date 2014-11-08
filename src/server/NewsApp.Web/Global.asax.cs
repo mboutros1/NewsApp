@@ -38,14 +38,19 @@ namespace NewsApp
             AppController.Start();
         }
 
+        protected void Application_Error()
+        {
+            var err = Server.GetLastError(); 
+            Console.WriteLine(Request.Form);
+        }
         protected void Application_Stop()
         {
             AppController.End();
         }
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            //HttpContext.Current.Response.AddHeader(
-            //            "Access-Control-Allow-Origin", "*");  
+            HttpContext.Current.Response.AddHeader(
+                        "Access-Control-Allow-Origin", "*");  
             /* HttpContext.Current.Response.AddHeader(
       "Access-Control-Allow-Origin", 
       "http://AllowedDomain.com"); */

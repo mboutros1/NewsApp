@@ -5,10 +5,7 @@
       <column name="" />
       <generator class="identity" />
     </id>
-    <property name="DeviceId" type="String" p1:ValidateRequired="True" p1:Guid="94f62061-1973-4019-a808-0b900d93e9ed">
-      <column name="" />
-    </property>
-    <property name="DeviceType" type="String" p1:ValidateRequired="True" p1:Guid="b14f2100-c850-477f-b629-5e78aa38edcb">
+    <property name="Email" type="String" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="b14f2100-c850-477f-b629-5e78aa38edcb">
       <column name="" />
     </property>
     <property name="CreateDate" type="DateTime" p1:ValidateRequired="True" p1:Guid="d4a3d86c-c632-4333-bb6f-833e9e49a6f7">
@@ -21,6 +18,9 @@
       <column name="" />
     </property>
     <property name="Name" type="String" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="3176f6ee-650c-464e-9cc8-284e5a06b01c">
+      <column name="" />
+    </property>
+    <property name="BirthDay" type="Date" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="f437a0ce-6224-4978-8b7c-7e1646bb9e89">
       <column name="" />
     </property>
     <bag name="Notifications" inverse="true" generic="true" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="6838389c-5451-4ffe-b137-0a5d49b1d23c">
@@ -55,6 +55,12 @@
       </key>
       <one-to-many class="UserSubscription" />
     </bag>
+    <bag name="Devices" inverse="true" cascade="all-delete-orphan" generic="true" p1:AssociationGuid="8df70813-1c18-4f25-adc6-82e6da1033f1" p1:Guid="154ad6fb-52ee-45a4-b847-729d9cfff159">
+      <key>
+        <column name="" />
+      </key>
+      <one-to-many class="UserDevice" />
+    </bag>
   </class>
   <class name="NewsFeed" table="" p1:Guid="82568817-20a1-45ab-b37f-9c53867a1b67">
     <id name="NewsFeedId" type="Int32" p1:ValidateRequired="True" p1:Guid="7c3b0be8-5bea-4e89-9735-2c4b29f32eb2">
@@ -85,10 +91,10 @@
     <property name="IsSent" type="Boolean" p1:ValidateRequired="True" p1:Guid="3599fa68-e697-4645-a73d-0a8e30302ba1">
       <column name="" />
     </property>
-    <many-to-one name="Chruch" class="Church" p1:AssociationGuid="1770c555-17df-4e8b-8c1a-fee8ee6ad1d5" p1:Guid="7344652d-84c3-47f6-910e-6cbe0ccfaac6">
+    <many-to-one name="CreatedBy" class="User" p1:AssociationGuid="09a5e895-0cd5-41b8-b01d-9b2aaffa25d1" p1:Guid="20162122-e1df-4b55-893e-94a06c93fca4">
       <column name="" />
     </many-to-one>
-    <many-to-one name="CreatedBy" class="User" p1:AssociationGuid="09a5e895-0cd5-41b8-b01d-9b2aaffa25d1" p1:Guid="20162122-e1df-4b55-893e-94a06c93fca4">
+    <many-to-one name="Chruch" class="Church" p1:AssociationGuid="1770c555-17df-4e8b-8c1a-fee8ee6ad1d5" p1:Guid="7344652d-84c3-47f6-910e-6cbe0ccfaac6">
       <column name="" />
     </many-to-one>
     <bag name="UserNotification" inverse="true" generic="false" p1:AssociationGuid="d943f797-51d1-44ee-bb90-357ac0983cae" p1:Guid="d510dd24-ac04-4e29-bbe7-2d4d13cc40d9">
@@ -180,10 +186,10 @@
     <property name="Images" type="String" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="1de1dd58-87bc-4e8d-bb0a-d3f2cc7968a5">
       <column name="" />
     </property>
-    <many-to-one name="NewsFeed" class="NewsFeed" p1:AssociationGuid="6bf8916e-666d-4b38-8509-b51a6063132d" p1:Guid="57688409-bdf4-4bca-92de-79c7b61c4ae3">
+    <many-to-one name="User" class="User" p1:AssociationGuid="7e7fa471-8001-4337-a6b6-a42a81f1f3a8" p1:Guid="0f9f21b4-ef6b-4414-b38f-aadb56c5fd2f">
       <column name="" />
     </many-to-one>
-    <many-to-one name="User" class="User" p1:AssociationGuid="7e7fa471-8001-4337-a6b6-a42a81f1f3a8" p1:Guid="0f9f21b4-ef6b-4414-b38f-aadb56c5fd2f">
+    <many-to-one name="NewsFeed" class="NewsFeed" p1:AssociationGuid="6bf8916e-666d-4b38-8509-b51a6063132d" p1:Guid="57688409-bdf4-4bca-92de-79c7b61c4ae3">
       <column name="" />
     </many-to-one>
   </class>
@@ -196,6 +202,20 @@
       <column name="" />
     </property>
     <many-to-one name="User" class="User" p1:AssociationGuid="c5ae2797-32c7-4ed2-8331-00baa1a841e5" p1:Guid="a051812a-b777-4655-adff-cdf68e6acb64">
+      <column name="" />
+    </many-to-one>
+  </class>
+  <class name="UserDevice" table="" p1:Guid="15aaa591-6210-4f8f-829c-90e6a4ea99c7">
+    <id name="UserDeviceId" type="String" p1:ValidateRequired="True" p1:Guid="429a7e11-79db-4998-9b35-26b2eb614fca">
+      <column name="" />
+    </id>
+    <property name="Type" type="String" p1:ValidateRequired="True" p1:Guid="a86f9e3e-0295-4ac0-bda6-b7973c145452">
+      <column name="" />
+    </property>
+    <property name="LastLogin" type="DateTime" p1:ValidateRequired="True" p1:Guid="4a66918b-fa51-40d6-846a-0fbbcdcbcc9a">
+      <column name="" />
+    </property>
+    <many-to-one name="User" class="User" cascade="all" p1:AssociationGuid="8df70813-1c18-4f25-adc6-82e6da1033f1" p1:Guid="5ff410bb-eda9-4479-83ef-d4b33bf99fee">
       <column name="" />
     </many-to-one>
   </class>

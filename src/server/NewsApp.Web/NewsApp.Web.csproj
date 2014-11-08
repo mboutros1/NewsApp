@@ -189,6 +189,7 @@
     <Compile Include="Configuration\NinjectBindingModule.cs" />
     <Compile Include="Configuration\NinjectDependencySCope.cs" />
     <Compile Include="Configuration\NinjectMvcDiResolver.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

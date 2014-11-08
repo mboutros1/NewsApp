@@ -33,7 +33,7 @@ namespace NewsApp.Controllers
         }
         public JsonResult Register(int? userId, string deviceId, string deviceType)
         {
-            return Json(_userService.Register(userId.GetValueOrDefault(), deviceId, deviceType), JsonRequestBehavior.AllowGet);
+            return Json(_userService.Register(userId.GetValueOrDefault(), deviceId, deviceType).ToViewModel(), JsonRequestBehavior.AllowGet);
         }
         public JsonResult GetFeed(int userId, int? startAt,bool? refresh)
         {

@@ -2,7 +2,6 @@ define([],function(){
     var that = {
         register: function () {
             window.plugins.pushNotification.register(function (status) {
-                app.last = status;
                 app.user.storeToken(status);
             }, function (st) {
                 logger.log(st);
@@ -10,6 +9,7 @@ define([],function(){
 
         },
         storeToken: function (deviceId) {
+            localStorage.setItem("deviceId", deviceId);
             $$.ajax({
                 url: app.baseUrl + 'Home/Register',
                 dataType: 'json',

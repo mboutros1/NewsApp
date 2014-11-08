@@ -1,33 +1,34 @@
-define(['utils/appFunc','utils/xhr','view/module'],function(appFunc,xhr,VM){
+define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, xhr, VM, GS) {
 
     var settingCtrl = {
 
-        init: function(){
+        init: function () {
 
             var bindings = [{
-                element:'#settingView',
+                element: '#settingView',
                 event: 'show',
                 handler: settingCtrl.renderSetting
             }];
-
             VM.module('settingView').init({
-                bindings:bindings
+                bindings: bindings
             });
 
         },
 
-        renderSetting: function(){
-            if($$('#settingView .page-content')[0])
+        renderSetting: function () {
+            if ($$('#settingView .page-content')[0])
                 return;
             hiApp.showIndicator();
-            xhr.simpleCall({
-                func:'user_login'
-            },function(response) {
-                if (response.err_code === 0) {
-                    var user = response.data.user;
 
-                    VM.module('settingView').renderSetting(user);
-                }
+
+            xhr.simpleCall({
+                func: 'GetUserInfo', data: GS.getCurrentUser(), method: 'POST'
+            }, function (response) {
+                var user = response;
+                GS.setCurrentUser(user.UserId, user);
+                VM.module('settingView').renderSetting(GS.getCurrentUser());
+
+                //VM.module('settingView').renderSetting(user);
             });
         }
 

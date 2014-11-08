@@ -72,9 +72,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for NewsFeed in the schema.
+        /// There are no comments for User in the schema.
         /// </summary>
-        public virtual NewsFeed NewsFeed
+        public virtual User User
         {
             get;
             set;
@@ -82,9 +82,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for User in the schema.
+        /// There are no comments for NewsFeed in the schema.
         /// </summary>
-        public virtual User User
+        public virtual NewsFeed NewsFeed
         {
             get;
             set;

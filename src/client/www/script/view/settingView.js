@@ -1,17 +1,17 @@
-define(['utils/appFunc','utils/tplManager','GS','i18n!nls/lang'],function(appFunc,TM,GS,i18n){
+define(['utils/appFunc', 'utils/tplManager', 'GS', 'i18n!nls/lang'], function (appFunc, TM, GS, i18n) {
 
     /* global $CONFIG */
 
     var settingView = {
 
-        init: function(params){
+        init: function (params) {
             appFunc.bindEvents(params.bindings);
         },
 
-        renderSetting: function(user){
+        renderSetting: function (user) {
             var renderData = {
-                avatarUrl: user.avatarUrl,
-                nickName: user.nickName,
+                Avatar: 'styles/img/img/avatar/avatar' + user.Avatar,
+                Name: user.Name,
                 points: user.points,
                 i18nNickName: i18n.setting.nickname,
                 i18nPoints: i18n.setting.points,
@@ -29,7 +29,7 @@ define(['utils/appFunc','utils/tplManager','GS','i18n!nls/lang'],function(appFun
                 element: '.logout-button',
                 event: 'click',
                 handler: settingView.logOut
-            },{
+            }, {
                 element: '#settingView .update-button',
                 event: 'click',
                 handler: settingView.checkVersion
@@ -40,8 +40,8 @@ define(['utils/appFunc','utils/tplManager','GS','i18n!nls/lang'],function(appFun
             hiApp.hideIndicator();
         },
 
-        logOut: function(){
-            hiApp.confirm(i18n.setting.confirm_logout,function(){
+        logOut: function () {
+            hiApp.confirm(i18n.setting.confirm_logout, function () {
                 GS.removeCurrentUser();
 
                 mainView.loadPage('page/login.html');
@@ -49,7 +49,7 @@ define(['utils/appFunc','utils/tplManager','GS','i18n!nls/lang'],function(appFun
             });
         },
 
-        checkVersion: function(){
+        checkVersion: function () {
             var version = $CONFIG.version;
             var releaseTime = $CONFIG.release_time;
             hiApp.alert(i18n.setting.current_version + ' V' + version + '<br/>[ ' + releaseTime + ' ]');

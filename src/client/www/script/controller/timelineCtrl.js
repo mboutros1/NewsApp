@@ -1,4 +1,4 @@
-define(['utils/appFunc', 'utils/xhr', 'view/module'], function (appFunc, xhr, VM) {
+define(['utils/appFunc', 'utils/xhr', 'view/module','GS'], function (appFunc, xhr, VM,GS) {
 
     var timelineCtrl = {
         init: function () {
@@ -48,9 +48,9 @@ define(['utils/appFunc', 'utils/xhr', 'view/module'], function (appFunc, xhr, VM
         },
 
         getTimeline: function () {
-            var that = this;
+            var user = GS.getCurrentUser();
             xhr.simpleCall({
-                func: 'GetFeed', data: { userId: app.user.userId, startAt: timelineCtrl.firstIndex }
+                func: 'GetFeed', data: { userId: user.UserId, startAt: timelineCtrl.firstIndex }
             }, function (response) {
                 timelineCtrl.firstIndex = response.data.length > 0 ? response.data[0].Id : 00;
                 timelineCtrl.lastIndex = response.data.length > 0 ? response.data[response.data.length - 1].Id : 00;
@@ -59,9 +59,9 @@ define(['utils/appFunc', 'utils/xhr', 'view/module'], function (appFunc, xhr, VM
         },
 
         refreshTimeline: function () {
-            var that = this;
+            var user = GS.getCurrentUser();
             xhr.simpleCall({
-                func: 'GetFeed', data: { userId: app.user.userId, startAt: timelineCtrl.firstIndex, refresh: true }
+                func: 'GetFeed', data: { userId: user.UserId, startAt: timelineCtrl.firstIndex, refresh: true }
             }, function (response) {
                 timelineCtrl.firstIndex = response.data.length > 0 ? response.data[0].Id : 00;
                 VM.module('timelineView').refreshTimeline(response.data);
@@ -70,9 +70,9 @@ define(['utils/appFunc', 'utils/xhr', 'view/module'], function (appFunc, xhr, VM
 
         infiniteTimeline: function () {
             var $dom = $$(this);
-            var that = this;
+            var user = GS.getCurrentUser();
             xhr.simpleCall({
-                func: 'GetFeed', data: { userId: app.user.userId, startAt: timelineCtrl.lastIndex, refresh: false }
+                func: 'GetFeed', data: { userId: user.UserId, startAt: timelineCtrl.lastIndex, refresh: false }
             }, function (response) {
                 timelineCtrl.lastIndex = response.data.length > 0 ? response.data[response.data.length - 1].Id : 00;
                 VM.module('timelineView').infiniteTimeline({

@@ -268,7 +268,7 @@ namespace NewsApp.Notifications.NotUser
     //            memoryStream.Write(Encoding.ASCII.GetBytes(payload.PayloadId.ToString()), 0, payload.PayloadId.ToString().Length);
 
     //            //Adding ExpiryDate to Payload
-    //            int epoch = (int)(DateTime.UtcNow.AddMinutes(300) - new DateTime(1970, 1, 1)).TotalSeconds;
+    //            int epoch = (int)(LocalHelper.Now.UtcNow.AddMinutes(300) - new LocalHelper.Now(1970, 1, 1)).TotalSeconds;
     //            byte[] timeStamp = BitConverter.GetBytes(epoch);
     //            memoryStream.Write(timeStamp, 0, timeStamp.Length);
 
@@ -316,7 +316,7 @@ namespace NewsApp.Notifications.NotUser
     //                //Set up
     //                byte[] buffer = new byte[38];
     //                int recd = 0;
-    //                DateTime minTimestamp = DateTime.Now.AddYears(-1);
+    //                LocalHelper.Now minTimestamp = LocalHelper.Now.Now.AddYears(-1);
 
     //                //Get the first feedback
     //                recd = _apnsStream.Read(buffer, 0, buffer.Length);
@@ -344,7 +344,7 @@ namespace NewsApp.Notifications.NotUser
     //                    int tSeconds = BitConverter.ToInt32(bSeconds, 0);
 
     //                    //Add seconds since 1970 to that date, in UTC and then get it locally
-    //                    fb.Timestamp = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(tSeconds).ToLocalTime();
+    //                    fb.Timestamp = new LocalHelper.Now(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(tSeconds).ToLocalTime();
 
 
     //                    //Now copy out the device token

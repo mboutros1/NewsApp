@@ -13,6 +13,7 @@ define(['utils/appFunc','i18n!nls/lang','utils/tplManager'],function(appFunc,i18
                 loginnamePlaceholder: i18n.login.loginname_placeholder,
                 passwordPlaceholder: i18n.login.password_placeholder,
                 loginBtn: i18n.login.login_btn,
+                loginFbBtn: i18n.login.loginFbBtn,
                 signUp: i18n.login.sign_up,
                 forgotPwd: i18n.login.forgot_pwd,
                 language: i18n.global.language

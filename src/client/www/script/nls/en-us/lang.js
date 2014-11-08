@@ -1,6 +1,6 @@
 define({
     app: {
-        name: 'HiApp', liveStream:"Live Stream"
+        name: 'Church Feed', liveStream:"Live Stream"
     },
     global: {
         cancel: 'Cancel',
@@ -44,6 +44,7 @@ define({
         loginname_placeholder: 'Email/Username',
         password_placeholder: 'Password',
         login_btn: 'Sign In',
+       loginFbBtn :'Facebook Sign In',
         sign_up: 'Sign Up',
         forgot_pwd: 'Forgot password',
         err_empty_input: 'Please enter login name and password',

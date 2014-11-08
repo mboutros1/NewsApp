@@ -25,11 +25,16 @@ namespace NewsAppModel.Services
         {
             foreach (var user in users)
             {
-                var provider = _providers.FirstOrDefault(m => m.Type == user.DeviceType);
-                if (provider == null)
-                    throw new InvalidOperationException("Device Not Supported");
-                provider.SendNotification(user.DeviceId, notification.Title, 1, "default");
-                _userNotificationRepository.Add(new UserNotification() { Notification = notification, SentDate = DateTime.Now, User = user });
+                foreach (var device in user.Devices)
+                {
+
+                    var provider = _providers.FirstOrDefault(m => m.Type == device.Type);
+                    if (provider == null)
+                        throw new InvalidOperationException("Device Not Supported");
+                    provider.SendNotification(device.UserDeviceId, notification.Title, 1, "default");
+                    _userNotificationRepository.Add(new UserNotification() { Notification = notification, SentDate = DateTime.Now, User = user });
+
+                }
             }
             _uow.Save();
         }

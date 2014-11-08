@@ -124,6 +124,16 @@ namespace NewsApp.Model
 
     
         /// <summary>
+        /// There are no comments for CreatedBy in the schema.
+        /// </summary>
+        public virtual User CreatedBy
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
         /// There are no comments for Chruch in the schema.
         /// </summary>
         public virtual Church Chruch
@@ -137,16 +147,6 @@ namespace NewsApp.Model
         /// There are no comments for UserNotification in the schema.
         /// </summary>
         public virtual IList UserNotification
-        {
-            get;
-            set;
-        }
-
-    
-        /// <summary>
-        /// There are no comments for CreatedBy in the schema.
-        /// </summary>
-        public virtual User CreatedBy
         {
             get;
             set;

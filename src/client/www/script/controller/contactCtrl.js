@@ -19,21 +19,22 @@ define(['utils/appFunc','utils/xhr','view/module'],function(appFunc,xhr,VM){
             });
         },
 
-        loadContacts: function() {
-            if(VM.module('contactView').beforeLoadContacts()) {
-                xhr.simpleCall({
-                    query: {
-                        callback: '?'
-                    },
-                    func: 'contacts'
-                }, function (response) {
-                    if (response.err_code === 0) {
-                        VM.module('contactView').render({
-                            contacts: response.data
-                        });
-                    }
-                });
-            }
+        loadContacts: function () {
+            document.getElementById("livestream").innerHTML = getYouTubeLink('7rGCx5M7rg4');
+            //if(VM.module('contactView').beforeLoadContacts()) {
+            //    xhr.simpleCall({
+            //        query: {
+            //            callback: '?'
+            //        },
+            //        func: 'contacts'
+            //    }, function (response) {
+            //        if (response.err_code === 0) {
+            //            VM.module('contactView').render({
+            //                contacts: response.data
+            //            });
+            //        }
+            //    });
+            //}
         }
 
     };

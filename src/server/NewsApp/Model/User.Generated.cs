@@ -32,6 +32,7 @@ namespace NewsApp.Model
             this.Comments = new List<Comment>();
             this.CreatedNotifications = new List<NewsFeed>();
             this.Subscriptions = new List<UserSubscription>();
+            this.Devices = new List<UserDevice>();
             OnCreated();
         }
 
@@ -47,19 +48,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for DeviceId in the schema.
+        /// There are no comments for Email in the schema.
         /// </summary>
-        public virtual string DeviceId
-        {
-            get;
-            set;
-        }
-
-    
-        /// <summary>
-        /// There are no comments for DeviceType in the schema.
-        /// </summary>
-        public virtual string DeviceType
+        public virtual string Email
         {
             get;
             set;
@@ -100,6 +91,16 @@ namespace NewsApp.Model
         /// There are no comments for Name in the schema.
         /// </summary>
         public virtual string Name
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
+        /// There are no comments for BirthDay in the schema.
+        /// </summary>
+        public virtual System.Nullable<System.DateTime> BirthDay
         {
             get;
             set;
@@ -150,6 +151,16 @@ namespace NewsApp.Model
         /// There are no comments for Subscriptions in the schema.
         /// </summary>
         public virtual IList<UserSubscription> Subscriptions
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
+        /// There are no comments for Devices in the schema.
+        /// </summary>
+        public virtual IList<UserDevice> Devices
         {
             get;
             set;
