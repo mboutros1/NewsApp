@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace NewsApp.Model
 {
 
-    public partial class UserSubscription
+    public partial class ChurchSubscription
     {
     }
 }

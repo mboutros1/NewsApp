@@ -1,15 +1,11 @@
-define(['utils/appFunc', 'utils/xhr', 'view/module','GS'], function (appFunc, xhr, VM,GS) {
+define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, xhr, VM, GS) {
 
     var timelineCtrl = {
-        init: function () {
-
-            VM.module('timelineView').init();
-
+        init: function () { 
+            VM.module('timelineView').init(); 
             this.getTimeline();
-        },
-
-        bindEvent: function () {
-
+        }, 
+        bindEvent: function () { 
             var bindings = [
                 {
                     element: '#ourView',
@@ -45,16 +41,28 @@ define(['utils/appFunc', 'utils/xhr', 'view/module','GS'], function (appFunc, xh
 
             appFunc.bindEvents(bindings);
 
+        }, loadLastFeed: function (lastFeed) {
+            if (lastFeed) {
+                storage('feed', lastFeed);
+            }
+            else {
+                lastFeed = storage("feed");
+                if (typeof (lastFeed) =='object')
+                    VM.module('timelineView').getTimeline(lastFeed);
+            }
         },
 
         getTimeline: function () {
             var user = GS.getCurrentUser();
+            this.loadLastFeed();
+            var that = this;
             xhr.simpleCall({
                 func: 'GetFeed', data: { userId: user.UserId, startAt: timelineCtrl.firstIndex }
             }, function (response) {
                 timelineCtrl.firstIndex = response.data.length > 0 ? response.data[0].Id : 00;
                 timelineCtrl.lastIndex = response.data.length > 0 ? response.data[response.data.length - 1].Id : 00;
                 VM.module('timelineView').getTimeline(response.data);
+                that.loadLastFeed(response.data);
             });
         },
 

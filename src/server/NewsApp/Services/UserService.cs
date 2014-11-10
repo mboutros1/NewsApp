@@ -79,14 +79,14 @@ namespace NewsAppModel.Services
             {
                 u.User = mainUser;
             }
-            IEnumerable<UserSubscription> subscriptionLst =
-                sndUser.Subscriptions.Where(
-                    m => !mainUser.Subscriptions.Select(h => h.SubscriptionType).Contains(m.SubscriptionType));
-            foreach (UserSubscription userSubscription in subscriptionLst)
-            {
-                userSubscription.User = mainUser;
-                mainUser.Subscriptions.Add(userSubscription);
-            }
+            //IEnumerable<ChurchSubscription> subscriptionLst =
+            //    sndUser.Subscriptions.Where(
+            //        m => !mainUser.Subscriptions.Select(h => h.SubscriptionType).Contains(m.SubscriptionType));
+            //foreach (ChurchSubscription userSubscription in subscriptionLst)
+            //{
+            //    userSubscription.User = mainUser;
+            //    mainUser.Subscriptions.Add(userSubscription);
+            //}
             IEnumerable<Church> chlst =
                 sndUser.Churches.Where(
                     m => !mainUser.Churches.Select(h => h.ChurchId).Contains(m.ChurchId));
@@ -100,7 +100,7 @@ namespace NewsAppModel.Services
             return mainUser;
         }
 
-        public User LoginFb(int userId, string email, string birthdate, long facebookId, string deviceId,
+        public User LoginFb(int userId, string email, string name,string birthdate, long facebookId, string deviceId,
             string deviceType)
         {
             User user = _userRepository.All().FirstOrDefault(m => m.UserId == userId);
@@ -110,6 +110,7 @@ namespace NewsAppModel.Services
             user = user ?? new User {CreateDate = LocalHelper.Now};
             user.AddDevice(deviceId, deviceType);
             user.Email = email;
+            user.Name = name;
             user.BirthDay = DateTime.Parse(birthdate);
             if (user.Churches.Count == 0)
             {

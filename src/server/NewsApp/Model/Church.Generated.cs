@@ -30,6 +30,8 @@ namespace NewsApp.Model
             this.Country = @"US";
             this.Users = new List<User>();
             this.Notifications = new List<NewsFeed>();
+            this.ChurchSubscriptions = new List<ChurchSubscription>();
+            this.HomeUsers = new List<User>();
             OnCreated();
         }
 
@@ -125,6 +127,16 @@ namespace NewsApp.Model
 
     
         /// <summary>
+        /// There are no comments for LiveStremUrl in the schema.
+        /// </summary>
+        public virtual string LiveStremUrl
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
         /// There are no comments for Users in the schema.
         /// </summary>
         public virtual IList<User> Users
@@ -138,6 +150,26 @@ namespace NewsApp.Model
         /// There are no comments for Notifications in the schema.
         /// </summary>
         public virtual IList<NewsFeed> Notifications
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
+        /// There are no comments for ChurchSubscriptions in the schema.
+        /// </summary>
+        public virtual IList<ChurchSubscription> ChurchSubscriptions
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
+        /// There are no comments for HomeUsers in the schema.
+        /// </summary>
+        public virtual IList<User> HomeUsers
         {
             get;
             set;

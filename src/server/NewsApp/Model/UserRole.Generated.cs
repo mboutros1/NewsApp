@@ -10,9 +10,9 @@ namespace NewsApp.Model
 {
 
     /// <summary>
-    /// There are no comments for NewsApp.Model.UserSubscription, NewsAppModel in the schema.
+    /// There are no comments for NewsApp.Model.UserRole, NewsAppModel in the schema.
     /// </summary>
-    public partial class UserSubscription {
+    public partial class UserRole {
     
         #region Extensibility Method Definitions
         
@@ -23,18 +23,18 @@ namespace NewsApp.Model
         
         #endregion
         /// <summary>
-        /// There are no comments for UserSubscription constructor in the schema.
+        /// There are no comments for UserRole constructor in the schema.
         /// </summary>
-        public UserSubscription()
+        public UserRole()
         {
             OnCreated();
         }
 
     
         /// <summary>
-        /// There are no comments for UserSubscriptionId in the schema.
+        /// There are no comments for UserRoleId in the schema.
         /// </summary>
-        public virtual int UserSubscriptionId
+        public virtual int UserRoleId
         {
             get;
             set;
@@ -42,9 +42,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for SubscriptionType in the schema.
+        /// There are no comments for CanPost in the schema.
         /// </summary>
-        public virtual string SubscriptionType
+        public virtual bool CanPost
         {
             get;
             set;

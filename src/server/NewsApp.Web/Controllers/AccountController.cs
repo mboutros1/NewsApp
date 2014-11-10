@@ -43,10 +43,10 @@ namespace NewsApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult LoginFb(int userId, string email, string birthdate, long facebookId, string deviceId)
+        public JsonResult LoginFb(int? userId, string email,string name, string birthdate, long facebookId, string deviceId)
         {
             return
-               Json(_userService.LoginFb(userId, email, birthdate, facebookId, deviceId, GetDeviceType()).ToViewModel());
+               Json(_userService.LoginFb(userId.GetValueOrDefault(), email, name, birthdate, facebookId, deviceId, GetDeviceType()).ToViewModel());
         }
 
         [HttpPost]

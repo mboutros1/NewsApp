@@ -1,7 +1,6 @@
 define([], function () {
     var CONFIG = null;
     var globalService = {
-
         init: function () {
             if (!CONFIG) {
                 CONFIG = {
@@ -23,6 +22,7 @@ define([], function () {
                 if (!CONFIG.currentUser.UserId) CONFIG.currentUser.UserId = 0;
             }
         },
+
         setCurrentUser: function (sid, user) {
             CONFIG.setCurrentUser(sid, user);
         },
@@ -38,27 +38,42 @@ define([], function () {
                 logger.log(st);
             }, { alert: true, sound: true, badge: true, ecb: 'onNotificationGCM' });
 
-        },  
+        },
+        login: function (result) {
+            var deviceId = storage("deviceId");
+            var uid = parseInt(storage('sid'));
+            result = !result ? {} : result;
+            var name = result.first_name + ' ' + result.last_name;
+            require('utils/xhr').simpleCall({
+                func: 'LoginFb',
+                data: {
+                    userId: uid,
+                    email: result.email,
+                    name: name,
+                    birthdate: result.birthday,
+                    facebookId: result.id,
+                    deviceId: deviceId
+                }, method: 'POST'
+            }, function (response) {
+                CONFIG.setCurrentUser(response.UserId, response);
+                mainView.loadPage('index.html');
+                hiApp.hidePreloader();
+            });
+        },
         facebookUpdate: function () {
             var fbData = JSON.parse(localStorage.getItem('fbData'));
-            facebookConnectPlugin.api(fbData.id + "/?fields=id,email,birthday",
+            facebookConnectPlugin.api(fbData.id + "/?fields=id,email,birthday,first_name,last_name",
                 ["user_birthday"],
                 function (result) {
-                    localStorage.setItem('fbData', JSON.stringify(result));
-                    require('utils/xhr').simpleCall({
-                        func: 'LoginFb',
-                        data: {
-                            userId: this.getCurrentUser().UserId,
-                            email: result.email,
-                            birthdate: result.birthday,
-                            facebookId: result.id,
-                            deviceId: localStorage.getItem("deviceId")
-                        }, method: 'POST'
-                    }, function (response) {
-                        CONFIG.setCurrentUser(response.UserId, response);
-                        mainView.loadPage('index.html');
-                        hiApp.hidePreloader();
-                    });
+
+                    try {
+                        storage('fbData', result);
+                        logger.log(name);
+                        this.login(result);
+                    } catch (e) {
+                        logger.log(e);
+                    }
+
                 }, cl);
         },
         storeToken: function (deviceId) {

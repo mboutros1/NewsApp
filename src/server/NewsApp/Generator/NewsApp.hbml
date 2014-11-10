@@ -23,6 +23,9 @@
     <property name="BirthDay" type="Date" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="f437a0ce-6224-4978-8b7c-7e1646bb9e89">
       <column name="" />
     </property>
+    <many-to-one name="HomeChurch" class="Church" p1:AssociationGuid="e8791b5e-0452-4b02-a2a0-dfff554c6f8e" p1:Guid="6212ea16-44db-4811-863c-4a7c32e4c595">
+      <column name="" />
+    </many-to-one>
     <bag name="Notifications" inverse="true" generic="true" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="6838389c-5451-4ffe-b137-0a5d49b1d23c">
       <key>
         <column name="" />
@@ -49,17 +52,25 @@
       </key>
       <one-to-many class="NewsFeed" />
     </bag>
-    <bag name="Subscriptions" inverse="true" generic="true" p1:AssociationGuid="c5ae2797-32c7-4ed2-8331-00baa1a841e5" p1:Guid="d0f4480c-a546-49b7-92cd-8531acecd41e">
-      <key>
-        <column name="" />
-      </key>
-      <one-to-many class="UserSubscription" />
-    </bag>
     <bag name="Devices" inverse="true" cascade="all-delete-orphan" generic="true" p1:AssociationGuid="8df70813-1c18-4f25-adc6-82e6da1033f1" p1:Guid="154ad6fb-52ee-45a4-b847-729d9cfff159">
       <key>
         <column name="" />
       </key>
       <one-to-many class="UserDevice" />
+    </bag>
+    <bag name="Subscriptions" table="" inverse="true" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="50d48312-b35f-4fc6-ac09-67d3bfea4ad1">
+      <key>
+        <column name="" />
+      </key>
+      <many-to-many class="ChurchSubscription" fetch="join">
+        <column name="" />
+      </many-to-many>
+    </bag>
+    <bag name="Roles" inverse="true" generic="true" p1:AssociationGuid="1f1dd1af-c1f5-4227-88c2-331f83664b7f" p1:Guid="1c8ce8f4-e0a2-41af-8310-eb3a8d8b2c18">
+      <key>
+        <column name="" />
+      </key>
+      <one-to-many class="UserRole" />
     </bag>
   </class>
   <class name="NewsFeed" table="" p1:Guid="82568817-20a1-45ab-b37f-9c53867a1b67">
@@ -89,6 +100,9 @@
       <column name="" />
     </property>
     <property name="IsSent" type="Boolean" p1:ValidateRequired="True" p1:Guid="3599fa68-e697-4645-a73d-0a8e30302ba1">
+      <column name="" />
+    </property>
+    <property name="NotifyUsers" type="Boolean" p1:ValidateRequired="True" p1:Guid="b0cfc6f5-ce96-4807-9796-4ed0be27dae3">
       <column name="" />
     </property>
     <many-to-one name="CreatedBy" class="User" p1:AssociationGuid="09a5e895-0cd5-41b8-b01d-9b2aaffa25d1" p1:Guid="20162122-e1df-4b55-893e-94a06c93fca4">
@@ -157,6 +171,9 @@
     <property name="Longitude" type="Int64" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="e012b6ab-c5c5-4af5-ad9f-5ec4b9d6d291">
       <column name="" />
     </property>
+    <property name="LiveStremUrl" type="String" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="be2adc17-4c12-448d-a7c2-c83b8ffbce77">
+      <column name="" />
+    </property>
     <bag name="Users" table="" generic="true" p1:AssociationGuid="3c2e6149-b0ad-4722-9987-814987c52f7d" p1:Guid="eb57b47c-7603-4d13-9805-f3cc7945fb26">
       <key>
         <column name="" />
@@ -170,6 +187,18 @@
         <column name="" />
       </key>
       <one-to-many class="NewsFeed" />
+    </bag>
+    <bag name="ChurchSubscriptions" inverse="true" generic="true" p1:AssociationGuid="f1daf756-2083-4d40-853e-ef0a098c20e4" p1:Guid="4ff95a1e-c4f9-4751-ab58-4df4af10f5e0">
+      <key>
+        <column name="" />
+      </key>
+      <one-to-many class="ChurchSubscription" />
+    </bag>
+    <bag name="HomeUsers" inverse="true" generic="true" p1:AssociationGuid="e8791b5e-0452-4b02-a2a0-dfff554c6f8e" p1:Guid="3576dfd1-c5c4-43b3-8542-1c08c074a909">
+      <key>
+        <column name="" />
+      </key>
+      <one-to-many class="User" />
     </bag>
   </class>
   <class name="Comment" table="" p1:Guid="a51b7c9c-b937-4122-a519-842d4cdf028c">
@@ -193,18 +222,6 @@
       <column name="" />
     </many-to-one>
   </class>
-  <class name="UserSubscription" table="" p1:Guid="1c8b7e90-5a7b-425b-8c46-b0c11fcd49b5">
-    <id name="UserSubscriptionId" type="Int32" p1:ValidateRequired="True" p1:Guid="8eb2d2b0-cd9b-4cbf-bbbc-1044961581fc">
-      <column name="" />
-      <generator class="identity" />
-    </id>
-    <property name="SubscriptionType" type="String" p1:ValidateRequired="True" p1:Guid="e09f9d05-f747-4c27-87fb-f3bb9ac18cc6">
-      <column name="" />
-    </property>
-    <many-to-one name="User" class="User" p1:AssociationGuid="c5ae2797-32c7-4ed2-8331-00baa1a841e5" p1:Guid="a051812a-b777-4655-adff-cdf68e6acb64">
-      <column name="" />
-    </many-to-one>
-  </class>
   <class name="UserDevice" table="" p1:Guid="15aaa591-6210-4f8f-829c-90e6a4ea99c7">
     <id name="UserDeviceId" type="String" p1:ValidateRequired="True" p1:Guid="429a7e11-79db-4998-9b35-26b2eb614fca">
       <column name="" />
@@ -216,6 +233,41 @@
       <column name="" />
     </property>
     <many-to-one name="User" class="User" cascade="all" p1:AssociationGuid="8df70813-1c18-4f25-adc6-82e6da1033f1" p1:Guid="5ff410bb-eda9-4479-83ef-d4b33bf99fee">
+      <column name="" />
+    </many-to-one>
+  </class>
+  <class name="ChurchSubscription" table="" p1:Guid="48a91152-f8ca-4b79-99e1-f6ecf7012cab">
+    <id name="ChurchSubscriptionId" type="Int32" p1:ValidateRequired="True" p1:Guid="d0fe3e33-1c33-4327-9604-263510ed8b5f">
+      <column name="" />
+      <generator class="identity" />
+    </id>
+    <property name="Name" type="String" p1:ValidateRequired="True" p1:Guid="2ebc669c-6334-49c4-89d5-be7ee7b2c7dd">
+      <column name="" />
+    </property>
+    <property name="IsEvent" type="Boolean" p1:ValidateRequired="True" p1:Guid="845f2d85-93cd-4f6b-9727-9183d0f792af">
+      <column name="" />
+    </property>
+    <many-to-one name="Church" class="Church" p1:AssociationGuid="f1daf756-2083-4d40-853e-ef0a098c20e4" p1:Guid="9d723872-757a-4e0d-a398-a94c8569f549">
+      <column name="" />
+    </many-to-one>
+    <bag name="Users" table="" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="728c7771-32a7-4de4-90c3-d4504b07010f">
+      <key>
+        <column name="" />
+      </key>
+      <many-to-many class="User" fetch="join">
+        <column name="" />
+      </many-to-many>
+    </bag>
+  </class>
+  <class name="UserRole" table="" p1:Guid="848d794c-cbf8-4bb7-82b0-35f2683a1496">
+    <id name="UserRoleId" type="Int32" p1:ValidateRequired="True" p1:Guid="ad700074-2dcc-47dd-b661-ef00ecb8e5b0">
+      <column name="" />
+      <generator class="identity" />
+    </id>
+    <property name="CanPost" type="Boolean" p1:ValidateRequired="True" p1:Guid="b7c65001-d5b2-4147-87ea-cc4e0cd9630f">
+      <column name="" />
+    </property>
+    <many-to-one name="User" class="User" p1:AssociationGuid="1f1dd1af-c1f5-4227-88c2-331f83664b7f" p1:Guid="9ac91c94-f28c-4d84-9f1d-e91c9d1079c3">
       <column name="" />
     </many-to-one>
   </class>

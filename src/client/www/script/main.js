@@ -98,3 +98,20 @@ var onNotificationGCM = function (e) {
         //snd.play();
     }
 }
+
+
+function storage(key, data) {
+    if (arguments.length == 1) {
+        var d = localStorage.getItem(key);
+        try {
+            return JSON.parse(d);
+        } catch (e) {
+            return d;
+        }
+    }
+    if (arguments.length == 2)
+        if (typeof (data) == "function") {
+            localStorage.setItem(key, JSON.stringify(data()));
+        } else
+            localStorage.setItem(key, JSON.stringify(data));
+}

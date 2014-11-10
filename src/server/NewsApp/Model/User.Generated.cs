@@ -31,8 +31,9 @@ namespace NewsApp.Model
             this.Churches = new List<Church>();
             this.Comments = new List<Comment>();
             this.CreatedNotifications = new List<NewsFeed>();
-            this.Subscriptions = new List<UserSubscription>();
             this.Devices = new List<UserDevice>();
+            this.Subscriptions = new List<ChurchSubscription>();
+            this.Roles = new List<UserRole>();
             OnCreated();
         }
 
@@ -148,9 +149,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for Subscriptions in the schema.
+        /// There are no comments for Devices in the schema.
         /// </summary>
-        public virtual IList<UserSubscription> Subscriptions
+        public virtual IList<UserDevice> Devices
         {
             get;
             set;
@@ -158,9 +159,29 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for Devices in the schema.
+        /// There are no comments for Subscriptions in the schema.
         /// </summary>
-        public virtual IList<UserDevice> Devices
+        public virtual IList<ChurchSubscription> Subscriptions
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
+        /// There are no comments for HomeChurch in the schema.
+        /// </summary>
+        public virtual Church HomeChurch
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
+        /// There are no comments for Roles in the schema.
+        /// </summary>
+        public virtual IList<UserRole> Roles
         {
             get;
             set;

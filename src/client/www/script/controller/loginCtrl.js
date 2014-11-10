@@ -1,27 +1,25 @@
 define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS', 'i18n!nls/lang'], function (appFunc, xhr, VM, GS, i18n) {
-
     var loginCtrl = {
-
         init: function () {
-
             var bindings = [
-                {
-                    element: '#submit',
-                    event: 'click',
-                    handler: loginCtrl.submitFb
-                },
-                {
-                    element: '.loginFb',
-                    event: 'click',
-                    handler: loginCtrl.loginFbSubmit
-                }
+                       {
+                           element: '#submit',
+                           event: 'click',
+                           handler: loginCtrl.submitFb
+                       },
+                       {
+                           element: '.loginFb',
+                           event: 'click',
+                           handler: loginCtrl.loginFbSubmit
+                       }
             ];
             VM.module('loginView').init({
                 bindings: bindings
             });
         },
-        loginFbSubmit: function () { 
+        loginFbSubmit: function () {
             facebookConnectPlugin.login(['email', 'public_profile', 'user_birthday'], function (event) {
+                storage('fbData', { id: event.authResponse.userID });
                 logger.log(event);
                 logger.log('facebook logged in');
                 require('GS').facebookUpdate();
@@ -61,8 +59,6 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS', 'i18n!nls/lang'], fun
                 });
             }
         }
-
     };
-
     return loginCtrl;
 });

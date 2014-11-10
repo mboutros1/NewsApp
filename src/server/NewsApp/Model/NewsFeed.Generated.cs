@@ -124,6 +124,16 @@ namespace NewsApp.Model
 
     
         /// <summary>
+        /// There are no comments for NotifyUsers in the schema.
+        /// </summary>
+        public virtual bool NotifyUsers
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
         /// There are no comments for CreatedBy in the schema.
         /// </summary>
         public virtual User CreatedBy

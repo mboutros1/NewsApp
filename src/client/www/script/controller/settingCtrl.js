@@ -19,17 +19,18 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
             if ($$('#settingView .page-content')[0])
                 return;
             hiApp.showIndicator();
+             VM.module('settingView').renderSetting(GS.getCurrentUser());
 
 
-            xhr.simpleCall({
-                func: 'GetUserInfo', data: GS.getCurrentUser(), method: 'POST'
-            }, function (response) {
-                var user = response;
-                GS.setCurrentUser(user.UserId, user);
-                VM.module('settingView').renderSetting(GS.getCurrentUser());
+            //xhr.simpleCall({
+            //    func: 'GetUserInfo', data: GS.getCurrentUser(), method: 'POST'
+            //}, function (response) {
+            //    var user = response;
+            //    GS.setCurrentUser(user.UserId, user);
+            //    VM.module('settingView').renderSetting(GS.getCurrentUser());
 
-                //VM.module('settingView').renderSetting(user);
-            });
+            //    //VM.module('settingView').renderSetting(user);
+            //});
         }
 
     };

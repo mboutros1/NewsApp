@@ -64,7 +64,8 @@ define(['utils/appFunc',
                         url: xhr.getRequestURL(options),
                         method: options.method,
                         crossDomain:true,
-                        data: options.data,error:cl,
+                        data: options.data,
+                        error: cl,
                         success: function (data) {
                             data = data ? JSON.parse(data) : '';
 

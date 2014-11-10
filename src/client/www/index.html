@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<!--(if target dist)>
+<!--(if target dist)> 
 {{banner}}
 <!(endif)-->
 <html>
@@ -66,15 +66,13 @@
                         <div class="list-block media-list">
                             <div class="load-result"></div>
                             <ul class="time-line-content"></ul>
-
+ 
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div id="contatcView" class="view tab">
-
+        </div> 
+        <div id="contatcView" class="view tab"> 
             <div class="navbar">
                 <div class="navbar-inner">
 
@@ -88,16 +86,20 @@
 
 
                     <div class="page-content">
-                        <div id="livestream"></div>
+                        <div id="livestream" style="height: 100%;width:100%">
+        
+                                        </div>
                         <script type="text/javascript">
                             function getYouTubeLink(url) {
-                                var video = 'http://www.youtube.com/v/' + url + '&hl=en&fs=1&';
+                                var video = 'http://www.youtube.com/embed/' + url + '?hl=en&fs=1&' + "autoplay=1&autohide=1&border=0&wmode=opaque&enablejsapi=1";
+
                                 var youtube = '<embed src="' + video + '" type="application/x-shockwave-flash"' +
                                     ' allowscriptaccess="always"' +
-                                    ' allowfullscreen="true"   height="100%"  controls="2" ></embed>';
+                                    ' allowfullscreen="true"   height="100%" width="100%"  controls="2" ></embed>';
+                                youtube = "<iframe src='" + video + "' allowscriptaccess='always' allowfullscreen='true' border='0' width='100%' height='100%' />";
                                 return youtube;
                             }
-                            document.getElementById("livestream").innerHTML = getYouTubeLink('7rGCx5M7rg4');
+                            document.getElementById("livestream").innerHTML = getYouTubeLink('LWDzSbfDjQc');
                          </script>
                     </div>
                 </div>

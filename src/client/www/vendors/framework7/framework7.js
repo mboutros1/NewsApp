@@ -1,14 +1,14 @@
-/*
+/* 
  * Framework7 0.9.6 - Custom Build
  *
  * Included modules: modals, pull-to-refresh, infinite-scroll, tabs, fast-clicks, forms, push-state, photo-browser, searchbar, messages, slider
- *
+ * 
  * Copyright 2014, Vladimir Kharlampidi
  * The iDangero.us
  * http://www.idangero.us/
  *
  * Created on: September 14, 2014, 22:36
- */
+ */ 
 (function () {
 
     'use strict';
