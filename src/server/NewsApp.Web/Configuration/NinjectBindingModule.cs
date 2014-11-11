@@ -30,9 +30,11 @@ namespace NewsApp.Configuration
             Kernel.Bind(m => m.From(lst).SelectAllClasses().BindDefaultInterfaces().Configure(c => c.InRequestScope()));
             Bind<NotificationService>().ToSelf().InRequestScope();
             Bind<UserService>().ToSelf().InRequestScope();
+            Rebind<IUnitOfWork>().To<NHibernateUnitOfWork>().InThreadScope();
             Bind<IDeviceProvider>().To<AppleNotifier>().InSingletonScope();
             Bind<ISession>().ToMethod(m => NHibernateSessionProvider.GetSession()).InRequestScope();
             Rebind<INewsFeedRepository>().To<NewsFeedRepository>().InRequestScope();
+            Rebind<ICommentRepository>().To<CommentRepository>().InRequestScope();
         }
     }
 

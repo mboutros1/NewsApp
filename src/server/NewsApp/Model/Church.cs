@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Collections.Generic;
 
 namespace NewsApp.Model
 {
-
     public partial class Church
     {
+        public virtual void AddSubscriptionType(ChurchSubscription subscription)
+        {
+            if (subscription == null)
+                throw new ArgumentException("subscription");
+            ChurchSubscriptions.Add(subscription);
+            subscription.Church = this;
+        }
     }
 }

@@ -8,12 +8,7 @@ using System.Collections.Generic;
 namespace NewsApp.Model
 {
 
-    public partial class Comment
+    public partial class UserLog
     {
-        partial void OnCreated()
-        {
-            this.NewsFeed = new NewsFeed();
-            this.User = new User();
-        }
     }
 }

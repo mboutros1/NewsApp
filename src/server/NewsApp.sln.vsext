@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Solution>
+  <Profile Name="Test" SingleStartProjectGuid="">
+    <Exclude>
+      <Project Guid="a39f708a-a25b-4fb8-9496-183ccb268fd7" />
+      <Project Guid="32257cdc-063e-4d75-94d7-fdb6d87e81cc" />
+    </Exclude>
+  </Profile>
+</Solution>

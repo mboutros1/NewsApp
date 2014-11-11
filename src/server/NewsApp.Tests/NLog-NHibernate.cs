@@ -63,8 +63,7 @@ namespace NewsApp.Tests
         public void DebugFormat(string format, params object[] args)
         {
             logger.Debug(String.Format(format, args));
-        }
-
+        } 
         public void Error(object message, Exception exception)
         {
             logger.ErrorException(message.ToString(), exception);

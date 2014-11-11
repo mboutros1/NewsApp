@@ -28,6 +28,7 @@ namespace NewsApp.Model
         public ChurchSubscription()
         {
             this.Users = new List<User>();
+            this.NewsFeeds = new List<NewsFeed>();
             OnCreated();
         }
 
@@ -63,6 +64,16 @@ namespace NewsApp.Model
 
     
         /// <summary>
+        /// There are no comments for Users in the schema.
+        /// </summary>
+        public virtual IList<User> Users
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
         /// There are no comments for Church in the schema.
         /// </summary>
         public virtual Church Church
@@ -73,9 +84,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for Users in the schema.
+        /// There are no comments for NewsFeeds in the schema.
         /// </summary>
-        public virtual IList<User> Users
+        public virtual IList<NewsFeed> NewsFeeds
         {
             get;
             set;

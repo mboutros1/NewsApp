@@ -13,18 +13,20 @@ namespace NewsApp.Controllers
         //
         // GET: /Home/
         private readonly NotificationService _notificationService;
+        private readonly FeedService _feedService;
         private readonly UserService _userService;
         private readonly IRepository<NewsFeed> _notificationRepository;
         private readonly IRepository<User> _userRepository;
         private readonly IUnitOfWork _uow;
         public HomeController(NotificationService notificationService, UserService userService,
-            IRepository<NewsFeed> notificationRepository, IRepository<User> userRepository, IUnitOfWork uow)
+            IRepository<NewsFeed> notificationRepository, IRepository<User> userRepository, IUnitOfWork uow, FeedService feedService)
         {
             _notificationService = notificationService;
             _userService = userService;
             _notificationRepository = notificationRepository;
             _userRepository = userRepository;
             _uow = uow;
+            _feedService = feedService;
         }
 
         public ActionResult Index()
@@ -38,7 +40,7 @@ namespace NewsApp.Controllers
         public JsonResult GetFeed(int userId, int? startAt,bool? refresh)
         {
             refresh = refresh ?? true;
-            return Json(_notificationService.GetFeed(userId, startAt.GetValueOrDefault(), refresh.GetValueOrDefault()), JsonRequestBehavior.AllowGet);
+            return Json(_feedService.GetFeed(userId, startAt.GetValueOrDefault(), refresh.GetValueOrDefault()), JsonRequestBehavior.AllowGet);
         }
         public ActionResult TestSendById(int userId)
         {

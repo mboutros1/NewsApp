@@ -27,7 +27,10 @@ namespace NewsApp.Model
         /// </summary>
         public NewsFeed()
         {
-            this.UserNotification = new ArrayList();
+            this.LikesCount = 0;
+            this.IsSent = false;
+            this.NotifyUsers = false;
+            this.Notification = new ArrayList();
             this.Comments = new List<Comment>();
             OnCreated();
         }
@@ -74,9 +77,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for SubscriptionType in the schema.
+        /// There are no comments for Type in the schema.
         /// </summary>
-        public virtual System.Nullable<int> SubscriptionType
+        public virtual System.Nullable<int> Type
         {
             get;
             set;
@@ -84,9 +87,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for Likes in the schema.
+        /// There are no comments for LikesCount in the schema.
         /// </summary>
-        public virtual int Likes
+        public virtual long LikesCount
         {
             get;
             set;
@@ -134,6 +137,26 @@ namespace NewsApp.Model
 
     
         /// <summary>
+        /// There are no comments for IsGlobal in the schema.
+        /// </summary>
+        public virtual System.Nullable<bool> IsGlobal
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
+        /// There are no comments for CommentsCount in the schema.
+        /// </summary>
+        public virtual long CommentsCount
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
         /// There are no comments for CreatedBy in the schema.
         /// </summary>
         public virtual User CreatedBy
@@ -154,9 +177,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for UserNotification in the schema.
+        /// There are no comments for Notification in the schema.
         /// </summary>
-        public virtual IList UserNotification
+        public virtual IList Notification
         {
             get;
             set;
@@ -167,6 +190,16 @@ namespace NewsApp.Model
         /// There are no comments for Comments in the schema.
         /// </summary>
         public virtual IList<Comment> Comments
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
+        /// There are no comments for ChurchSubscription in the schema.
+        /// </summary>
+        public virtual ChurchSubscription ChurchSubscription
         {
             get;
             set;

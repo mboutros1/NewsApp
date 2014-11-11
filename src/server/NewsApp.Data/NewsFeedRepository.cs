@@ -16,15 +16,25 @@ namespace NewsApp.Data
 
         public IList<NewsFeedView> GetNewsFeed(int userId, int startId, bool refresh)
         {
-            const string sql = @"select top {0}  feed.NewsFeedId Id , feed.Images, feed.Title  , u.Avatar ,
-u.Name ,feed.Likes , feed.CreateDate,
-(Select Count(*) from Comments where NewsFeedId =feed.NewsFeedId) CommentsCount from newsfeeds feed   
+            var sql = @"select top {0}  feed.NewsFeedId Id , feed.Images, feed.Title  , u.Avatar ,
+u.Name ,feed.LikesCount , feed.CreateDate,  CommentsCount from newsfeeds feed   
  join Users u on feed.userid = u.userid
-  where ChurchId in ( select Churchid from Users_Churches where userid = {1})    and feed.newsfeedid {2} {3}  order by feed.CreateDate desc";
-
-            return session.CreateSQLQuery(string.Format(sql, 10, userId,refresh ? ">" : "<",  startId))
+ WHERE   ChurchSubscriptionId IN ( SELECT    ChurchSubscriptionid
+                      FROM      dbo.Users_Subscriptions ch
+                      WHERE     ch.userid = {1} )    {2}  order by feed.NewsFeedId desc";
+            var str = string.Format(" and feed.newsfeedid {0} {1}  ", refresh ? ">" : "<", startId);
+            sql = string.Format(sql, 10, userId, startId == 0 ? "" : str);
+            return session.CreateSQLQuery(sql)
                 .SetResultTransformer(Transformers.AliasToBean<NewsFeedView>())
                 .List<NewsFeedView>();
+        }
+
+        public void LikePost(int newsFeedId)
+        {
+            session.CreateQuery(
+                "UPDATE NewsFeed SET LikesCount = LikesCount +1 WHERE NewsFeedId = :id")
+                .SetParameter("id", newsFeedId)
+                .ExecuteUpdate();
         }
     }
 }

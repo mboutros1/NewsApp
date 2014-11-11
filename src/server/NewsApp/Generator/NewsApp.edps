@@ -20,6 +20,9 @@
         <File Name="NewsApp\Model\ChurchSubscription.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
         <File Name="NewsApp\Model\UserRole.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
         <File Name="NewsApp\Model\UserRole.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
+        <File Name="NewsApp\Model\UserLog.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" OverwriteMode="None" />
+        <File Name="NewsApp\Model\UserLog.Generated.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
+        <File Name="LogType.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server" />
         <File Name="NewsApp.hbm.xml" />
         <File Name="NewsApp.User.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
         <File Name="NewsApp.NewsFeed.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
@@ -29,6 +32,7 @@
         <File Name="NewsApp.UserDevice.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
         <File Name="NewsApp.ChurchSubscription.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
         <File Name="NewsApp.UserRole.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
+        <File Name="NewsApp.UserLog.FluentMapping.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Mapping\Fluent" />
         <File Name="IUnitOfWork.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />
         <File Name="IUnitOfWorkFactory.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />
         <File Name="IRepository.cs" DestinationFolder="C:\Users\Mike\Projects\NewsApp\src\server\NewsApp.Data\Uow\Interfaces" />

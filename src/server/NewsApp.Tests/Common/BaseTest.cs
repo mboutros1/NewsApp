@@ -4,7 +4,7 @@ using NewsApp.Model;
 
 namespace NewsApp.Tests.Common
 {
-    public class BaseTest
+    public class BaseTest:IDisposable
     {
         public static T First<T>()
         {
@@ -34,6 +34,11 @@ namespace NewsApp.Tests.Common
         public static IRepository<T> R<T>()
         {
             return Factory.Get<IRepository<T>>();
+        }
+
+        public virtual void Dispose()
+        {
+
         }
     }
 }

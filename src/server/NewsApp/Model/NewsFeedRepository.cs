@@ -7,5 +7,11 @@ namespace NewsAppModel.Model
     public interface INewsFeedRepository : IRepository<NewsFeed>
     {
         IList<NewsFeedView> GetNewsFeed(int userId, int startId, bool refresh);
+        void LikePost(int newsFeedId);
+    }
+
+    public interface ICommentRepository : IRepository<Comment>
+    {
+
     }
 }

@@ -20,30 +20,30 @@ using FluentNHibernate.MappingModel.Collections;
 namespace NewsApp.Model
 {
     /// <summary>
-    /// There are no comments for UserNotificationMap in the schema.
+    /// There are no comments for UserLogMap in the schema.
     /// </summary>
-    public partial class UserNotificationMap : ClassMap<UserNotification>
+    public partial class UserLogMap : ClassMap<UserLog>
     {
         /// <summary>
-        /// There are no comments for UserNotificationMap constructor in the schema.
+        /// There are no comments for UserLogMap constructor in the schema.
         /// </summary>
-        public UserNotificationMap()
+        public UserLogMap()
         {
-              Table(@"UserNotifications");
+              Table(@"UserLogs");
               LazyLoad();
-              Id(x => x.UserNotificationId)
-                .Column("UserNotificationId")
+              Id(x => x.UserLogId)
+                .Column("UserLogId")
                 .CustomType("Int32")
                 .Access.Property()                
                 .GeneratedBy.Identity();
-              Map(x => x.LastSeen)    
-                .Column("LastSeen")
+              Map(x => x.LogTime)    
+                .Column("LogTime")
                 .CustomType("DateTime")
                 .Access.Property()
                 .Generated.Never();
-              Map(x => x.SentDate)    
-                .Column("SentDate")
-                .CustomType("DateTime")
+              Map(x => x.LogType)    
+                .Column("LogType")
+                .CustomType("NewsApp.Model.LogType, NewsAppModel")
                 .Access.Property()
                 .Generated.Never();
               References(x => x.User)
@@ -52,7 +52,7 @@ namespace NewsApp.Model
                 .Cascade.None()
                 .LazyLoad()
                 .Columns("UserId");
-              References(x => x.Notification)
+              References(x => x.NewsFeed)
                 .Class<NewsFeed>()
                 .Access.Property()
                 .Cascade.None()

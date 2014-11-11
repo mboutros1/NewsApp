@@ -13,19 +13,23 @@ using NUnit.Framework;
 namespace NewsApp.Tests.Users
 {
     [TestFixture]
-    public class working_wz_login
+    public class working_wz_login : BaseTest
     {
         [SetUp]
         public void SetThisUp()
         {
             _userRepository = Factory.Get<IRepository<User>>();
-            _uow = Factory.Get<IUnitOfWork>();
             _userService = Factory.Get<UserService>();
+            _uoWork = Factory.Get<IUnitOfWork>();
         }
-
+        public override void Dispose()
+        {
+            _uoWork.Save();
+            base.Dispose();
+        }
         private IRepository<User> _userRepository;
-        private IUnitOfWork _uow;
         private UserService _userService;
+        private IUnitOfWork _uoWork;
 
         [Test]
         public void login_wz_facebook()
@@ -38,14 +42,13 @@ namespace NewsApp.Tests.Users
             fst.AddDevice(new UserDevice() { LastLogin = now, UserDeviceId = deviceId, Type = deviceType });
             if (fst.CreateDate == DateTime.MinValue) fst.CreateDate = now;
             _userRepository.Add(fst);
-            _uow.Save();
             fst.Dump();
         }
 
         [Test]
         public void login_anon_user()
         {
-            
+
         }
         [Test]
         public void facebook_login()

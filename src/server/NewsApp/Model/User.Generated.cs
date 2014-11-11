@@ -109,6 +109,16 @@ namespace NewsApp.Model
 
     
         /// <summary>
+        /// There are no comments for HomeChurch in the schema.
+        /// </summary>
+        public virtual Church HomeChurch
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
         /// There are no comments for Notifications in the schema.
         /// </summary>
         public virtual IList<UserNotification> Notifications
@@ -162,16 +172,6 @@ namespace NewsApp.Model
         /// There are no comments for Subscriptions in the schema.
         /// </summary>
         public virtual IList<ChurchSubscription> Subscriptions
-        {
-            get;
-            set;
-        }
-
-    
-        /// <summary>
-        /// There are no comments for HomeChurch in the schema.
-        /// </summary>
-        public virtual Church HomeChurch
         {
             get;
             set;
