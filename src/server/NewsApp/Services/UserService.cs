@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using NewsApp.Model;
 using NewsAppModel.Helpers;
 
 namespace NewsAppModel.Services
 {
-    public class UserViewModel
-    {
-        public int UserId { get; set; }
-        public DateTime CreateDate { get; set; }
-        public string Avatar { get; set; }
-        public string Name { get; set; }
-    }
-
     public class UserService
     {
         private readonly IUnitOfWork _uow;
@@ -22,16 +13,15 @@ namespace NewsAppModel.Services
         public UserService(IRepository<User> userRepository, IUnitOfWork uow)
         {
             _userRepository = userRepository;
-
             _uow = uow;
         }
 
         public User Register(int userId, string deviceId, string deviceType)
         {
-            DateTime now = LocalHelper.Now;
-            User fst = _userRepository.All().FirstOrDefault(m => m.Devices.Any(h => h.UserDeviceId == deviceId));
+            var now = LocalHelper.Now;
+            var fst = _userRepository.All().FirstOrDefault(m => m.Devices.Any(h => h.UserDeviceId == deviceId));
             fst = fst ?? new User();
-            fst.AddDevice(new UserDevice {LastLogin = now, UserDeviceId = deviceId, Type = deviceType});
+            fst.AddDevice(new UserDevice { LastLogin = now, UserDeviceId = deviceId, Type = deviceType });
             //; if (fst.DeviceId != deviceId)
             //{
             //    if (fst.UserId != 0)
@@ -42,13 +32,12 @@ namespace NewsAppModel.Services
             if (fst.CreateDate == DateTime.MinValue) fst.CreateDate = now;
             //if (fst.UserId == 0)
             _userRepository.Add(fst);
-            _uow.Save();
             return fst;
         }
 
         public User GetById(int userId)
         {
-            User user = _userRepository.All().FirstOrDefault(m => m.UserId == userId);
+            var user = _userRepository.All().FirstOrDefault(m => m.UserId == userId);
             if (user == null)
                 throw new InvalidOperationException("User Not found");
             return user;
@@ -63,7 +52,7 @@ namespace NewsAppModel.Services
                 mainUser = user2;
                 sndUser = user1;
             }
-            string email = "";
+            var email = "";
             DateTime? bdate;
             if (!string.IsNullOrEmpty(mainUser.Email) && string.IsNullOrEmpty(sndUser.Email))
                 email = mainUser.Email;
@@ -75,7 +64,7 @@ namespace NewsAppModel.Services
                 bdate = sndUser.BirthDay;
             mainUser.Email = email;
             mainUser.BirthDay = bdate;
-            foreach (UserDevice u in sndUser.Devices)
+            foreach (var u in sndUser.Devices)
             {
                 u.User = mainUser;
             }
@@ -87,10 +76,10 @@ namespace NewsAppModel.Services
             //    userSubscription.User = mainUser;
             //    mainUser.Subscriptions.Add(userSubscription);
             //}
-            IEnumerable<Church> chlst =
+            var chlst =
                 sndUser.Churches.Where(
                     m => !mainUser.Churches.Select(h => h.ChurchId).Contains(m.ChurchId));
-            foreach (Church userSubscription in chlst)
+            foreach (var userSubscription in chlst)
             {
                 mainUser.Churches.Add(userSubscription);
             }
@@ -100,33 +89,102 @@ namespace NewsAppModel.Services
             return mainUser;
         }
 
-        public User LoginFb(int userId, string email, string name,string birthdate, long facebookId, string deviceId,
-            string deviceType)
+        public User LoginFb(LoginRequest loginRequest)
         {
-            User user = _userRepository.All().FirstOrDefault(m => m.UserId == userId);
-            if (user == null && !string.IsNullOrEmpty(email))
-                user = _userRepository.All().FirstOrDefault(m => m.Email == email);
+            var user = _userRepository.All().FirstOrDefault(m => m.UserId == loginRequest.UserId);
+            if (user == null && !string.IsNullOrEmpty(loginRequest.Email))
+                user = _userRepository.All().FirstOrDefault(m => m.Email == loginRequest.Email);
 
-            user = user ?? new User {CreateDate = LocalHelper.Now};
-            user.AddDevice(deviceId, deviceType);
-            user.Email = email;
-            user.Name = name;
-            user.BirthDay = DateTime.Parse(birthdate);
+            user = user ?? new User { CreateDate = LocalHelper.Now };
+            user.AddDevice(loginRequest.DeviceId, loginRequest.DeviceType);
+            user.Email = loginRequest.Email;
+            user.Name = loginRequest.Name;
+            user.BirthDay = DateTime.Parse(loginRequest.Birthdate);
             if (user.Churches.Count == 0)
             {
                 user.AddChurch(1);
             }
-            if (!string.IsNullOrEmpty(email))
+            if (!string.IsNullOrEmpty(loginRequest.Email))
             {
-                User item = _userRepository.All().FirstOrDefault(m => m.Email == email);
+                var item = _userRepository.All().FirstOrDefault(m => m.Email == loginRequest.Email);
                 if (item != null)
                 {
                     user = Merge(user, item);
                 }
             }
             _userRepository.Add(user); //user.BirthDay = datetim
-            _uow.Save();
             return user;
+        }
+    }
+
+    public class LoginRequest
+    {
+        private readonly string _birthdate;
+        private readonly int _churchId;
+        private readonly string _deviceId;
+        private readonly string _deviceType;
+        private readonly string _email;
+        private readonly long _facebookId;
+        private readonly string _name;
+        private readonly int _userId;
+
+        public LoginRequest(int userId, string email, string name, string birthdate, long facebookId, string deviceId,
+            string deviceType)
+            : this(userId, email, name, birthdate, facebookId, deviceId, deviceType, 0)
+        {
+        }
+
+        public LoginRequest(int userId, string email, string name, string birthdate, long facebookId, string deviceId,
+            string deviceType, int churchId)
+        {
+            _userId = userId;
+            _email = email;
+            _name = name;
+            _birthdate = birthdate;
+            _facebookId = facebookId;
+            _deviceId = deviceId;
+            _deviceType = deviceType;
+            _churchId = churchId == 0 ? 1 : churchId;
+        }
+
+        public int UserId
+        {
+            get { return _userId; }
+        }
+
+        public int ChurchId
+        {
+            get { return _churchId; }
+        }
+
+        public string Email
+        {
+            get { return _email; }
+        }
+
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        public string Birthdate
+        {
+            get { return _birthdate; }
+        }
+
+        public long FacebookId
+        {
+            get { return _facebookId; }
+        }
+
+        public string DeviceId
+        {
+            get { return _deviceId; }
+        }
+
+        public string DeviceType
+        {
+            get { return _deviceType; }
         }
     }
 }

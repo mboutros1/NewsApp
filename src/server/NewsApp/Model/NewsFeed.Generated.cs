@@ -30,6 +30,7 @@ namespace NewsApp.Model
             this.LikesCount = 0;
             this.IsSent = false;
             this.NotifyUsers = false;
+            this.CommentsCount = 0;
             this.Notification = new ArrayList();
             this.Comments = new List<Comment>();
             OnCreated();

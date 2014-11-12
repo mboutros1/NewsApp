@@ -37,10 +37,15 @@ namespace NewsApp.Controllers
         {
             return Json(_userService.Register(userId.GetValueOrDefault(), deviceId, deviceType).ToViewModel(), JsonRequestBehavior.AllowGet);
         }
-        public JsonResult GetFeed(int userId, int? startAt,bool? refresh)
+        public JsonResult GetFeed(int userId, int? startAt, bool? refresh)
         {
             refresh = refresh ?? true;
             return Json(_feedService.GetFeed(userId, startAt.GetValueOrDefault(), refresh.GetValueOrDefault()), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetInitFeed(int userId, int? startAt, bool? refresh, string deviceId, string deviceType)
+        {
+            refresh = refresh ?? true;
+            return Json(_feedService.GetInitFeed(userId, startAt.GetValueOrDefault(), refresh.GetValueOrDefault(), deviceId, deviceType), JsonRequestBehavior.AllowGet);
         }
         public ActionResult TestSendById(int userId)
         {

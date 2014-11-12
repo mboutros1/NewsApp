@@ -103,6 +103,18 @@ namespace NewsApp.Model
                 throw new InvalidOperationException("No transaction is active.");
             _transaction.Commit();
         }
+
+        public void Commit()
+        {
+            if (_session == null)
+                throw new InvalidOperationException("Session has not been initialized.");
+            if (_transaction == null || !_transaction.IsActive)
+                throw new InvalidOperationException("No transaction is active.");
+            _session.Flush();
+            _transaction.Commit();
+            BeginTransaction();
+        }
+
         #endregion
     }
 }

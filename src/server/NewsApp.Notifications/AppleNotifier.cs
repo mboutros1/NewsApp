@@ -11,7 +11,7 @@ namespace NewsApp.Notifications
             AppController.PushProBroker.QueueNotification(new AppleNotification()
                  .ForDeviceToken(deviceId)
                  .WithAlert(notification)
-                 .WithBadge(1)
+                 .WithBadge(badge)
                  .WithSound("default"));
         }
 

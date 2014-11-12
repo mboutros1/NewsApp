@@ -109,6 +109,16 @@ namespace NewsApp.Model
 
     
         /// <summary>
+        /// There are no comments for FacebookId in the schema.
+        /// </summary>
+        public virtual System.Nullable<long> FacebookId
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
         /// There are no comments for HomeChurch in the schema.
         /// </summary>
         public virtual Church HomeChurch

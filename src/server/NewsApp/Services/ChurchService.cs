@@ -72,9 +72,39 @@ namespace NewsAppModel.Services
             _userRepository.Add(user);
         }
 
-        public void UpdateSubscription(ChurchSubscriptionRequest churchSubscriptionRequest)
+        public void UpdateSubscription(UserChurchSubscriptionRequest churchSubscriptionRequest)
         {
-            throw new NotImplementedException();
+            var user = _userRepository.GetById(churchSubscriptionRequest.UserId);
+            if (user == null)
+                throw new ArgumentOutOfRangeException("Userid not found");
+
+            var subscriptions = churchSubscriptionRequest.Churches.SelectMany(m => m.SubscriptionRequests).Where(m => m.IsSubscribe);
+            var removeThose =
+                user.Subscriptions.Where(
+                    m => !subscriptions.Select(h => h.ChurchSubscriptionId).Contains(m.ChurchSubscriptionId));
+            var addThose =
+                          subscriptions.Where(
+                              m => !user.Subscriptions.Select(h => h.ChurchSubscriptionId).Contains(m.ChurchSubscriptionId));
+
+        fst: foreach (var churchSubscription in removeThose)
+            {
+                user.Subscriptions.Remove(churchSubscription);
+                goto fst;
+            }
+            foreach (var subscriptionRequest in addThose)
+            {
+                var newSUbscription = new ChurchSubscription() { ChurchSubscriptionId = subscriptionRequest.ChurchSubscriptionId };
+
+                user.Subscriptions.Add(newSUbscription);
+            }
+            _userRepository.Add(user);
+        }
+        public UserChurchSubscriptionResponse GetSubscription(int userid)
+        {
+            var user = _userRepository.GetById(userid);
+            if (user == null)
+                throw new ArgumentOutOfRangeException("userid");
+            return user.Subscriptions.ToResponse(user);
         }
     }
 }

@@ -14,5 +14,6 @@ namespace NewsApp.Model
     public partial interface IUnitOfWork : IDisposable
     {
         void Save();
+        void Commit();
     }
 }

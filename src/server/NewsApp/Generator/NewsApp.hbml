@@ -32,7 +32,10 @@
     <property name="BirthDay" type="Date" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="f437a0ce-6224-4978-8b7c-7e1646bb9e89">
       <column name="" />
     </property>
-    <many-to-one name="HomeChurch" class="Church" p1:AssociationGuid="e8791b5e-0452-4b02-a2a0-dfff554c6f8e" p1:Guid="6212ea16-44db-4811-863c-4a7c32e4c595">
+    <property name="FacebookId" type="Int64" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="bf15c963-5f0d-4b5f-bc4f-beae9194f793">
+      <column name="" />
+    </property>
+    <many-to-one name="HomeChurch" class="Church" not-found="ignore" p1:AssociationGuid="e8791b5e-0452-4b02-a2a0-dfff554c6f8e" p1:Guid="6212ea16-44db-4811-863c-4a7c32e4c595">
       <column name="" />
     </many-to-one>
     <bag name="Notifications" inverse="true" generic="true" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="6838389c-5451-4ffe-b137-0a5d49b1d23c">
@@ -67,7 +70,7 @@
       </key>
       <one-to-many class="UserDevice" />
     </bag>
-    <bag name="Subscriptions" table="" inverse="true" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="50d48312-b35f-4fc6-ac09-67d3bfea4ad1">
+    <bag name="Subscriptions" table="" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="50d48312-b35f-4fc6-ac09-67d3bfea4ad1">
       <key>
         <column name="" />
       </key>
@@ -200,11 +203,11 @@
         <column name="" />
       </many-to-many>
     </bag>
-    <bag name="HomeUsers" inverse="true" generic="true" p1:AssociationGuid="e8791b5e-0452-4b02-a2a0-dfff554c6f8e" p1:Guid="3576dfd1-c5c4-43b3-8542-1c08c074a909">
+    <bag name="HomeUsers" inverse="true" cascade="save-update" generic="true" p1:AssociationGuid="e8791b5e-0452-4b02-a2a0-dfff554c6f8e" p1:Guid="3576dfd1-c5c4-43b3-8542-1c08c074a909">
       <key>
         <column name="" />
       </key>
-      <one-to-many class="User" />
+      <one-to-many class="User" not-found="ignore" />
     </bag>
     <bag name="Feeds" inverse="true" generic="true" p1:AssociationGuid="1770c555-17df-4e8b-8c1a-fee8ee6ad1d5" p1:Guid="7e1dd338-1065-45fd-aa79-49775d7ad9f5">
       <key>
@@ -265,7 +268,7 @@
     <property name="IsEvent" type="Boolean" p1:ValidateRequired="True" p1:Guid="845f2d85-93cd-4f6b-9727-9183d0f792af">
       <column name="" />
     </property>
-    <bag name="Users" table="" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="728c7771-32a7-4de4-90c3-d4504b07010f">
+    <bag name="Users" table="" inverse="true" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="728c7771-32a7-4de4-90c3-d4504b07010f">
       <key>
         <column name="" />
       </key>

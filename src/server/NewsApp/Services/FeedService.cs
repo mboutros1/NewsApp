@@ -10,19 +10,21 @@ namespace NewsAppModel.Services
     public class FeedService
     {
         private readonly IRepository<Church> _churchRepository;
+        private readonly IRepository<Comment> _commentRepository;
         private readonly INewsFeedRepository _newsFeedRepository;
         private readonly IUnitOfWork _uow;
         private readonly IRepository<User> _userRepository;
-        private readonly IRepository<Comment> _commentRepository;
+        private readonly UserService _userService;
 
         public FeedService(INewsFeedRepository newsFeedRepository, IUnitOfWork uow, IRepository<User> userRepository,
-            IRepository<Church> churchRepository, IRepository<Comment> commentRepository)
+            IRepository<Church> churchRepository, IRepository<Comment> commentRepository, UserService userService)
         {
             _newsFeedRepository = newsFeedRepository;
             _uow = uow;
             _userRepository = userRepository;
             _churchRepository = churchRepository;
             _commentRepository = commentRepository;
+            _userService = userService;
         }
 
 
@@ -60,6 +62,21 @@ namespace NewsAppModel.Services
             return new TimeLineResponse { data = feed, err_code = 0, err_msg = "" };
         }
 
+        public TimeLineResponse GetInitFeed(int userId, int startId, bool refresh, string deviceId, string deviceType)
+        {
+            var response = new TimeLineResponse();
+            if (userId == 0)
+            {
+                response.User = _userService.Register(userId, deviceId, deviceType).ToViewModel();
+                userId = response.User.UserId;
+            }
+            if (!refresh && startId < 0) refresh = true;
+            response.data = _newsFeedRepository.GetNewsFeed(userId, startId, refresh);
+            response.err_code = 0;
+            response.err_msg = "";
+            return response;
+        }
+
         public void Comment(int feedId, int userId, string comment)
         {
             if (string.IsNullOrWhiteSpace(comment))
@@ -73,7 +90,6 @@ namespace NewsAppModel.Services
             };
             _commentRepository.Add(ct);
             //TODO: Add logging
-
         }
 
         public void Like(int feedId, int userId)

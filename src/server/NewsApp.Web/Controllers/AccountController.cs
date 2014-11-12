@@ -6,18 +6,7 @@ using NewsAppModel.Services;
 
 namespace NewsApp.Controllers
 {
-    public static class UserExtension
-    { 
-        static UserExtension()
-        {
-            Mapper.CreateMap<User, UserViewModel>().ReverseMap();
-        }
 
-        public static UserViewModel ToViewModel(this User sender)
-        {
-            return Mapper.Map<User, UserViewModel>(sender);
-        }
-    }
 
     public class AccountController : Controller
     {
@@ -46,7 +35,7 @@ namespace NewsApp.Controllers
         public JsonResult LoginFb(int? userId, string email,string name, string birthdate, long facebookId, string deviceId)
         {
             return
-               Json(_userService.LoginFb(userId.GetValueOrDefault(), email, name, birthdate, facebookId, deviceId, GetDeviceType()).ToViewModel());
+               Json(_userService.LoginFb(new LoginRequest(userId.GetValueOrDefault(), email, name, birthdate, facebookId, deviceId, GetDeviceType())).ToViewModel());
         }
 
         [HttpPost]

@@ -36,5 +36,13 @@ u.Name ,feed.LikesCount , feed.CreateDate,  CommentsCount from newsfeeds feed
                 .SetParameter("id", newsFeedId)
                 .ExecuteUpdate();
         }
+
+        public void NotificaitonSeen(int userNotificaitonId)
+        {
+            session.CreateQuery(
+                       "UPDATE UserNotificaiton SET LastSeen = GetUTCDate()  WHERE userNotificaitonId = :id")
+                       .SetParameter("id", userNotificaitonId)
+                       .ExecuteUpdate();
+        }
     }
 }

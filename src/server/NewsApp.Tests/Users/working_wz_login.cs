@@ -12,7 +12,7 @@ using NUnit.Framework;
 
 namespace NewsApp.Tests.Users
 {
-    [TestFixture]
+    [TestFixture,RequiresSTA]
     public class working_wz_login : BaseTest
     {
         [SetUp]
@@ -46,9 +46,16 @@ namespace NewsApp.Tests.Users
         }
 
         [Test]
-        public void login_anon_user()
+        public void register_new_device()
         {
-
+            string deviceId = Path.GetRandomFileName();
+             _userService.Register(0, deviceId, "ios");
+        }
+        [Test]
+        public void register_existed_device()
+        {
+            string deviceId = Path.GetRandomFileName();
+            _userService.Register(1, deviceId, "ios");
         }
         [Test]
         public void facebook_login()
@@ -59,7 +66,7 @@ namespace NewsApp.Tests.Users
             const string email = "asdf@fasdf.com";
             var userId = LocalHelper.Now.Second;
             const string deviceType = "ios";
-            var us = _userService.LoginFb(userId, email, "", birthdate, facebookId, deviceId, deviceType);
+            var us = _userService.LoginFb(new LoginRequest(userId, email, "", birthdate, facebookId, deviceId, deviceType));
             us.Dump();
         }
     }

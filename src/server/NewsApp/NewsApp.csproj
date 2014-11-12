@@ -54,6 +54,7 @@
     <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\IUnitOfWork.cs" />
     <Compile Include="Infrastructure\IUnitOfWorkFactory.cs" />
+    <Compile Include="Messaging\ChurchRequest.cs" />
     <Compile Include="Messaging\ChurchResponse.cs" />
     <Compile Include="Messaging\CreateFeedRequest.cs" />
     <Compile Include="Model\Church.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Messaging\TimeLineResponse.cs" />
     <Compile Include="Services\RepositoryExtensions.cs" />
     <Compile Include="Services\UserService.cs" />
+    <Compile Include="Services\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
