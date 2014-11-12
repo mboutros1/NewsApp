@@ -316,4 +316,19 @@
       <column name="" />
     </many-to-one>
   </class>
+  <class name="FeedBack" table="" p1:Guid="efe542b5-c50a-4da9-a7af-b7e5a99be48a">
+    <id name="FeedBackId" type="Int32" p1:ValidateRequired="True" p1:Guid="88556bf3-7a38-42e6-91ec-7514c309e80d">
+      <column name="" />
+      <generator class="identity" />
+    </id>
+    <property name="Body" type="String" p1:ValidateRequired="True" p1:Guid="920fafc4-0de3-4cc8-bf29-10f4b0aed6ec">
+      <column name="" />
+    </property>
+    <property name="CreateDate" type="DateTime" p1:ValidateRequired="True" p1:Guid="55c5c738-af37-4279-a60f-85476c0fef3a">
+      <column name="" />
+    </property>
+    <many-to-one name="User" class="User" p1:AssociationGuid="70d5fa87-20b2-4073-88eb-34a07732b922" p1:Guid="0c105ea9-1c75-4037-8d19-4369d3e461c2">
+      <column name="" />
+    </many-to-one>
+  </class>
 </hibernate-mapping>

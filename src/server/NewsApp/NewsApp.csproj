@@ -63,6 +63,8 @@
     <Compile Include="Model\ChurchSubscription.Generated.cs" />
     <Compile Include="Model\Comment.cs" />
     <Compile Include="Model\Comment.Generated.cs" />
+    <Compile Include="Model\FeedBack.cs" />
+    <Compile Include="Model\FeedBack.Generated.cs" />
     <Compile Include="Model\LogType.cs" />
     <Compile Include="Model\NewsFeed.cs" />
     <Compile Include="Model\NewsFeed.Generated.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ChurchService.cs" />
     <Compile Include="Services\FeedService.cs" />
+    <Compile Include="Services\LoginRequest.cs" />
     <Compile Include="Services\NewsFeedView.cs" />
     <Compile Include="Services\NotificationService.cs" />
     <Compile Include="Services\Providers\IDeviceProvider.cs" />

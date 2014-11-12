@@ -308,4 +308,19 @@
       <column name="NewsFeedId" not-null="true" />
     </many-to-one>
   </class>
+  <class name="FeedBack" table="FeedBacks">
+    <id name="FeedBackId" type="Int32">
+      <column name="FeedBackId" not-null="true" />
+      <generator class="identity" />
+    </id>
+    <property name="Body" type="String">
+      <column name="Body" not-null="true" />
+    </property>
+    <property name="CreateDate" type="DateTime">
+      <column name="CreateDate" not-null="true" />
+    </property>
+    <many-to-one name="User" class="User">
+      <column name="UserId" not-null="true" />
+    </many-to-one>
+  </class>
 </hibernate-mapping>

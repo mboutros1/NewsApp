@@ -61,8 +61,8 @@ namespace NewsAppModel.Services
                     {
                         _userNotificationRepository.Add(new UserNotification()
                         {
-                            User = {UserId = i},
-                            Notification = {NewsFeedId = newsFeed.NewsFeedId}
+                            User = new User() { UserId = i },
+                            Notification = new NewsFeed() { NewsFeedId = newsFeed.NewsFeedId }
                         });
                     }
                 }
@@ -73,18 +73,17 @@ namespace NewsAppModel.Services
                             .Where(
                                 m =>
                                     m.Subscriptions.Select(h => h.ChurchSubscriptionId)
-                                        .Contains(newsFeed.ChurchSubscription.ChurchSubscriptionId)).Select(m=>m.UserId);
+                                        .Contains(newsFeed.ChurchSubscription.ChurchSubscriptionId)).Select(m => m.UserId);
                     foreach (var i in thisUsers)
                     {
                         _userNotificationRepository.Add(new UserNotification()
                         {
-                            User = { UserId = i },
-                            Notification = { NewsFeedId = newsFeed.NewsFeedId }
+                            User = new User() { UserId = i },
+                            Notification = new NewsFeed() { NewsFeedId = newsFeed.NewsFeedId }
                         });
                     }
                 }
             }
-            _uow.Save();
         }
         public void SendPendingNotification()
         {

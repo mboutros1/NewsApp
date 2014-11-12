@@ -53,6 +53,7 @@
     <Compile Include="Mapping\Fluent\NewsApp.Church.FluentMapping.cs" />
     <Compile Include="Mapping\Fluent\NewsApp.ChurchSubscription.FluentMapping.cs" />
     <Compile Include="Mapping\Fluent\NewsApp.Comment.FluentMapping.cs" />
+    <Compile Include="Mapping\Fluent\NewsApp.FeedBack.FluentMapping.cs" />
     <Compile Include="Mapping\Fluent\NewsApp.NewsFeed.FluentMapping.cs" />
     <Compile Include="Mapping\Fluent\NewsApp.User.FluentMapping.cs" />
     <Compile Include="Mapping\Fluent\NewsApp.UserDevice.FluentMapping.cs" />

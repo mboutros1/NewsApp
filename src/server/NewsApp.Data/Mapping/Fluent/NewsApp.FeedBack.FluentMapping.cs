@@ -20,19 +20,19 @@ using FluentNHibernate.MappingModel.Collections;
 namespace NewsApp.Model
 {
     /// <summary>
-    /// There are no comments for CommentMap in the schema.
+    /// There are no comments for FeedBackMap in the schema.
     /// </summary>
-    public partial class CommentMap : ClassMap<Comment>
+    public partial class FeedBackMap : ClassMap<FeedBack>
     {
         /// <summary>
-        /// There are no comments for CommentMap constructor in the schema.
+        /// There are no comments for FeedBackMap constructor in the schema.
         /// </summary>
-        public CommentMap()
+        public FeedBackMap()
         {
-              Table(@"Comments");
+              Table(@"FeedBacks");
               LazyLoad();
-              Id(x => x.CommentId)
-                .Column("CommentId")
+              Id(x => x.FeedBackId)
+                .Column("FeedBackId")
                 .CustomType("Int32")
                 .Access.Property()                
                 .GeneratedBy.Identity();
@@ -46,23 +46,12 @@ namespace NewsApp.Model
                 .CustomType("DateTime")
                 .Access.Property()
                 .Generated.Never();
-              Map(x => x.Images)    
-                .Column("Images")
-                .CustomType("String")
-                .Access.Property()
-                .Generated.Never();
               References(x => x.User)
                 .Class<User>()
                 .Access.Property()
                 .Cascade.None()
                 .LazyLoad()
                 .Columns("UserId");
-              References(x => x.NewsFeed)
-                .Class<NewsFeed>()
-                .Access.Property()
-                .Cascade.None()
-                .LazyLoad()
-                .Columns("NewsFeedId");
               ExtendMapping();
         }
 

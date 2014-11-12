@@ -75,11 +75,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Users\creating_news_feed.cs" />
     <Compile Include="Users\creating_subscription.cs" />
+    <Compile Include="Users\feedback.cs" />
     <Compile Include="Users\getting_feed.cs" />
     <Compile Include="Users\search_churches.cs" />
     <Compile Include="Users\submitting_comments.cs" />
     <Compile Include="Users\user_subscripe.cs" />
     <Compile Include="Users\working_wz_login.cs" />
+    <Compile Include="Users\workin_wz_notifiations.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -7,13 +7,15 @@ namespace NewsAppModel.Services
 {
     public class UserService
     {
+        private readonly IRepository<FeedBack> _feedBackRepository;
         private readonly IUnitOfWork _uow;
         private readonly IRepository<User> _userRepository;
 
-        public UserService(IRepository<User> userRepository, IUnitOfWork uow)
+        public UserService(IRepository<User> userRepository, IUnitOfWork uow, IRepository<FeedBack> feedBackRepository)
         {
             _userRepository = userRepository;
             _uow = uow;
+            _feedBackRepository = feedBackRepository;
         }
 
         public User Register(int userId, string deviceId, string deviceType)
@@ -21,7 +23,7 @@ namespace NewsAppModel.Services
             var now = LocalHelper.Now;
             var fst = _userRepository.All().FirstOrDefault(m => m.Devices.Any(h => h.UserDeviceId == deviceId));
             fst = fst ?? new User();
-            fst.AddDevice(new UserDevice { LastLogin = now, UserDeviceId = deviceId, Type = deviceType });
+            fst.AddDevice(new UserDevice {LastLogin = now, UserDeviceId = deviceId, Type = deviceType});
             //; if (fst.DeviceId != deviceId)
             //{
             //    if (fst.UserId != 0)
@@ -95,11 +97,12 @@ namespace NewsAppModel.Services
             if (user == null && !string.IsNullOrEmpty(loginRequest.Email))
                 user = _userRepository.All().FirstOrDefault(m => m.Email == loginRequest.Email);
 
-            user = user ?? new User { CreateDate = LocalHelper.Now };
+            user = user ?? new User {CreateDate = LocalHelper.Now};
             user.AddDevice(loginRequest.DeviceId, loginRequest.DeviceType);
             user.Email = loginRequest.Email;
             user.Name = loginRequest.Name;
             user.BirthDay = DateTime.Parse(loginRequest.Birthdate);
+            user.FacebookId = loginRequest.FacebookId;
             if (user.Churches.Count == 0)
             {
                 user.AddChurch(1);
@@ -112,79 +115,18 @@ namespace NewsAppModel.Services
                     user = Merge(user, item);
                 }
             }
-            _userRepository.Add(user); //user.BirthDay = datetim
+            _userRepository.Add(user);  
             return user;
         }
-    }
 
-    public class LoginRequest
-    {
-        private readonly string _birthdate;
-        private readonly int _churchId;
-        private readonly string _deviceId;
-        private readonly string _deviceType;
-        private readonly string _email;
-        private readonly long _facebookId;
-        private readonly string _name;
-        private readonly int _userId;
-
-        public LoginRequest(int userId, string email, string name, string birthdate, long facebookId, string deviceId,
-            string deviceType)
-            : this(userId, email, name, birthdate, facebookId, deviceId, deviceType, 0)
+        public void FeedBack(int userId, string feedBack)
         {
-        }
-
-        public LoginRequest(int userId, string email, string name, string birthdate, long facebookId, string deviceId,
-            string deviceType, int churchId)
-        {
-            _userId = userId;
-            _email = email;
-            _name = name;
-            _birthdate = birthdate;
-            _facebookId = facebookId;
-            _deviceId = deviceId;
-            _deviceType = deviceType;
-            _churchId = churchId == 0 ? 1 : churchId;
-        }
-
-        public int UserId
-        {
-            get { return _userId; }
-        }
-
-        public int ChurchId
-        {
-            get { return _churchId; }
-        }
-
-        public string Email
-        {
-            get { return _email; }
-        }
-
-        public string Name
-        {
-            get { return _name; }
-        }
-
-        public string Birthdate
-        {
-            get { return _birthdate; }
-        }
-
-        public long FacebookId
-        {
-            get { return _facebookId; }
-        }
-
-        public string DeviceId
-        {
-            get { return _deviceId; }
-        }
-
-        public string DeviceType
-        {
-            get { return _deviceType; }
+            _feedBackRepository.Add(new FeedBack
+            {
+                Body = feedBack,
+                CreateDate = LocalHelper.Now,
+                User = new User {UserId = userId}
+            });
         }
     }
 }
