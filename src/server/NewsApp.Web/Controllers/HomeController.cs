@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using NewsApp.Model;
+using NewsAppModel.Messaging;
 using NewsAppModel.Services;
 
 namespace NewsApp.Controllers
@@ -13,39 +14,31 @@ namespace NewsApp.Controllers
         //
         // GET: /Home/
         private readonly NotificationService _notificationService;
-        private readonly FeedService _feedService;
         private readonly UserService _userService;
         private readonly IRepository<NewsFeed> _notificationRepository;
         private readonly IRepository<User> _userRepository;
         private readonly IUnitOfWork _uow;
         public HomeController(NotificationService notificationService, UserService userService,
-            IRepository<NewsFeed> notificationRepository, IRepository<User> userRepository, IUnitOfWork uow, FeedService feedService)
+            IRepository<NewsFeed> notificationRepository, IRepository<User> userRepository, IUnitOfWork uow)
         {
             _notificationService = notificationService;
             _userService = userService;
             _notificationRepository = notificationRepository;
             _userRepository = userRepository;
             _uow = uow;
-            _feedService = feedService;
         }
 
         public ActionResult Index()
         {
             return View();
         }
-        public JsonResult Register(int? userId, string deviceId, string deviceType)
+
+        [HttpPost]
+        public JsonResult PostFeedBack(int userId, string feedback)
         {
-            return Json(_userService.Register(userId.GetValueOrDefault(), deviceId, deviceType).ToViewModel(), JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult GetFeed(int userId, int? startAt, bool? refresh)
-        {
-            refresh = refresh ?? true;
-            return Json(_feedService.GetFeed(userId, startAt.GetValueOrDefault(), refresh.GetValueOrDefault()), JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult GetInitFeed(int userId, int? startAt, bool? refresh, string deviceId, string deviceType)
-        {
-            refresh = refresh ?? true;
-            return Json(_feedService.GetInitFeed(userId, startAt.GetValueOrDefault(), refresh.GetValueOrDefault(), deviceId, deviceType), JsonRequestBehavior.AllowGet);
+            _userService.FeedBack(userId, feedback);
+            return Json(new { succes = true });
+
         }
         public ActionResult TestSendById(int userId)
         {

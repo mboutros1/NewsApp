@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NewsApp.Model;
+using NewsAppModel.Extensions;
 using NewsAppModel.Helpers;
 
 namespace NewsAppModel.Services
@@ -128,5 +129,15 @@ namespace NewsAppModel.Services
                 User = new User {UserId = userId}
             });
         }
+
+        public User UpdateUserInfo(UserViewModel userVm)
+        {
+            var user = _userRepository.GetById(userVm.UserId);
+            user.Email = userVm.Email;
+            user.Name = userVm.Name;
+            _userRepository.Add(user); 
+            _uow.Commit();
+            return user;
+        } 
     }
 }

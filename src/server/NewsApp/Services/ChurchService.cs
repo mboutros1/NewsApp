@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NewsApp.Model;
+using NewsAppModel.Extensions;
 using NewsAppModel.Messaging;
 
 namespace NewsAppModel.Services
@@ -10,12 +11,13 @@ namespace NewsAppModel.Services
         private readonly IRepository<Church> _churchRepository;
         private readonly IRepository<ChurchSubscription> _churchSubscriptionRepository;
         private readonly IRepository<User> _userRepository;
-
-        public ChurchService(IRepository<Church> churchRepository, IRepository<User> userRepository, IRepository<ChurchSubscription> churchSubscriptionRepository)
+        private IUnitOfWork _uow;
+        public ChurchService(IRepository<Church> churchRepository, IRepository<User> userRepository, IRepository<ChurchSubscription> churchSubscriptionRepository, IUnitOfWork uow)
         {
             _churchRepository = churchRepository;
             _userRepository = userRepository;
             _churchSubscriptionRepository = churchSubscriptionRepository;
+            _uow = uow;
         }
 
         public void AddSubscriptionType(int churchId, ChurchSubscription churchSubscription)
@@ -54,6 +56,7 @@ namespace NewsAppModel.Services
                 throw new InvalidOperationException("churchsubscription not found");
             user.Subscriptions.Add(churchsubscription);
             _userRepository.Add(user);
+            _uow.Commit();
         }
 
         public void Unsubscribe(int churchSubscriptionId, int userId)
@@ -70,6 +73,7 @@ namespace NewsAppModel.Services
                 throw new InvalidOperationException("churchsubscription not found");
             user.Subscriptions.Remove(user.Subscriptions.FirstOrDefault(m => m.ChurchSubscriptionId == churchSubscriptionId));
             _userRepository.Add(user);
+            _uow.Commit();
         }
 
         public void UpdateSubscription(UserChurchSubscriptionRequest churchSubscriptionRequest)
@@ -98,6 +102,7 @@ namespace NewsAppModel.Services
                 user.Subscriptions.Add(newSUbscription);
             }
             _userRepository.Add(user);
+            _uow.Commit();
         }
         public UserChurchSubscriptionResponse GetSubscription(int userid)
         {

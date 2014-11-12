@@ -190,7 +190,9 @@
     <Compile Include="Configuration\NinjectDependencySCope.cs" />
     <Compile Include="Configuration\NinjectMvcDiResolver.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ChurchController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NewsFeedController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

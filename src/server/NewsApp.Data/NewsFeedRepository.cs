@@ -28,7 +28,17 @@ u.Name ,feed.LikesCount , feed.CreateDate,  CommentsCount from newsfeeds feed
                 .SetResultTransformer(Transformers.AliasToBean<NewsFeedView>())
                 .List<NewsFeedView>();
         }
-
+        public NewsFeedView GetNewsFeed(int feedId)
+        {
+            var sql = @"select  feed.NewsFeedId Id , feed.Images, feed.Title  , u.Avatar ,
+u.Name ,feed.LikesCount , feed.CreateDate,  CommentsCount from newsfeeds feed   
+ join Users u on feed.userid = u.userid
+ WHERE  eed.NewsFeedId = {0} desc";
+            sql = string.Format(sql, feedId);
+            return session.CreateSQLQuery(sql)
+                .SetResultTransformer(Transformers.AliasToBean<NewsFeedView>())
+                .UniqueResult<NewsFeedView>();
+        }
         public void LikePost(int newsFeedId)
         {
             session.CreateQuery(

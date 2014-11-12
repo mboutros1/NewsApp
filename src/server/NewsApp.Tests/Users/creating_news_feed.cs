@@ -39,7 +39,7 @@ namespace NewsApp.Tests.Users
             SetThisUp();
             var church = _churchRepository.All().FirstOrDefault();
             var user = _userRepository.All().FirstOrDefault();
-            _feedService.CreateFeed(new CreateFeedRequest
+            _feedService.Post(new CreateFeedRequest
             {
                 ChurchId = church.ChurchId,
                 Body = "body",
@@ -56,7 +56,7 @@ namespace NewsApp.Tests.Users
             SetThisUp();
             var church = _churchRepository.All().FirstOrDefault();
             var user = _userRepository.All().FirstOrDefault();
-            _feedService.CreateFeed(new CreateFeedRequest
+            _feedService.Post(new CreateFeedRequest
             {
                 ChurchId = church.ChurchId,
                 Body = "body",
@@ -73,7 +73,7 @@ namespace NewsApp.Tests.Users
             SetThisUp();
             var user = _userRepository.All().FirstOrDefault();
             var church = _churchRepository.All().FirstOrDefault();
-            _feedService.CreateFeed(new CreateFeedRequest
+            _feedService.Post(new CreateFeedRequest
             {
                 ChurchId = church.ChurchId,
                 Body = "body",
@@ -89,7 +89,7 @@ namespace NewsApp.Tests.Users
             SetThisUp();
             var user = _userRepository.All().FirstOrDefault();
             var church = _churchRepository.All().FirstOrDefault();
-            _feedService.CreateFeed(new CreateFeedRequest
+            _feedService.Post(new CreateFeedRequest
             {
                 ChurchId = church.ChurchId,
                 Body = "body",
@@ -104,7 +104,7 @@ namespace NewsApp.Tests.Users
             SetThisUp();
             var user = _userRepository.All().FirstOrDefault();
             var church = _churchRepository.All().FirstOrDefault();
-            _feedService.CreateFeed(new CreateFeedRequest
+            _feedService.Post(new CreateFeedRequest
             {
                 ChurchId = church.ChurchId,
                 Body = "body",
@@ -120,7 +120,7 @@ namespace NewsApp.Tests.Users
             SetThisUp();
             var user = _userRepository.All().FirstOrDefault();
             var church = _churchRepository.All().FirstOrDefault();
-            _feedService.CreateFeed(new CreateFeedRequest
+            _feedService.Post(new CreateFeedRequest
             {
                 ChurchId = church.ChurchId,
                 Body = "body",

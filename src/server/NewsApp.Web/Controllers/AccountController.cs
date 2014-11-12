@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using AutoMapper;
 using NewsApp.Model;
+using NewsAppModel.Extensions;
 using NewsAppModel.Services;
 
 namespace NewsApp.Controllers
@@ -30,7 +31,11 @@ namespace NewsApp.Controllers
         {
             return Json(new User());
         }
-
+        public JsonResult Register(int? userId, string deviceId, string deviceType)
+        {
+            return Json(_userService.Register(userId.GetValueOrDefault(), deviceId, deviceType).ToViewModel(), JsonRequestBehavior.AllowGet);
+        }
+      
         [HttpPost]
         public JsonResult LoginFb(int? userId, string email,string name, string birthdate, long facebookId, string deviceId)
         {
@@ -48,6 +53,11 @@ namespace NewsApp.Controllers
         public JsonResult GetUserInfo(User user)
         {
             return Json(_userService.GetById(user.UserId).ToViewModel());
+        }
+        [HttpPost]
+        public JsonResult UpdateUserInfo(UserViewModel user)
+        {
+            return Json(_userService.UpdateUserInfo(user).ToViewModel());
         }
 
         public string GetDeviceType()

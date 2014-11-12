@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using NewsApp.Model;
 
-namespace NewsAppModel.Services
+namespace NewsAppModel.Extensions
 {
     public static class RepositoryExtensions
     {

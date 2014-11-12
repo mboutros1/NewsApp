@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NewsApp.Model;
+using NewsAppModel.Extensions;
 using NewsAppModel.Helpers;
 using NewsAppModel.Messaging;
 using NewsAppModel.Model;
@@ -26,9 +27,7 @@ namespace NewsAppModel.Services
             _commentRepository = commentRepository;
             _userService = userService;
         }
-
-
-        public void CreateFeed(CreateFeedRequest createRequest)
+        public NewsFeedView Post(CreateFeedRequest createRequest)
         {
             if (createRequest.ChurchId == 0)
                 throw new InvalidOperationException("Church was not set while creating new feed");
@@ -36,11 +35,11 @@ namespace NewsAppModel.Services
                 throw new InvalidOperationException("user was not set while creating new feed");
             var user = _userRepository.All().FirstOrDefault(m => m.UserId == createRequest.UserId);
             if (user == null)
-                throw new InvalidOperationException("user can't be found [CreateFeed]");
+                throw new InvalidOperationException("user can't be found [Post]");
             var church = _churchRepository.All().FirstOrDefault(m => m.ChurchId == createRequest.ChurchId);
             if (church == null)
-                throw new InvalidOperationException("Church can't be found [CreateFeed]");
-            _newsFeedRepository.Add(new NewsFeed
+                throw new InvalidOperationException("Church can't be found [Post]");
+            var feed = new NewsFeed
             {
                 Body = createRequest.Body,
                 Title = createRequest.Title,
@@ -51,8 +50,10 @@ namespace NewsAppModel.Services
                 IsGlobal = createRequest.IsGlobal,
                 ScheduleDate = createRequest.ScheduleDate,
                 Chruch = church
-            });
-            //_uow.Save();
+            };
+            _newsFeedRepository.Add(feed);
+            _uow.Commit();
+            return _newsFeedRepository.GetNewsFeed(feed.NewsFeedId);
         }
 
         public TimeLineResponse GetFeed(int userId, int startId, bool refresh)
@@ -77,7 +78,11 @@ namespace NewsAppModel.Services
             return response;
         }
 
-        public void Comment(int feedId, int userId, string comment)
+        public NewsFeedDetailView GetDetail(int feedId)
+        {
+            return _newsFeedRepository.GetById(feedId).ToDetailViewModel();
+        }
+        public NewsFeedDetailView Comment(int feedId, int userId, string comment)
         {
             if (string.IsNullOrWhiteSpace(comment))
                 throw new ArgumentException("comment");
@@ -89,12 +94,16 @@ namespace NewsAppModel.Services
                 User = { UserId = userId }
             };
             _commentRepository.Add(ct);
+            _uow.Commit();
+            return GetDetail(feedId);
             //TODO: Add logging
         }
 
         public void Like(int feedId, int userId)
         {
             _newsFeedRepository.LikePost(feedId);
+            _uow.Commit();
+
             //TODO: Add logging
         }
     }
