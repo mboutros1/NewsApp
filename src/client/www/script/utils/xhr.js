@@ -25,6 +25,13 @@ define(['utils/appFunc',
                             url = app.baseUrl + 'Account/';
                             if (options.func == 'user_login') func = 'Login';
                             break;
+                        case "Comment":
+                        case "Like":
+                        case "Post":
+                        case "GetFeed":
+                        case "GetInitFeed":
+                            url = app.baseUrl + 'NewsFeed/';
+                            break;
                         default:
                             url = app.baseUrl + 'Home/';
                             break;
@@ -63,7 +70,7 @@ define(['utils/appFunc',
                     $$.ajax({
                         url: xhr.getRequestURL(options),
                         method: options.method,
-                        crossDomain:true,
+                        crossDomain: true,
                         data: options.data,
                         error: cl,
                         success: function (data) {

@@ -57,7 +57,7 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
             this.loadLastFeed();
             var that = this;
             xhr.simpleCall({
-                func: 'GetFeed', data: { userId: user.UserId, startAt: timelineCtrl.firstIndex }
+                func: 'GetInitFeed', data: { userId: user.UserId, startAt: timelineCtrl.firstIndex }
             }, function (response) {
                 timelineCtrl.firstIndex = response.data.length > 0 ? response.data[0].Id : 00;
                 timelineCtrl.lastIndex = response.data.length > 0 ? response.data[response.data.length - 1].Id : 00;
@@ -69,7 +69,10 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
         refreshTimeline: function () {
             var user = GS.getCurrentUser();
             xhr.simpleCall({
-                func: 'GetFeed', data: { userId: user.UserId, startAt: timelineCtrl.firstIndex, refresh: true }
+                func: 'GetFeed', data: {
+                    UserId: user.UserId, StartAt: timelineCtrl.firstIndex,
+                    Refresh: true
+                }
             }, function (response) {
                 timelineCtrl.firstIndex = response.data.length > 0 ? response.data[0].Id : 00;
                 VM.module('timelineView').refreshTimeline(response.data);

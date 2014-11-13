@@ -4,7 +4,6 @@
         locale: lang,
         paths: {
             text: '../vendors/require/text',
-            user: '../script/components/user',
             logger: '../script/components/logger',
             i18n: '../vendors/require/i18n',
             Framework7: '../vendors/framework7/framework7',
@@ -70,7 +69,8 @@
         app.baseUrl = 'http://192.168.113.1/';
         app.baseUrl = "http://192.168.10.118/";
         app.baseUrl = "http://192.168.1.2/";
-        //  app.baseUrl = 'http://localhost:1641/';
+        app.baseUrl = 'http://localhost:1641/';
+        app.baseUrl = 'http://localhost/';
         window.app = app;
         app.initialize();
     });

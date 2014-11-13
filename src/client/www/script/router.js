@@ -13,11 +13,12 @@ define(['GS','controller/module'],function(GS,CM) {
                 router.pageAfterAnimation(page);
             });
 
-            if(!GS.isLogin()){
-                mainView.loadPage('page/login.html');
-            }else{
-                mainView.reloadPage('index.html');
-            }
+            //if (!GS.isLogin()) {
+            //    mainView.loadPage('page/login.html');
+            //} else {
+            //    mainView.reloadPage('index.html');
+            //}
+            mainView.reloadPage('index.html');
 
             //remove 'hidden-navbar' class
             $$('div.views').removeClass('hidden-navbar');

@@ -4,6 +4,9 @@ define(['utils/appFunc','i18n!nls/lang','utils/tplManager'],function(appFunc,i18
 
         init: function(params){
             appFunc.bindEvents(params.bindings);
+            if (!GS.isLogin()) {
+                mainView.loadPage('page/login.html');
+            }  
         },
 
         commentPopup: function(params){

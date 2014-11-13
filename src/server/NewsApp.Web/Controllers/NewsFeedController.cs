@@ -27,13 +27,13 @@ namespace NewsApp.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetInitFeed(int userId, int? startAt, bool? refresh, string deviceId, string deviceType)
+        public JsonResult GetInitFeed(GetInitFeedParams getInitFeedParams)
         {
-            refresh = refresh ?? true;
+            getInitFeedParams.Refresh = getInitFeedParams.Refresh ?? true;
             return
                 Json(
-                    _feedService.GetInitFeed(userId, startAt.GetValueOrDefault(), refresh.GetValueOrDefault(), deviceId,
-                        deviceType), JsonRequestBehavior.AllowGet);
+                    _feedService.GetInitFeed(getInitFeedParams.UserId, getInitFeedParams.StartAt.GetValueOrDefault(), getInitFeedParams.Refresh.GetValueOrDefault(), getInitFeedParams.DeviceId,
+                        getInitFeedParams.DeviceType), JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Comment(int userId, int feedId, string comment)
@@ -49,6 +49,54 @@ namespace NewsApp.Controllers
         public JsonResult Post(CreateFeedRequest request)
         {
             return Json(_feedService.Post(request), JsonRequestBehavior.AllowGet);
+        }
+    }
+
+    public class GetInitFeedParams
+    {
+        private int _userId;
+        private int? _startAt;
+        private bool? _refresh;
+        private string _deviceId;
+        private string _deviceType;
+
+        public GetInitFeedParams()
+        {
+            
+        }
+        public GetInitFeedParams(int userId, int? startAt, bool? refresh, string deviceId, string deviceType)
+        {
+            _userId = userId;
+            _startAt = startAt;
+            _refresh = refresh;
+            _deviceId = deviceId;
+            _deviceType = deviceType;
+        }
+
+        public int UserId
+        {
+            get { return _userId; }
+        }
+
+        public int? StartAt
+        {
+            get { return _startAt; }
+        }
+
+        public bool? Refresh
+        {
+            get { return _refresh; }
+            set { _refresh = value; }
+        }
+
+        public string DeviceId
+        {
+            get { return _deviceId; }
+        }
+
+        public string DeviceType
+        {
+            get { return _deviceType; }
         }
     }
 }
