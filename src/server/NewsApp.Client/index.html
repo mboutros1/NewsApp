@@ -1,0 +1,151 @@
+﻿<!--(if target dist)>
+{{banner}}
+<!(endif)-->
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>St. George</title>
+    <!--(if target dev)><!-->
+    <link rel="stylesheet" href="style/css/app.css">
+    <!--<!(endif)-->
+    <!--(if target dist)>
+      <link rel="stylesheet" href="style/css/hiapp.min.css?v={{rlsdate}}">
+    <!(endif)-->
+    <!--(if target dev)><!-->
+    <script type="text/javascript">
+        var $CONFIG = {};
+        $CONFIG['version'] = 'Test';
+        $CONFIG['release_time'] = 'Test';
+    </script>
+    <!--<!(endif)-->
+    <!--(if target dist)>
+    <script type="text/javascript">
+        var $CONFIG = {};
+        $CONFIG['version'] = '{{version}}';
+        $CONFIG['release_time'] = '{{rlsdate2}}';
+    </script>
+    <!(endif)-->
+</head>
+<body>
+    <div class="statusbar-overlay"></div>
+    <div class="panel-overlay"></div>
+    <div class="views tabs toolbar-through hidden-toolbar hidden-navbar">
+        <div id="ourView" class="view view-main tab active">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="left">
+                        <a href="#" class="refresh-click link">
+                            <i class="icon ios7-reload"></i>
+                        </a>
+                    </div>
+                    <div class="center sliding i18n" data-i18n="app.name">{{i}}</div>
+                    <div class="right">
+                        <a href="#" class="open-send-popup link icon-only">
+                            <i class="icon ios7-compose-outline"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="pages navbar-through">
+                <div data-page="ourView" class="page no-swipeback">
+                    <div data-distance="50" class="page-content pull-to-refresh-content infinite-scroll hide-bars-on-scroll">
+                        <div class="pull-to-refresh-layer">
+                            <div class="preloader"></div>
+                            <div class="pull-to-refresh-arrow"></div>
+                        </div>
+                        <div class="list-block media-list">
+                            <ul class="time-line-content" data-bind="template: { name:'timelineTemplate',foreach:feeds}"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="contatcView" class="view tab">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="center sliding i18n" data-i18n="app.name"></div>
+                </div>
+            </div>
+            <div class="pages navbar-through">
+                <div data-page="contatcView" class="page contact-page">
+
+                    <div class="page-content">
+                        <div id="livestream" style="height: 100%;width:100%">
+
+                        </div>
+                        <script type="text/javascript">
+                            function getYouTubeLink(url) {
+                                var video = 'http://www.youtube.com/embed/' + url + '?hl=en&fs=1&' + "autoplay=1&autohide=1&border=0&wmode=opaque&enablejsapi=1";
+
+                                var youtube = '<embed src="' + video + '" type="application/x-shockwave-flash"' +
+                                    ' allowscriptaccess="always"' +
+                                    ' allowfullscreen="true"   height="100%" width="100%"  controls="2" ></embed>';
+                                youtube = "<iframe src='" + video + "' allowscriptaccess='always' allowfullscreen='true' border='0' width='100%' height='100%' />";
+                                return youtube;
+                            }
+
+                            //  document.getElementById("livestream").innerHTML = getYouTubeLink('LWDzSbfDjQc');
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="settingView" class="view tab">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="center sliding i18n" data-i18n="app.name"></div>
+                </div>
+            </div>
+            <div class="pages navbar-through">
+                <div data-page="setting" class="page" data-bind="template:{name:'settingTemplate',data:$data}">
+                </div>
+            </div>
+        </div>
+        <!-- toolbar start -->
+        <div class="toolbar tabbar tabbar-labels">
+            <div class="toolbar-inner">
+                <a href="#ourView" class="tab-link active">
+                    <i class="icon ios7-home-outline"></i>
+                    <span class="tabbar-label i18n" data-i18n="index.feed"></span>
+                </a>
+                <a href="#contatcView" class="tab-link">
+                    <i class="icon ios7-chatbubble-outline"></i>
+                    <span class="tabbar-label i18n" data-i18n="index.stream"></span>
+                </a>
+                <a href="#settingView" class="tab-link">
+                    <i class="icon ios7-gear-outline">
+                        <!-- <span class="badge badge-red">4</span> -->
+                    </i>
+                    <span class="tabbar-label i18n" data-i18n="index.setting"></span>
+                </a>
+            </div>
+        </div>
+        <!-- toolbar end -->
+    </div>
+    <div class="load-result"></div>
+
+    <div id="fb-root"></div>
+    <!-- Please ignore the 404 error when you are not running under PhoneGap environment or delete it. -->
+    <script type="text/javascript" src="cordova.js"></script>
+    <!--<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.js"></script>-->
+    <script src="script/platformOverrides.js"></script>
+    <script type="text/javascript" src="script/lib/facebookConnectPlugin.js"></script>
+    <script type="text/javascript" src="script/lib/ko.debug.js"></script>
+    <script type="text/javascript" src="script/lib/ko.mapping.debug.js"></script>
+    <script type="text/javascript" src="script/lib/ko.mapping.ext.js"></script>
+    <script type="text/javascript" src="script/lib/moment.js"></script>
+ <!--(if target dev)><!-->
+    <script data-main="script/main" src="vendors/require/require.js"></script>
+    <!--<!(endif)-->
+    <!--(if target dist)>
+        <script data-main="script/hiapp.min" src="script/require.min.js?v={{rlsdate}}"></script>
+        <!(endif)-->
+    
+    
+   
+</body>
+</html>

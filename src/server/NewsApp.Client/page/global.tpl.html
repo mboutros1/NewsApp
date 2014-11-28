@@ -1,0 +1,313 @@
+<script id="timelineTemplate" type="text/html">
+    <li data-bind="attr:{'data-id':Id}" class="item-content card-content">
+        <div class="item-inner">
+            <div class="item-header">
+                <div class="avatar">
+                    <img data-bind="attr:{'data-avatarid':Avatar},formatAvatar:Avatar">
+                </div>
+                <div class="detail">
+                    <p data-bind="text:Name" class="nickname"> </p>
+                    <p data-bind="text:CreateDate,formatDate:CreateDate" data-time="" class="create-time"></p>
+                </div>
+            </div>
+            <div class="click-content">
+                <div class="item-subtitle" data-bind="text:Title">
+                </div>
+                <!--ko if:Images-->
+                <div class="item-image">
+                    <img data-bind="attr:{src:Images}" alt="">
+                </div>
+                <!--/ko-->
+            </div>
+            <div class="item-tools">
+                <ul>
+                    <li>
+                        <a data-bind="attr:{href:'page/item.html?id=' + Id()}">
+                            <i class="icon ios7-chatbubble-outline"></i>
+                            <span class="text" data-bind="text:$root.i18n.comment"></span>
+                            <span class="text" data-bind="text:CommentsCount,formatNumber:CommentsCount"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="likePost" data-bind="attr:{'data-feedid':Id}">
+                            <i class="icon " data-bind="css:{'ios7-heart-liked':IsLiked,  'ios7-heart-outline':IsLiked() ==false}"></i>
+                            <span class="text" data-bind="text:$root.i18n.like"></span>
+                            <span class="text" data-bind="text:LikesCount,formatNumber:LikesCount"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </li>
+</script>
+<div class="item-inner user-info">
+    <div class="avatar">
+        <img data-bind="formatAvatar:Avatar"  alt="">
+    </div>
+    <div class="user-detail">
+        <div data-bind="visible:Name()!='',text:i18nNickName() + ':' + Name()" class="name">{{i18nNickName}}: {{Name}}</div>
+    </div>
+</div>
+<script id="subscriptionTemplate" type="text/html">
+    <!--ko foreach:churches-->
+    <div data-id="{{ChurchId}}" data-bind="attr:{'data-id':ChurchId}" class="item-content card-content">
+        <div class="item-inner ">
+            <div class="item-header">
+                <div class="avatar">
+                    <img data-avatarid="{{Avatar}}"
+                         data-bind="attr:{'data-avatarid':Avatar},formatAvatar:Avatar" >
+                </div>
+                <div class="detail">
+                    <div data-bind="text:Name" class="nickname churchName">{{Name}}</div>
+                </div>
+            </div>
+            <div class="click-content list-block">
+                <ul class="" data-bind="foreach:Subscription">
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-toggle"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label" data-bind="text:Name">{{Name}}</div>
+                                <div class="item-input">
+                                    <label class="label-switch">
+                                        <input type="checkbox" class="subscriptionItem" data-bind="checked:IsSubscribe, event:{change:update},attr:{'name':ChurchSubscriptionId,'id':ChurchSubscriptionId}"
+                                               id="{{ChurchSubscriptionId}}" name="{{ChurchSubscriptionId}}" />
+                                        <div class="checkbox"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /ko-->
+</script>
+<script id="itemTemplate" type="text/html">
+    <div class="item-header">
+        <div class="avatar">
+            <img src="{{avatar}}">
+        </div>
+        <div class="detail">
+            <p class="nickname">{{nickname}}</p>
+            <p data-time="{{created_at}}" class="create-time">{{time}}</p>
+        </div>
+    </div>
+    <div class="item-subtitle">
+        {{text}}
+    </div>
+    {{#if image}}
+    <div class="item-image">
+        <img src="{{image}}" alt="">
+    </div>
+    {{/if}}
+</script>
+<script id="commentsTemplate" type="text/html">
+    <!-- ko foreach:comments-->
+    <li class="comment-item">
+        <div class="avatar">
+            <img data-bind="formatAvatar:Avatar" alt="">
+        </div>
+        <div class="comment-detail">
+            <div class="name" data-bind="text:Name"></div>
+            <div class="text" data-bind="text:Body"></div>
+            <div class="time" data-bind="text:CreateDate,formatDate:CreateDate"></div>
+        </div>
+    </li>
+    <!--/ko-->
+    <div class="none-comment" data-bind="visible:comments().length ==0">
+        <i class="icon ios7-chatboxes-outline"></i>
+        <p data-bind="text:emptyComment"></p>
+    </div>
+</script>
+<script id="commentPopupTemplate" type="text/template">
+    <div class="popup comment-popup">
+        <div class="view navbar-fixed">
+            <div class="page">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="left"><a href="#" class="link close-popup">{{cancel}}</a></div>
+                        <div class="center">{{title}}</div>
+                        <div class="right"><a id="commentBtn" href="#" data-feed-id="{{feedId}}" class="link orange">{{send}}</a></div>
+                    </div>
+                </div>
+                <div class="page-content message-content">
+                    <div class="message-input">
+                        <textarea id="commentText" placeholder="{{placeholder}}"></textarea>
+                    </div>
+                    <div class="message-tools">
+                        <ul>
+                            <li><i class="icon ios7-emotion"></i></li>
+                            <li><i class="icon ios7-at-outline"></i></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="sendPopupTemplate" type="text/template">
+    <div class="send-popup popup">
+        <div class="view navbar-fixed">
+            <div class="page">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="left"><a href="#" class="link close-popup" data-bind="text:cancel">{{cancel}}</a></div>
+                        <div class="center" data-bind="text:senTweet">{{senTweet}}</div>
+                        <div class="right"><a id="sendWeiboBtn" href="#" class="link orange" data-bind="text:send,click:postMsg">{{send}}</a></div>
+                    </div>
+                </div>
+                <div class="page-content message-content">
+                    <div class="list-block">
+                        <!--<ul>
+                            <li>-->
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-input row">
+                                    <select id="selChurch" class="col-50" data-bind="options: churches, value: selectedChurch, optionsText: 'Name'"></select>
+                                    <select id="selSubscription" class="col-50" data-bind="optionsCaption:'Category',options: selectedChurch.Subscription, value: selectedSubscription,optionsText: 'Name'"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <!--</li>
+                        </ul>-->
+                    </div>
+                    <div class="message-input">
+                        <textarea id="messageText" data-bind="attr:{placeholder:sendPlaceholder},value:text"></textarea>
+                    </div>
+                    <div class="message-tools">
+                        <ul>
+                            <li class="camera image-upload">
+                                <i class="icon ios7-camera-outline"></i>
+                            </li>
+                            <li class="photoalbum image-upload">
+                                <i class="icon ios7-pic"></i>
+                            </li>
+                            <li>
+                                <i class="icon ios7-emotion"></i>
+                            </li>
+                            <li class="get-position">
+                                <i class="icon ios7-dingxiang"></i>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="geoInfo" class="geo-info">
+                        <div class="location"><i class="icon preloader"></i><span class="info" data-bind="text:loadingGeo">{{loadingGeo}}</span></div>
+                        <div class="close"><i class="icon ios7-close"></i></div>
+                    </div>
+                    <div id="uploadPicPreview" class="upload-pic-preview">
+                        <img src="" alt="" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="settingTemplate" type="text/template">
+    <div class="page-content">
+        <div class="setting-page list-block">
+            <ul>
+                <li>
+                    <div class="item-content">
+                        <div class="item-inner user-info">
+                            <div class="avatar">
+                                <img data-bind="formatAvatar:Avatar" src="{{avatarUrl}}" alt="">
+                            </div>
+                            <div class="user-detail">
+                                <div data-bind="visible:Name()!='',text:i18nNickName() + ':' + Name()" class="name">{{i18nNickName}}: {{Name}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <a href="page/feedback.html" class="item-link">
+                        <div class="item-content">
+                            <div class="item-media feedback spring"></div>
+                            <div class="item-inner">
+                                <div data-bind="text:feedBack" class="item-title">{{feedBack}}</div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="page/subscriptions.html?from=setting" class="item-link">
+                        <div class="item-content">
+                            <div class="item-media update spring"></div>
+                            <div class="item-inner">
+                                <div data-bind="text:subscriptions" class="item-title">{{subscriptions}}</div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="page/language.html?from=setting" class="item-link">
+                        <div class="item-content">
+                            <div class="item-media language">
+                                <i class="icon ios7-world-outline"></i>
+                            </div>
+                            <div class="item-inner">
+                                <div data-bind="text:language" class="item-title">{{language}}</div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="page/about.html" class="item-link">
+                        <div class="item-content">
+                            <div class="item-media about spring"></div>
+                            <div class="item-inner">
+                                <div data-bind="text:about" class="item-title">{{about}}</div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                         <div class="item-content">
+                            <div class="item-media about spring"></div>
+                            <div class="item-inner">
+                                <input type="text" id="txtServer" data-bind="value:baseUrl" onchange="    thisApp.baseUrl = this.value; storage('url', this.value);" />
+                            </div>
+                        </div>
+                 </li>
+            </ul>
+            <a href="#" class="button button-big logout-button button-fill color-red" data-bind="text:loginOut,click:logOut">{{loginOut}}</a>
+        </div>
+    </div>
+</script>
+<script id="contactListTemplate" type="text/template">
+    {{#contacts}}
+    {{#if header}}
+    <li class="list-group-title">{{header}}</li>
+    {{/if}}
+    <li class="contact-item">
+        <a href="page/message.html?nickname={{Name}}" class="item-link">
+            <div class="item-content">
+                <div class="item-media"><img src="style/img/avatar/avatar{{Avatar}}.jpg" width="44"></div>
+                <div class="item-inner">
+                    <div class="item-title-row">
+                        <div class="item-title">{{Name}}</div>
+                    </div>
+                    <div class="item-subtitle">{{location}}</div>
+                </div>
+            </div>
+        </a>
+    </li>
+    {{/contacts}}
+</script>
+<script id="messageTemplate" type="text/template">
+    {{#each message}}
+    {{#if date}}
+    <div class="messages-date">{{date}}</div>
+    {{/if}}
+    {{#if image}}
+    <div class="message message-{{from}} message-pic ">
+        <div class="message-text"><img src="{{text}}" /></div>
+    </div>
+    {{else}}
+    <div class="message message-{{from}} message-last">
+        <div class="message-text">{{text}}</div>
+    </div>
+    {{/if}}
+    {{/each}}
+</script>
