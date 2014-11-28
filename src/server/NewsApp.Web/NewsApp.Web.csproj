@@ -278,9 +278,9 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NewsApp.Data\NewsApp.Data.csproj">
+    <ProjectReference Include="..\NewsApp.Data\NewsApp.Data.Nhibernate.csproj">
       <Project>{e0575696-8872-4109-a00f-0d6eaf80bc1d}</Project>
-      <Name>NewsApp.Data</Name>
+      <Name>NewsApp.Data.Nhibernate</Name>
     </ProjectReference>
     <ProjectReference Include="..\NewsApp.Notifications\NewsApp.Notifications.csproj">
       <Project>{a91e03ef-6532-4896-89c4-9fcec1d8d4db}</Project>

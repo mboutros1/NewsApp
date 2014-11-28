@@ -33,9 +33,11 @@ namespace NewsApp.Configuration
             Rebind<IUnitOfWork>().To<NHibernateUnitOfWork>().InThreadScope();
             Bind<IDeviceProvider>().To<AppleNotifier>().InSingletonScope();
             Bind<ISession>().ToMethod(m => NHibernateSessionProvider.GetSession()).InRequestScope();
-            Rebind<INewsFeedRepository>().To<NewsFeedRepository>().InRequestScope();
             Rebind<ICommentRepository>().To<CommentRepository>().InRequestScope();
+            Rebind<INewsFeedRepository>().To<NewsFeedRepository>().InRequestScope();
         }
+
+
     }
 
     public static class Extension

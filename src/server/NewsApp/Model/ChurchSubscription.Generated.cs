@@ -74,9 +74,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for Church in the schema.
+        /// There are no comments for NewsFeeds in the schema.
         /// </summary>
-        public virtual Church Church
+        public virtual IList<NewsFeed> NewsFeeds
         {
             get;
             set;
@@ -84,9 +84,9 @@ namespace NewsApp.Model
 
     
         /// <summary>
-        /// There are no comments for NewsFeeds in the schema.
+        /// There are no comments for Church in the schema.
         /// </summary>
-        public virtual IList<NewsFeed> NewsFeeds
+        public virtual Church Church
         {
             get;
             set;

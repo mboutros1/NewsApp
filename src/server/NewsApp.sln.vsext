@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Solution>
-  <Profile Name="Test" SingleStartProjectGuid="">
-    <Exclude>
-      <Project Guid="a39f708a-a25b-4fb8-9496-183ccb268fd7" />
-      <Project Guid="32257cdc-063e-4d75-94d7-fdb6d87e81cc" />
-    </Exclude>
-  </Profile>
   <Profile Name="client" SingleStartProjectGuid="">
     <Exclude>
       <Project Guid="bcf20c42-8eda-485d-aa7a-ab2414afaf1e" />
+    </Exclude>
+  </Profile>
+  <Profile Name="Test" SingleStartProjectGuid="">
+    <Exclude>
+      <Project Guid="a21f90be-3a15-4aac-bb7f-30f5906c7eb3" />
+      <Project Guid="a39f708a-a25b-4fb8-9496-183ccb268fd7" />
     </Exclude>
   </Profile>
 </Solution>

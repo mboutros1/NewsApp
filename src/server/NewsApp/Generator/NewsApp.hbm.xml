@@ -26,22 +26,41 @@
     <property name="FacebookId" type="Int64">
       <column name="FacebookId" not-null="false" />
     </property>
+    <property name="IsAnonymous" type="Boolean">
+      <column name="IsAnonymous" default="1" not-null="true" />
+    </property>
     <many-to-one name="HomeChurch" class="Church" not-found="ignore">
-      <column name="ChurchId" not-null="true" />
+      <column name="ChurchId" not-null="false" precision="10" scale="0" sql-type="int" />
     </many-to-one>
+    <bag name="Subscriptions" table="Subscriptions_Users" generic="true">
+      <key>
+        <column name="UserId" not-null="true" />
+      </key>
+      <many-to-many class="ChurchSubscription" fetch="join">
+        <column name="ChurchSubscriptionId" not-null="true" />
+      </many-to-many>
+    </bag>
+    <bag name="Churches" table="Churches_Users" generic="true">
+      <key>
+        <column name="UserId" not-null="true" />
+      </key>
+      <many-to-many class="Church" fetch="join">
+        <column name="ChurchId" not-null="true" />
+      </many-to-many>
+    </bag>
+    <bag name="LikedNewsFeeds" table="LikedNewsFeeds_Users" generic="true">
+      <key>
+        <column name="UserId" not-null="true" />
+      </key>
+      <many-to-many class="NewsFeed" fetch="join">
+        <column name="NewsFeedId" not-null="true" />
+      </many-to-many>
+    </bag>
     <bag name="Notifications" inverse="true" generic="true">
       <key>
         <column name="UserId" />
       </key>
       <one-to-many class="UserNotification" />
-    </bag>
-    <bag name="Churches" table="Users_Churches" inverse="true" generic="true">
-      <key>
-        <column name="UserId" />
-      </key>
-      <many-to-many class="Church" fetch="join">
-        <column name="ChurchId" />
-      </many-to-many>
     </bag>
     <bag name="Comments" inverse="true" generic="true">
       <key>
@@ -49,7 +68,7 @@
       </key>
       <one-to-many class="Comment" />
     </bag>
-    <bag name="CreatedNotifications" inverse="true" generic="true">
+    <bag name="CreatedNewsFeeds" inverse="true" generic="true">
       <key>
         <column name="UserId" />
       </key>
@@ -60,14 +79,6 @@
         <column name="UserId" />
       </key>
       <one-to-many class="UserDevice" />
-    </bag>
-    <bag name="Subscriptions" table="Users_Subscriptions" generic="true">
-      <key>
-        <column name="UserId" not-null="true" />
-      </key>
-      <many-to-many class="ChurchSubscription" fetch="join">
-        <column name="ChurchSubscriptionId" not-null="true" />
-      </many-to-many>
     </bag>
     <bag name="Roles" inverse="true" generic="true">
       <key>
@@ -186,19 +197,19 @@
     <property name="LiveStremUrl" type="String">
       <column name="LiveStremUrl" not-null="false" />
     </property>
-    <bag name="Users" table="Users_Churches" generic="true">
-      <key>
-        <column name="ChurchId" not-null="true" />
-      </key>
-      <many-to-many class="User" fetch="join">
-        <column name="UserId" not-null="true" />
-      </many-to-many>
-    </bag>
     <bag name="HomeUsers" inverse="true" cascade="save-update" generic="true">
       <key>
         <column name="ChurchId" />
       </key>
       <one-to-many class="User" not-found="ignore" />
+    </bag>
+    <bag name="Users" table="Churches_Users" inverse="true" generic="true">
+      <key>
+        <column name="ChurchId" />
+      </key>
+      <many-to-many class="User" fetch="join">
+        <column name="UserId" />
+      </many-to-many>
     </bag>
     <bag name="Feeds" inverse="true" generic="true">
       <key>
@@ -260,7 +271,10 @@
     <property name="IsEvent" type="Boolean">
       <column name="IsEvent" not-null="true" />
     </property>
-    <bag name="Users" table="Users_Subscriptions" inverse="true" generic="true">
+    <many-to-one name="Church" class="Church">
+      <column name="ChurchId" not-null="true" />
+    </many-to-one>
+    <bag name="Users" table="Subscriptions_Users" inverse="true" generic="true">
       <key>
         <column name="ChurchSubscriptionId" />
       </key>
@@ -268,9 +282,6 @@
         <column name="UserId" />
       </many-to-many>
     </bag>
-    <many-to-one name="Church" class="Church">
-      <column name="ChurchId" not-null="true" />
-    </many-to-one>
     <bag name="NewsFeeds" inverse="true" generic="true">
       <key>
         <column name="ChurchSubscriptionId" />

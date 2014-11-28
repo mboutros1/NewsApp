@@ -64,6 +64,23 @@ namespace NewsApp.Tests.Users
             _feedService.Like(feed.NewsFeedId, user.UserId);
 
         }
+        [Test]
+        public void Didlike_a_post()
+        {
+            //var feed = _newsFeed.All().FirstOrDefault();
+            //var user = _userRepository.All().FirstOrDefault();
+            Debug.WriteLine("Starting");
+            _feedService.Dislike(1000, 109);
+
+        }
+        [Test]
+        public void Load_a_feed()
+        {
+         //   var feed = _newsFeed.All().FirstOrDefault();
+
+            var user = _userRepository.All().FirstOrDefault();
+
+        }
 
         [Test]
         public void like_a_post_and_than_save_it()

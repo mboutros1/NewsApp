@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NewsApp.Model;
 using NewsAppModel.Extensions;
@@ -59,22 +60,29 @@ namespace NewsAppModel.Services
         public TimeLineResponse GetFeed(int userId, int startId, bool refresh)
         {
             if (!refresh && startId < 0) refresh = true;
+            var vUser = ValidateUser(userId, null, null);
+            if (vUser != null) userId = vUser.UserId;
+
             var feed = _newsFeedRepository.GetNewsFeed(userId, startId, refresh);
             return new TimeLineResponse { data = feed, err_code = 0, err_msg = "" };
         }
 
+        private UserViewModel ValidateUser(int userId, string deviceId, string deviceType)
+        {
+            //if (userId == 0)
+                return _userService.Register(userId, deviceId, deviceType).ToViewModel();
+            return null;
+        }
         public TimeLineResponse GetInitFeed(int userId, int startId, bool refresh, string deviceId, string deviceType)
         {
             var response = new TimeLineResponse();
-            if (userId == 0)
-            {
-                response.User = _userService.Register(userId, deviceId, deviceType).ToViewModel();
-                userId = response.User.UserId;
-            }
+            var vUser = ValidateUser(userId, deviceId, deviceType);
+            if (vUser != null) userId = vUser.UserId;
             if (!refresh && startId < 0) refresh = true;
             response.data = _newsFeedRepository.GetNewsFeed(userId, startId, refresh);
             response.err_code = 0;
             response.err_msg = "";
+            response.User = vUser;
             return response;
         }
 
@@ -99,12 +107,24 @@ namespace NewsAppModel.Services
             //TODO: Add logging
         }
 
-        public void Like(int feedId, int userId)
+        public long Like(int feedId, int userId)
         {
-            _newsFeedRepository.LikePost(feedId);
+            var value = _newsFeedRepository.LikePost(feedId,userId);
             _uow.Commit();
-
+            return value;
             //TODO: Add logging
+        }
+        public long Dislike(int feedId, int userId)
+        {
+            var value = _newsFeedRepository.DislikePost(feedId,userId);
+            _uow.Commit();
+            return value;
+            //TODO: Add logging
+        }
+        public List<CommentView> GetComments(int feedId)
+        {
+            return
+                _newsFeedRepository.GetComments(feedId).ToList();
         }
     }
 }

@@ -8,18 +8,20 @@ namespace NewsAppModel.Messaging
     {
         public ChurchResponse()
         {
-            SubscriptionRequests = new List<ChurchSubscriptionResponse>();
+            Subscription = new List<ChurchSubscriptionResponse>();
         }
 
         public string Name { get; set; }
+        public string Avatar { get; set; }
         public int ChurchId { get; set; }
-        public List<ChurchSubscriptionResponse> SubscriptionRequests { get; set; }
+        public List<ChurchSubscriptionResponse> Subscription { get; set; }
     }
 
     public class ChurchSubscriptionResponse
     {
         public string Name { get; set; }
         public int ChurchSubscriptionId { get; set; }
+        public int ChurchId { get; set; }
         public bool IsSubscribe { get; set; }
     }
 
@@ -38,11 +40,10 @@ namespace NewsAppModel.Messaging
             foreach (var churchResponse in Churches)
             {
                 output += churchResponse.Name + " " + churchResponse.ChurchId + "\r\n";
-                output = churchResponse.SubscriptionRequests.Aggregate(output, (current, sub) => current + (" " + sub.Name + " " + sub.ChurchSubscriptionId + "\r\n"));
+                output = churchResponse.Subscription.Aggregate(output, (current, sub) => current + (" " + sub.Name + " " + sub.ChurchSubscriptionId + "\r\n"));
             }
             return output;
-            return base.ToString();
-        }
+         }
     }
 
     public static class Extension
@@ -59,11 +60,11 @@ namespace NewsAppModel.Messaging
                 {
                     var isSubscribed =
                         user.Subscriptions.Any(h => h.ChurchSubscriptionId == subscription.ChurchSubscriptionId);
-                    response.SubscriptionRequests.Add(new ChurchSubscriptionResponse
+                    response.Subscription.Add(new ChurchSubscriptionResponse
                     {
                         ChurchSubscriptionId = subscription.ChurchSubscriptionId,
                         IsSubscribe = isSubscribed,
-                        Name = subscription.Name
+                        Name = subscription.Name, ChurchId = subscription.Church.ChurchId
                     });
                 }
             }

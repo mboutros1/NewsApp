@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<hibernate-mapping assembly="NewsAppModel" namespace="NewsApp.Model" p1:Guid="49a356f3-1be5-4921-9db4-2c2af1d3ceaa" xmlns:p1="http://devart.com/schemas/EntityDeveloper/1.0" xmlns="urn:nhibernate-mapping-2.2">
+<hibernate-mapping assembly="NewsAppModel" namespace="NewsApp.Model" p1:name="NewsAppModel" p1:Guid="49a356f3-1be5-4921-9db4-2c2af1d3ceaa" xmlns:p1="http://devart.com/schemas/EntityDeveloper/1.0" xmlns="urn:nhibernate-mapping-2.2">
   <class name="$EnumTypes">
     <EnumType Name="LogType" class="LogType" p1:Guid="8c8c1491-e3ec-4a9b-b4a3-99b9ffaa9971">
       <Member Name="Post" Value="0" p1:Guid="9f2b0283-06be-406c-a999-90a4be43f989" />
@@ -35,16 +35,21 @@
     <property name="FacebookId" type="Int64" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="bf15c963-5f0d-4b5f-bc4f-beae9194f793">
       <column name="" />
     </property>
+    <property name="IsAnonymous" type="Boolean" p1:ValidateRequired="True" p1:Guid="dcf7f26f-4ef1-4249-9297-1f5dee494876">
+      <column name="" default="1" />
+    </property>
     <many-to-one name="HomeChurch" class="Church" not-found="ignore" p1:AssociationGuid="e8791b5e-0452-4b02-a2a0-dfff554c6f8e" p1:Guid="6212ea16-44db-4811-863c-4a7c32e4c595">
-      <column name="" />
+      <column name="ChurchId" not-null="false" precision="10" scale="0" sql-type="int" p1:unicode="false" />
     </many-to-one>
-    <bag name="Notifications" inverse="true" generic="true" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="6838389c-5451-4ffe-b137-0a5d49b1d23c">
+    <bag name="Subscriptions" table="" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="50d48312-b35f-4fc6-ac09-67d3bfea4ad1">
       <key>
         <column name="" />
       </key>
-      <one-to-many class="UserNotification" />
+      <many-to-many class="ChurchSubscription" fetch="join">
+        <column name="" />
+      </many-to-many>
     </bag>
-    <bag name="Churches" table="" inverse="true" generic="true" p1:AssociationGuid="3c2e6149-b0ad-4722-9987-814987c52f7d" p1:Guid="813f7685-ab77-4f55-8318-ad43ae009a08">
+    <bag name="Churches" table="" generic="true" p1:AssociationGuid="3c2e6149-b0ad-4722-9987-814987c52f7d" p1:Guid="813f7685-ab77-4f55-8318-ad43ae009a08">
       <key>
         <column name="" />
       </key>
@@ -52,13 +57,19 @@
         <column name="" />
       </many-to-many>
     </bag>
+    <bag name="Notifications" inverse="true" generic="true" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="6838389c-5451-4ffe-b137-0a5d49b1d23c">
+      <key>
+        <column name="" />
+      </key>
+      <one-to-many class="UserNotification" />
+    </bag>
     <bag name="Comments" inverse="true" generic="true" p1:AssociationGuid="7e7fa471-8001-4337-a6b6-a42a81f1f3a8" p1:Guid="a54407ae-877d-494d-8e25-556d88c03a21">
       <key>
         <column name="" />
       </key>
       <one-to-many class="Comment" />
     </bag>
-    <bag name="CreatedNotifications" inverse="true" generic="true" p1:AssociationGuid="09a5e895-0cd5-41b8-b01d-9b2aaffa25d1" p1:Guid="0bd394e7-8e7a-42e1-9340-5870c90ea2d6">
+    <bag name="CreatedNewsFeeds" inverse="true" generic="true" p1:AssociationGuid="09a5e895-0cd5-41b8-b01d-9b2aaffa25d1" p1:Guid="0bd394e7-8e7a-42e1-9340-5870c90ea2d6">
       <key>
         <column name="" />
       </key>
@@ -70,19 +81,19 @@
       </key>
       <one-to-many class="UserDevice" />
     </bag>
-    <bag name="Subscriptions" table="" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="50d48312-b35f-4fc6-ac09-67d3bfea4ad1">
-      <key>
-        <column name="" />
-      </key>
-      <many-to-many class="ChurchSubscription" fetch="join">
-        <column name="" />
-      </many-to-many>
-    </bag>
     <bag name="Roles" inverse="true" generic="true" p1:AssociationGuid="1f1dd1af-c1f5-4227-88c2-331f83664b7f" p1:Guid="1c8ce8f4-e0a2-41af-8310-eb3a8d8b2c18">
       <key>
         <column name="" />
       </key>
       <one-to-many class="UserRole" />
+    </bag>
+    <bag name="LikedNewsFeeds" table="LikedNewsFeeds_Users" schema="dbo" inverse="true" generic="true" p1:AssociationGuid="a4b41b73-fc2c-4d9d-b0b8-e7f24a4bd92b" p1:Guid="654d6e40-76c3-443a-85b9-2a8de9441f5d">
+      <key>
+        <column name="UserId" />
+      </key>
+      <many-to-many class="NewsFeed" fetch="join">
+        <column name="NewsFeedId" />
+      </many-to-many>
     </bag>
   </class>
   <class name="NewsFeed" table="" p1:Guid="82568817-20a1-45ab-b37f-9c53867a1b67">
@@ -132,6 +143,14 @@
     <many-to-one name="ChurchSubscription" class="ChurchSubscription" p1:AssociationGuid="4d564d30-7074-4a52-943b-95a9a69883c1" p1:Guid="4f5bdd94-a911-4cdf-a031-b9e290aa9c37">
       <column name="" />
     </many-to-one>
+    <bag name="Users" table="LikedNewsFeeds_Users" schema="dbo" generic="true" p1:AssociationGuid="a4b41b73-fc2c-4d9d-b0b8-e7f24a4bd92b" p1:Guid="39bf3d48-2a2e-4594-a071-d4278e89debd">
+      <key not-null="true">
+        <column name="NewsFeedId" not-null="true" precision="10" scale="0" sql-type="int" p1:unicode="false" />
+      </key>
+      <many-to-many class="User" fetch="join">
+        <column name="UserId" not-null="true" precision="10" scale="0" sql-type="int" p1:unicode="false" />
+      </many-to-many>
+    </bag>
     <bag name="Notification" inverse="true" generic="false" p1:AssociationGuid="d943f797-51d1-44ee-bb90-357ac0983cae" p1:Guid="d510dd24-ac04-4e29-bbe7-2d4d13cc40d9">
       <key>
         <column name="" />
@@ -195,19 +214,19 @@
     <property name="LiveStremUrl" type="String" p1:nullable="true" p1:ValidateRequired="False" p1:Guid="be2adc17-4c12-448d-a7c2-c83b8ffbce77">
       <column name="" />
     </property>
-    <bag name="Users" table="" generic="true" p1:AssociationGuid="3c2e6149-b0ad-4722-9987-814987c52f7d" p1:Guid="eb57b47c-7603-4d13-9805-f3cc7945fb26">
+    <bag name="HomeUsers" inverse="true" cascade="save-update" generic="true" p1:AssociationGuid="e8791b5e-0452-4b02-a2a0-dfff554c6f8e" p1:Guid="3576dfd1-c5c4-43b3-8542-1c08c074a909">
+      <key>
+        <column name="ChurchId" />
+      </key>
+      <one-to-many class="User" not-found="ignore" />
+    </bag>
+    <bag name="Users" table="" inverse="true" generic="true" p1:AssociationGuid="3c2e6149-b0ad-4722-9987-814987c52f7d" p1:Guid="eb57b47c-7603-4d13-9805-f3cc7945fb26">
       <key>
         <column name="" />
       </key>
       <many-to-many class="User" fetch="join">
         <column name="" />
       </many-to-many>
-    </bag>
-    <bag name="HomeUsers" inverse="true" cascade="save-update" generic="true" p1:AssociationGuid="e8791b5e-0452-4b02-a2a0-dfff554c6f8e" p1:Guid="3576dfd1-c5c4-43b3-8542-1c08c074a909">
-      <key>
-        <column name="" />
-      </key>
-      <one-to-many class="User" not-found="ignore" />
     </bag>
     <bag name="Feeds" inverse="true" generic="true" p1:AssociationGuid="1770c555-17df-4e8b-8c1a-fee8ee6ad1d5" p1:Guid="7e1dd338-1065-45fd-aa79-49775d7ad9f5">
       <key>
@@ -268,6 +287,9 @@
     <property name="IsEvent" type="Boolean" p1:ValidateRequired="True" p1:Guid="845f2d85-93cd-4f6b-9727-9183d0f792af">
       <column name="" />
     </property>
+    <many-to-one name="Church" class="Church" p1:AssociationGuid="f1daf756-2083-4d40-853e-ef0a098c20e4" p1:Guid="9d723872-757a-4e0d-a398-a94c8569f549">
+      <column name="" />
+    </many-to-one>
     <bag name="Users" table="" inverse="true" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="728c7771-32a7-4de4-90c3-d4504b07010f">
       <key>
         <column name="" />
@@ -276,9 +298,6 @@
         <column name="" />
       </many-to-many>
     </bag>
-    <many-to-one name="Church" class="Church" p1:AssociationGuid="f1daf756-2083-4d40-853e-ef0a098c20e4" p1:Guid="9d723872-757a-4e0d-a398-a94c8569f549">
-      <column name="" />
-    </many-to-one>
     <bag name="NewsFeeds" inverse="true" generic="true" p1:AssociationGuid="4d564d30-7074-4a52-943b-95a9a69883c1" p1:Guid="10a87f58-2f7d-49fa-85fe-5d1c4f018cea">
       <key>
         <column name="" />

@@ -66,7 +66,7 @@ namespace NewsApp.Tests.Users
             const string email = "asdf@fasdf.com";
             var userId = LocalHelper.Now.Second;
             const string deviceType = "ios";
-            var us = _userService.LoginFb(new LoginRequest(userId, email, "", birthdate, facebookId, deviceId, deviceType));
+            var us = _userService.Login(new LoginRequest(userId, email, "", birthdate, facebookId, deviceId, deviceType));
             us.Dump();
         }
     }

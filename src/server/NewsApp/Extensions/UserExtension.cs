@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AutoMapper;
 using NewsApp.Model;
 using NewsAppModel.Services;
@@ -10,6 +11,7 @@ namespace NewsAppModel.Extensions
         {
             Mapper.CreateMap<User, UserViewModel>().ReverseMap();
             Mapper.CreateMap<NewsFeed, NewsFeedDetailView>().ReverseMap();
+            Mapper.CreateMap<Comment, CommentView>().ForMember(m => m.Id, h => h.MapFrom(m => m.CommentId)).ReverseMap();
         }
 
         public static UserViewModel ToViewModel(this User sender)
@@ -22,6 +24,10 @@ namespace NewsAppModel.Extensions
         {
             return Mapper.Map<NewsFeed, NewsFeedDetailView>(sender);
         }
-    }
 
+        public static List<CommentView> ToViewModel(this IList<Comment> sender)
+        {
+            return Mapper.Map<IList<Comment>, List<CommentView>>(sender);
+        }
+    }
 }

@@ -25,7 +25,7 @@ namespace NewsAppModel.Services
 
         public void Seen(int userNotificaitonId)
         {
-            _newsFeedRepository.NotificaitonSeen(userNotificaitonId);
+            _newsFeedRepository.NotificationSeen(userNotificaitonId);
         }
         public void SendNotification(IList<User> users, NewsFeed notification)
         {

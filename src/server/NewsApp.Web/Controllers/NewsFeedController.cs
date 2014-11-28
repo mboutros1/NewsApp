@@ -20,83 +20,72 @@ namespace NewsApp.Controllers
             return View();
         }
 
-        public JsonResult GetFeed(int userId, int? startAt, bool? refresh)
+        public JsonResult GetFeed(GetFeedRequest getFeedRequest)
         {
-            refresh = refresh ?? true;
-            return Json(_feedService.GetFeed(userId, startAt.GetValueOrDefault(), refresh.GetValueOrDefault()),
+
+            getFeedRequest.Refresh = getFeedRequest.Refresh ?? true;
+            return Json(_feedService.GetFeed(getFeedRequest.UserId, getFeedRequest.StartAt.GetValueOrDefault(), getFeedRequest.Refresh.GetValueOrDefault()),
                 JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetInitFeed(GetInitFeedParams getInitFeedParams)
+        public JsonResult GetInitFeed(GetFeedRequest getFeedRequest)
         {
-            getInitFeedParams.Refresh = getInitFeedParams.Refresh ?? true;
+            getFeedRequest.Refresh = getFeedRequest.Refresh ?? true;
             return
-                Json(
-                    _feedService.GetInitFeed(getInitFeedParams.UserId, getInitFeedParams.StartAt.GetValueOrDefault(), getInitFeedParams.Refresh.GetValueOrDefault(), getInitFeedParams.DeviceId,
-                        getInitFeedParams.DeviceType), JsonRequestBehavior.AllowGet);
+               Json(
+                   _feedService.GetInitFeed(getFeedRequest.UserId, getFeedRequest.StartAt.GetValueOrDefault(), getFeedRequest.Refresh.GetValueOrDefault(), getFeedRequest.DeviceId,
+                       getFeedRequest.DeviceType), JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Comment(int userId, int feedId, string comment)
         {
             return Json(_feedService.Comment(feedId, userId, comment), JsonRequestBehavior.AllowGet);
         }
-
+        public JsonResult GetComments(int feedId)
+        {
+            return Json(_feedService.GetComments(feedId), JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
         public JsonResult Like(int userId, int feedId)
         {
-            _feedService.Like(feedId, userId);
-            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            return Json(new { Count = _feedService.Like(feedId, userId) }, JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
+        public JsonResult Dislike(int userId, int feedId)
+        {
+            ;
+            return Json(new { Count = _feedService.Dislike(feedId, userId) }, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
         public JsonResult Post(CreateFeedRequest request)
         {
             return Json(_feedService.Post(request), JsonRequestBehavior.AllowGet);
         }
     }
 
-    public class GetInitFeedParams
+    public class GetFeedRequest
     {
-        private int _userId;
-        private int? _startAt;
-        private bool? _refresh;
-        private string _deviceId;
-        private string _deviceType;
+        public GetFeedRequest()
+        {
 
-        public GetInitFeedParams()
-        {
-            
         }
-        public GetInitFeedParams(int userId, int? startAt, bool? refresh, string deviceId, string deviceType)
+        public GetFeedRequest(int userId, int? startAt, bool? refresh, string deviceId, string deviceType)
         {
-            _userId = userId;
-            _startAt = startAt;
-            _refresh = refresh;
-            _deviceId = deviceId;
-            _deviceType = deviceType;
+            UserId = userId;
+            StartAt = startAt;
+            Refresh = refresh;
+            DeviceId = deviceId;
+            DeviceType = deviceType;
         }
 
-        public int UserId
-        {
-            get { return _userId; }
-        }
+        public int UserId { get; set; }
 
-        public int? StartAt
-        {
-            get { return _startAt; }
-        }
+        public int? StartAt { get; set; }
 
-        public bool? Refresh
-        {
-            get { return _refresh; }
-            set { _refresh = value; }
-        }
+        public bool? Refresh { get; set; }
 
-        public string DeviceId
-        {
-            get { return _deviceId; }
-        }
+        public string DeviceId { get; set; }
 
-        public string DeviceType
-        {
-            get { return _deviceType; }
-        }
+        public string DeviceType { get; set; }
     }
 }

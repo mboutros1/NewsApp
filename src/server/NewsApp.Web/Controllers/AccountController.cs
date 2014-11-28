@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using AutoMapper;
 using NewsApp.Model;
 using NewsAppModel.Extensions;
@@ -35,12 +37,12 @@ namespace NewsApp.Controllers
         {
             return Json(_userService.Register(userId.GetValueOrDefault(), deviceId, deviceType).ToViewModel(), JsonRequestBehavior.AllowGet);
         }
-      
+
         [HttpPost]
-        public JsonResult LoginFb(int? userId, string email,string name, string birthdate, long facebookId, string deviceId)
+        public JsonResult LoginFb(int? userId, string email, string name, string birthdate, long facebookId, string deviceId)
         {
             return
-               Json(_userService.LoginFb(new LoginRequest(userId.GetValueOrDefault(), email, name, birthdate, facebookId, deviceId, GetDeviceType())).ToViewModel());
+               Json(_userService.Login(new LoginRequest(userId.GetValueOrDefault(), email, name, birthdate, facebookId, deviceId, this.GetDeviceType())).ToViewModel());
         }
 
         [HttpPost]
@@ -60,9 +62,20 @@ namespace NewsApp.Controllers
             return Json(_userService.UpdateUserInfo(user).ToViewModel());
         }
 
-        public string GetDeviceType()
+        [HttpPost]
+        public JsonResult Merge(int oldUserId, int newUserId)
         {
-            string agent = (HttpContext.Request.UserAgent ?? "").ToLower();
+            _userService.Merge(oldUserId, newUserId);
+            return Json(new { success = true });
+        }
+
+
+    }
+    public static class ControllerExtension
+    {
+        public static string GetDeviceType(this Controller sender)
+        {
+            string agent = (HttpContext.Current.Request.UserAgent ?? "").ToLower();
             if (agent.IndexOf("andriod", StringComparison.Ordinal) > -1) agent = "andriod";
             if (agent.IndexOf("blackberry", StringComparison.Ordinal) > -1) agent = "blackberry";
             if (agent.IndexOf("ios", StringComparison.Ordinal) > -1) agent = "ios";

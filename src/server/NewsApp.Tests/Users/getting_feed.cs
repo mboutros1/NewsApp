@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using NewsApp.Model;
 using NewsApp.Tests.Common;
+using NewsAppModel.Model;
 using NewsAppModel.Services;
 using NUnit.Framework;
 
@@ -14,14 +15,15 @@ namespace NewsApp.Tests.Users
         {
             _feedService = Factory.Get<FeedService>();
             _userRepository = Factory.Get<IRepository<User>>();
-            ;
+            _newsFeedRepository = Factory.Get<INewsFeedRepository>();
+
             _uoWork = Factory.Get<IUnitOfWork>();
         }
 
         private FeedService _feedService;
         private IRepository<User> _userRepository;
         private IUnitOfWork _uoWork;
-
+        private INewsFeedRepository _newsFeedRepository;
 
         public override void Dispose()
         {
@@ -33,7 +35,14 @@ namespace NewsApp.Tests.Users
         public void get_the_feed_for_user()
         {
             var user = _userRepository.All().FirstOrDefault();
-            _feedService.GetFeed(user.UserId, 0, true);
+            var feed = _newsFeedRepository.All().FirstOrDefault();
+            if (user.LikedNewsFeeds.All(h => h.NewsFeedId != feed.NewsFeedId))
+            {
+              //  user.LikedNewsFeeds.Add(feed);
+                _uoWork.Commit(); 
+            }
+            var item = _feedService.GetFeed(user.UserId, 0, true);
+            Assert.IsTrue(item.data.Any(m => m.IsLiked));
         }
 
         [Test]

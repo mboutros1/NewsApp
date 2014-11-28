@@ -8,8 +8,10 @@ namespace NewsAppModel.Model
     {
         IList<NewsFeedView> GetNewsFeed(int userId, int startId, bool refresh);
         NewsFeedView GetNewsFeed(int feedId);
-        void LikePost(int newsFeedId);
-        void NotificaitonSeen(int userNotificaitonId);
+        long LikePost(int newsFeedId, int userId);
+        long DislikePost(int newsFeedId, int userId);
+        IList<CommentView> GetComments(int newsFeedId);
+        void NotificationSeen(int userNotificationId);
     }
 
     public interface ICommentRepository : IRepository<Comment>

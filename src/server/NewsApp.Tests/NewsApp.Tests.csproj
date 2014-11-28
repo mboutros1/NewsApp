@@ -91,9 +91,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NewsApp.Data\NewsApp.Data.csproj">
+    <ProjectReference Include="..\NewsApp.Data\NewsApp.Data.Nhibernate.csproj">
       <Project>{E0575696-8872-4109-A00F-0D6EAF80BC1D}</Project>
-      <Name>NewsApp.Data</Name>
+      <Name>NewsApp.Data.Nhibernate</Name>
     </ProjectReference>
     <ProjectReference Include="..\NewsApp.Notifications\NewsApp.Notifications.csproj">
       <Project>{A91E03EF-6532-4896-89C4-9FCEC1D8D4DB}</Project>

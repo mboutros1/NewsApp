@@ -24,11 +24,19 @@ namespace NewsApp.Controllers
             return View();
         }
 
-        public JsonResult UpdateSubscriptions(UserChurchSubscriptionRequest churchSubscriptionRequest)
+        public JsonResult UpdateSubscriptions(int userId, int id, bool value)
         {
-            _churchService.UpdateSubscription(churchSubscriptionRequest);
-            return Json(_churchService.GetSubscription(churchSubscriptionRequest.UserId), JsonRequestBehavior.AllowGet);
+            if (value)
+                _churchService.Subscribe(id, userId);
+            else
+                _churchService.Unsubscribe(id, userId); 
+            return Json(_churchService.GetSubscription(userId), JsonRequestBehavior.AllowGet);
         }
+        //public JsonResult UpdateSubscriptions(UserChurchSubscriptionRequest churchSubscriptionRequest)
+        //{
+        //    _churchService.UpdateSubscription(churchSubscriptionRequest);
+        //    return Json(_churchService.GetSubscription(churchSubscriptionRequest.UserId), JsonRequestBehavior.AllowGet);
+        //}
         public JsonResult GetSubscriptions(int userId)
         {
             return Json(_churchService.GetSubscription(userId), JsonRequestBehavior.AllowGet);

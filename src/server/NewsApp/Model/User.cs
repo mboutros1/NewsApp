@@ -22,5 +22,11 @@ namespace NewsApp.Model
             Churches.Add(new Church() { ChurchId = 1 });
 
         }
+        public virtual void AddChurchSubscription(int churchSubscriptionId)
+        {
+            if (Subscriptions.Any(m => m.ChurchSubscriptionId == churchSubscriptionId)) return;
+            Subscriptions.Add(new ChurchSubscription() { ChurchSubscriptionId = churchSubscriptionId });
+
+        }
     }
 }

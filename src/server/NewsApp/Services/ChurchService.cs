@@ -71,7 +71,8 @@ namespace NewsAppModel.Services
             var churchsubscription = _churchSubscriptionRepository.GetById(churchSubscriptionId);
             if (churchsubscription == null)
                 throw new InvalidOperationException("churchsubscription not found");
-            user.Subscriptions.Remove(user.Subscriptions.FirstOrDefault(m => m.ChurchSubscriptionId == churchSubscriptionId));
+            var item = user.Subscriptions.FirstOrDefault(m => m.ChurchSubscriptionId == churchSubscriptionId);
+            user.Subscriptions.Remove(item);
             _userRepository.Add(user);
             _uow.Commit();
         }
@@ -97,9 +98,8 @@ namespace NewsAppModel.Services
             }
             foreach (var subscriptionRequest in addThose)
             {
-                var newSUbscription = new ChurchSubscription() { ChurchSubscriptionId = subscriptionRequest.ChurchSubscriptionId };
-
-                user.Subscriptions.Add(newSUbscription);
+                var newSubscription = new ChurchSubscription() { ChurchSubscriptionId = subscriptionRequest.ChurchSubscriptionId };
+                user.Subscriptions.Add(newSubscription);
             }
             _userRepository.Add(user);
             _uow.Commit();
@@ -109,7 +109,7 @@ namespace NewsAppModel.Services
             var user = _userRepository.GetById(userid);
             if (user == null)
                 throw new ArgumentOutOfRangeException("userid");
-            return user.Subscriptions.ToResponse(user);
+            return user.Churches.SelectMany(h=> h.ChurchSubscriptions).ToList().ToResponse(user);
         }
     }
 }

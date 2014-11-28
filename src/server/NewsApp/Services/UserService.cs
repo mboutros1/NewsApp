@@ -11,21 +11,33 @@ namespace NewsAppModel.Services
         private readonly IRepository<FeedBack> _feedBackRepository;
         private readonly IUnitOfWork _uow;
         private readonly IRepository<User> _userRepository;
+        private IRepository<ChurchSubscription> _churchSubscriptionRepository;
 
-        public UserService(IRepository<User> userRepository, IUnitOfWork uow, IRepository<FeedBack> feedBackRepository)
+        public UserService(IRepository<User> userRepository, IUnitOfWork uow, IRepository<FeedBack> feedBackRepository, IRepository<ChurchSubscription> churchSubscriptionRepository)
         {
             _userRepository = userRepository;
             _uow = uow;
             _feedBackRepository = feedBackRepository;
+            _churchSubscriptionRepository = churchSubscriptionRepository;
         }
 
         public User Register(int userId, string deviceId, string deviceType)
         {
             var now = LocalHelper.Now;
             var fst = _userRepository.All().FirstOrDefault(m => m.Devices.Any(h => h.UserDeviceId == deviceId));
+            var isNewUser = fst == null; 
             fst = fst ?? new User();
-            fst.AddDevice(new UserDevice {LastLogin = now, UserDeviceId = deviceId, Type = deviceType});
-            //; if (fst.DeviceId != deviceId)
+            if (!string.IsNullOrWhiteSpace(deviceId) && !string.IsNullOrWhiteSpace(deviceType))
+                fst.AddDevice(new UserDevice { LastLogin = now, UserDeviceId = deviceId, Type = deviceType });
+            if (isNewUser)
+            {
+                fst.AddChurch(1);
+                var lst = _churchSubscriptionRepository.All().Where(m => m.Church.ChurchId == 1).Select(m=>m.ChurchSubscriptionId);
+                foreach (var churchSubscription in lst)
+                {
+                    fst.AddChurchSubscription(churchSubscription); 
+                } 
+            }            //; if (fst.DeviceId != deviceId)
             //{
             //    if (fst.UserId != 0)
             //        fst.LastModified = now;
@@ -41,12 +53,23 @@ namespace NewsAppModel.Services
         public User GetById(int userId)
         {
             var user = _userRepository.All().FirstOrDefault(m => m.UserId == userId);
+            // DataRow dr =  ExecuteReader("Select * from Users where Userid  = @userid
+            // User user = new User(); 
+            // user.UserId = dr["UserId"]
+            // user.Name = dr["Name"]
+            // user.Email = dr["Email"]
+            //.....
+            //" Update Users set email = @email where user = @userid 
+
             if (user == null)
                 throw new InvalidOperationException("User Not found");
             return user;
         }
 
-        private User Merge(User user1, User user2)
+        public User Merge(int oldUserid, int newUserId) {
+            return Merge(_userRepository.All().First(m => m.UserId == oldUserid), _userRepository.All().First(m => m.UserId == newUserId));
+        }
+        public User Merge(User user1, User user2)
         {
             if (user1.UserId == user2.UserId) return user1;
             User mainUser = user1, sndUser = user2;
@@ -92,13 +115,13 @@ namespace NewsAppModel.Services
             return mainUser;
         }
 
-        public User LoginFb(LoginRequest loginRequest)
+        public User Login(LoginRequest loginRequest)
         {
             var user = _userRepository.All().FirstOrDefault(m => m.UserId == loginRequest.UserId);
             if (user == null && !string.IsNullOrEmpty(loginRequest.Email))
                 user = _userRepository.All().FirstOrDefault(m => m.Email == loginRequest.Email);
 
-            user = user ?? new User {CreateDate = LocalHelper.Now};
+            user = user ?? new User { CreateDate = LocalHelper.Now };
             user.AddDevice(loginRequest.DeviceId, loginRequest.DeviceType);
             user.Email = loginRequest.Email;
             user.Name = loginRequest.Name;
@@ -116,7 +139,7 @@ namespace NewsAppModel.Services
                     user = Merge(user, item);
                 }
             }
-            _userRepository.Add(user);  
+            _userRepository.Add(user);
             return user;
         }
 
@@ -126,7 +149,7 @@ namespace NewsAppModel.Services
             {
                 Body = feedBack,
                 CreateDate = LocalHelper.Now,
-                User = new User {UserId = userId}
+                User = new User { UserId = userId }
             });
         }
 
@@ -135,9 +158,9 @@ namespace NewsAppModel.Services
             var user = _userRepository.GetById(userVm.UserId);
             user.Email = userVm.Email;
             user.Name = userVm.Name;
-            _userRepository.Add(user); 
+            _userRepository.Add(user);
             _uow.Commit();
             return user;
-        } 
+        }
     }
 }
