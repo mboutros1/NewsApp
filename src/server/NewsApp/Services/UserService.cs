@@ -25,18 +25,21 @@ namespace NewsAppModel.Services
         {
             var now = LocalHelper.Now;
             var fst = _userRepository.All().FirstOrDefault(m => m.Devices.Any(h => h.UserDeviceId == deviceId));
-            var isNewUser = fst == null; 
+            if (fst == null) fst = _userRepository.All().FirstOrDefault(m => m.UserId == userId);
+            var isNewUser = fst == null;
             fst = fst ?? new User();
             if (!string.IsNullOrWhiteSpace(deviceId) && !string.IsNullOrWhiteSpace(deviceType))
+            {
                 fst.AddDevice(new UserDevice { LastLogin = now, UserDeviceId = deviceId, Type = deviceType });
+            }
             if (isNewUser)
             {
                 fst.AddChurch(1);
-                var lst = _churchSubscriptionRepository.All().Where(m => m.Church.ChurchId == 1).Select(m=>m.ChurchSubscriptionId);
+                var lst = _churchSubscriptionRepository.All().Where(m => m.Church.ChurchId == 1).Select(m => m.ChurchSubscriptionId);
                 foreach (var churchSubscription in lst)
                 {
-                    fst.AddChurchSubscription(churchSubscription); 
-                } 
+                    fst.AddChurchSubscription(churchSubscription);
+                }
             }            //; if (fst.DeviceId != deviceId)
             //{
             //    if (fst.UserId != 0)
@@ -66,14 +69,24 @@ namespace NewsAppModel.Services
             return user;
         }
 
-        public User Merge(int oldUserid, int newUserId) {
-            return Merge(_userRepository.All().First(m => m.UserId == oldUserid), _userRepository.All().First(m => m.UserId == newUserId));
+        public User Merge(int oldUserid, int newUserId)
+        {
+            return Merge(_userRepository.All().FirstOrDefault(m => m.UserId == oldUserid), _userRepository.All().FirstOrDefault(m => m.UserId == newUserId));
         }
         public User Merge(User user1, User user2)
         {
+            if (user1 == null && user2 != null)
+                return user2;
+            if (user2 == null && user1 != null)
+                return user1;
             if (user1.UserId == user2.UserId) return user1;
             User mainUser = user1, sndUser = user2;
             if (user1.UserId == 0 && user2.UserId > 0)
+            {
+                mainUser = user2;
+                sndUser = user1;
+            }
+            if (!user2.IsAnonymous && user1.IsAnonymous)
             {
                 mainUser = user2;
                 sndUser = user1;
@@ -90,10 +103,13 @@ namespace NewsAppModel.Services
                 bdate = sndUser.BirthDay;
             mainUser.Email = email;
             mainUser.BirthDay = bdate;
+            mainUser.IsAnonymous = mainUser.IsAnonymous && sndUser.IsAnonymous;
             foreach (var u in sndUser.Devices)
             {
-                u.User = mainUser;
+                mainUser.AddDevice(u);
+                // u.User = mainUser;
             }
+
             //IEnumerable<ChurchSubscription> subscriptionLst =
             //    sndUser.Subscriptions.Where(
             //        m => !mainUser.Subscriptions.Select(h => h.SubscriptionType).Contains(m.SubscriptionType));
@@ -110,6 +126,7 @@ namespace NewsAppModel.Services
                 mainUser.Churches.Add(userSubscription);
             }
             if (mainUser.CreateDate == DateTime.MinValue) mainUser.CreateDate = LocalHelper.Now;
+            var lst = sndUser.Notifications;
             _userRepository.Remove(sndUser);
             _userRepository.Add(mainUser);
             return mainUser;
@@ -120,25 +137,26 @@ namespace NewsAppModel.Services
             var user = _userRepository.All().FirstOrDefault(m => m.UserId == loginRequest.UserId);
             if (user == null && !string.IsNullOrEmpty(loginRequest.Email))
                 user = _userRepository.All().FirstOrDefault(m => m.Email == loginRequest.Email);
-
+            if (!string.IsNullOrWhiteSpace(loginRequest.Email))
+            {
+                var item = _userRepository.All().FirstOrDefault(m => m.Email == loginRequest.Email);
+                if (item != null)
+                {
+                    user = Merge(item, user);
+                }
+            }
             user = user ?? new User { CreateDate = LocalHelper.Now };
             user.AddDevice(loginRequest.DeviceId, loginRequest.DeviceType);
             user.Email = loginRequest.Email;
             user.Name = loginRequest.Name;
             user.BirthDay = DateTime.Parse(loginRequest.Birthdate);
             user.FacebookId = loginRequest.FacebookId;
+            user.IsAnonymous = user.FacebookId == 0;
             if (user.Churches.Count == 0)
             {
                 user.AddChurch(1);
             }
-            if (!string.IsNullOrEmpty(loginRequest.Email))
-            {
-                var item = _userRepository.All().FirstOrDefault(m => m.Email == loginRequest.Email);
-                if (item != null)
-                {
-                    user = Merge(user, item);
-                }
-            }
+
             _userRepository.Add(user);
             return user;
         }

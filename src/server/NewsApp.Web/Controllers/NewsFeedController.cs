@@ -20,21 +20,23 @@ namespace NewsApp.Controllers
             return View();
         }
 
-        public JsonResult GetFeed(GetFeedRequest getFeedRequest)
+        public JsonResult GetFeed(TimeLineRequest timeLineRequest)
         {
-
-            getFeedRequest.Refresh = getFeedRequest.Refresh ?? true;
-            return Json(_feedService.GetFeed(getFeedRequest.UserId, getFeedRequest.StartAt.GetValueOrDefault(), getFeedRequest.Refresh.GetValueOrDefault()),
+            timeLineRequest.Refresh = timeLineRequest.Refresh ?? true;
+            return Json(_feedService.GetFeed(timeLineRequest.UserId, timeLineRequest.StartAt.GetValueOrDefault(), timeLineRequest.Refresh.GetValueOrDefault()),
                 JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetInitFeed(GetFeedRequest getFeedRequest)
+        public JsonResult GetFeedDetails(int id)
         {
-            getFeedRequest.Refresh = getFeedRequest.Refresh ?? true;
+            return Json(_feedService.GetDetail(id), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetInitFeed(TimeLineRequest timeLineRequest)
+        {
+            timeLineRequest.Refresh = timeLineRequest.Refresh ?? true;
             return
                Json(
-                   _feedService.GetInitFeed(getFeedRequest.UserId, getFeedRequest.StartAt.GetValueOrDefault(), getFeedRequest.Refresh.GetValueOrDefault(), getFeedRequest.DeviceId,
-                       getFeedRequest.DeviceType), JsonRequestBehavior.AllowGet);
+                   _feedService.GetInitFeed(timeLineRequest), JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult Comment(int userId, int feedId, string comment)
@@ -61,31 +63,5 @@ namespace NewsApp.Controllers
         {
             return Json(_feedService.Post(request), JsonRequestBehavior.AllowGet);
         }
-    }
-
-    public class GetFeedRequest
-    {
-        public GetFeedRequest()
-        {
-
-        }
-        public GetFeedRequest(int userId, int? startAt, bool? refresh, string deviceId, string deviceType)
-        {
-            UserId = userId;
-            StartAt = startAt;
-            Refresh = refresh;
-            DeviceId = deviceId;
-            DeviceType = deviceType;
-        }
-
-        public int UserId { get; set; }
-
-        public int? StartAt { get; set; }
-
-        public bool? Refresh { get; set; }
-
-        public string DeviceId { get; set; }
-
-        public string DeviceType { get; set; }
     }
 }

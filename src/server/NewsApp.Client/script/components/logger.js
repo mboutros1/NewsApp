@@ -94,11 +94,7 @@ define([], function () {
                 else if (typeof xhr.stack != 'undefined' && typeof xhr.message != 'undefined') {
                     return xhr;
                 }
-            var response = xhr.responseText;
-            try {
-                response = JSON.parse(response);
-                return response;
-            } catch (e) {
+            var returnDefault = function (xhr) {
                 return {
                     url: xhr.url,
                     data: xhr.data,
@@ -107,15 +103,26 @@ define([], function () {
                     original: xhr
                 }
             }
+            var response = xhr.responseText;
+            if (response == "") return returnDefault(xhr); 
+            try {
+                response = JSON.parse(response);
+                return response;
+            } catch (e) {
+                return returnDefault(xhr);
+            }
         }, displayHvrErr: function (text) {
             if ((typeof text == 'undefined') || text == '') return;
             $$('.load-result').html(text).css('opacity', '1').transition(500);
             setTimeout(function () {
                 $$('.load-result').css('opacity', '0').transition(1500);
             }, 3100);
-        }, runQeue:function() {
-            require('utils/xhr').fireQeue();
-            console.log('Quee running');
+        }, runQeue: function () {
+            var xhr = require('utils/xhr');
+            if (xhr.qeue && xhr.qeue.length > 0) {
+                xhr.fireQeue();
+                console.log('Quee running');
+            }
             setTimeout(logger.runQeue, 10000);
         }
     }

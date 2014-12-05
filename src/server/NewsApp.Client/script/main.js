@@ -10,7 +10,8 @@
             Framework7: '../vendors/framework7/framework7',
             GTPL: '../page/global.tpl.html',
             GS: 'services/globalService',
-            userSubscriptions: 'viewModel/userSubscriptions'
+            userSubscriptions: 'viewModel/userSubscriptions',
+            note: 'viewModel/notification'
         },
         shim: {
             'Framework7': {
@@ -91,11 +92,7 @@
         app.initialize();
         //**************Debugging Only
         //  thisApp.baseUrl = "http://localhost/";
-        if (!window.cordova) {
-            window.cordova = { platformId: 'ios' };
-            thisApp.baseUrl = 'http://localhost:1641/';
-            //thisApp.initMainView();
-        }
+
         //************** 
 
 
@@ -111,6 +108,11 @@ function cl(log) {
 var onNotificationGCM = function (e) {
     logger.log('notification coming');
     logger.log(e);
+    if (e.foreground == false) {
+        alert('Cold start Detected ' + JSON.stringify(e));
+        mainView.loadPage('page/item.html?id=' + e.payload.id);
+
+    }
     window.plugins.pushNotification.setApplicationIconBadgeNumber(cl, cl, e.badge);
     if (e.alert) {
         logger.log("Alert " + e.alert);
@@ -123,39 +125,44 @@ var onNotificationGCM = function (e) {
     }
     if (e.sound) {
         console.log("Sound passed in " + e.sound);
-        //var snd = new Media(e.sound);
-        //snd.play();
+        var snd = new Media(e.sound);
+        snd.play();
+    }
+    if (e.payload.id) {
+        mainView.loadPage('page/item.html?isNote=true&id=' + e.payload.id);
     }
 }
 
 
 function storage(key, data) {
-    if (key == 'clear') {
-        var url = storage('url');
-        localStorage.clear();
-        storage('url', url);
-        return;
-    }
-    if (arguments.length == 2 && data == 'remove') {
-        localStorage.removeItem(key);
-        return;
-    }
-    if (arguments.length == 1) {
-        var d = localStorage.getItem(key);
-        try {
-            return JSON.parse(d);
-        } catch (e) {
-            return d;
+    try {
+        if (key == 'clear') {
+            var url = storage('url');
+            localStorage.clear();
+            storage('url', url);
         }
-    }
-    if (arguments.length == 2) {
-        if (typeof (data) == "function") {
-            localStorage.setItem(key, JSON.stringify(data()));
-        } else if (typeof (data) == 'object')
-            localStorage.setItem(key, JSON.stringify(data));
-        else
-            localStorage.setItem(key, data);
-
+        else if (arguments.length == 2 && data == 'remove') {
+            localStorage.removeItem(key);
+        }
+        else if (arguments.length == 1) {
+            var d = localStorage.getItem(key);
+            try {
+                return JSON.parse(d);
+            } catch (e) {
+                return d;
+            }
+        }
+        else if (arguments.length == 2) {
+            if (typeof (data) == "function") {
+                localStorage.setItem(key, JSON.stringify(data()));
+            }
+            else if (typeof (data) == 'object')
+                localStorage.setItem(key, JSON.stringify(data));
+            else
+                localStorage.setItem(key, data); 
+        } 
+    } catch (e) {
+        return null;
     }
 }
 Function.prototype.trace = function () {

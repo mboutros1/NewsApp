@@ -58,9 +58,8 @@ namespace NewsApp.Notifications
             //-------------------------
             //Configure and start Windows Notifications
             //_push.RegisterWindowsService(new WindowsPushChannelSettings("WINDOWS APP PACKAGE NAME HERE","WINDOWS APP PACKAGE SECURITY IDENTIFIER HERE", "CLIENT SECRET HERE"));
-		
-        }
 
+        }
         public static void End()
         {
             if (_push != null) _push.StopAllServices();
@@ -82,18 +81,21 @@ namespace NewsApp.Notifications
         private static void NotificationFailed(object sender, INotification notification,
             Exception notificationFailureException)
         {
-            Logger.Info("Failure: " + sender + " -> " + notificationFailureException.Message + " -> " +
-                              notification);
+            var deviceId = "";
+            deviceId = (notification as AppleNotification) == null ? deviceId : (notification as AppleNotification).DeviceToken;
+            Logger.Info("Failure: " + sender + " -> " + notificationFailureException + " -> " +
+                                         notification + " " + deviceId);
         }
+
         private static void ChannelException(object sender, IPushChannel channel, Exception exception)
         {
-            Logger.Info("Channel Exception: " + sender + " -> " + exception);
+            Logger.Error("Channel Exception: " + sender + " -> " + exception);
         }
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         //   
         private static void ServiceException(object sender, Exception exception)
         {
-            Logger.Info("Service Exception: " + sender + " -> " + exception);
+            Logger.Error("Service Exception: " + sender + " -> " + exception);
         }
 
         private static void DeviceSubscriptionExpired(object sender, string expiredDeviceSubscriptionId,

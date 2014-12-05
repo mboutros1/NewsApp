@@ -41,19 +41,19 @@
     <many-to-one name="HomeChurch" class="Church" not-found="ignore" p1:AssociationGuid="e8791b5e-0452-4b02-a2a0-dfff554c6f8e" p1:Guid="6212ea16-44db-4811-863c-4a7c32e4c595">
       <column name="ChurchId" not-null="false" precision="10" scale="0" sql-type="int" p1:unicode="false" />
     </many-to-one>
-    <bag name="Subscriptions" table="" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="50d48312-b35f-4fc6-ac09-67d3bfea4ad1">
+    <bag name="Subscriptions" table="" lazy="true" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="50d48312-b35f-4fc6-ac09-67d3bfea4ad1">
       <key>
         <column name="" />
       </key>
-      <many-to-many class="ChurchSubscription" fetch="join">
+      <many-to-many class="ChurchSubscription">
         <column name="" />
       </many-to-many>
     </bag>
-    <bag name="Churches" table="" generic="true" p1:AssociationGuid="3c2e6149-b0ad-4722-9987-814987c52f7d" p1:Guid="813f7685-ab77-4f55-8318-ad43ae009a08">
+    <bag name="Churches" table="" lazy="true" generic="true" p1:AssociationGuid="3c2e6149-b0ad-4722-9987-814987c52f7d" p1:Guid="813f7685-ab77-4f55-8318-ad43ae009a08">
       <key>
         <column name="" />
       </key>
-      <many-to-many class="Church" fetch="join">
+      <many-to-many class="Church">
         <column name="" />
       </many-to-many>
     </bag>
@@ -87,11 +87,11 @@
       </key>
       <one-to-many class="UserRole" />
     </bag>
-    <bag name="LikedNewsFeeds" table="LikedNewsFeeds_Users" schema="dbo" inverse="true" generic="true" p1:AssociationGuid="a4b41b73-fc2c-4d9d-b0b8-e7f24a4bd92b" p1:Guid="654d6e40-76c3-443a-85b9-2a8de9441f5d">
+    <bag name="LikedNewsFeeds" table="LikedNewsFeeds_Users" schema="dbo" lazy="true" inverse="true" generic="true" p1:AssociationGuid="a4b41b73-fc2c-4d9d-b0b8-e7f24a4bd92b" p1:Guid="654d6e40-76c3-443a-85b9-2a8de9441f5d">
       <key>
         <column name="UserId" />
       </key>
-      <many-to-many class="NewsFeed" fetch="join">
+      <many-to-many class="NewsFeed">
         <column name="NewsFeedId" />
       </many-to-many>
     </bag>
@@ -137,20 +137,20 @@
     <many-to-one name="CreatedBy" class="User" p1:AssociationGuid="09a5e895-0cd5-41b8-b01d-9b2aaffa25d1" p1:Guid="20162122-e1df-4b55-893e-94a06c93fca4">
       <column name="" />
     </many-to-one>
+    <bag name="Users" table="LikedNewsFeeds_Users" schema="dbo" generic="true" p1:AssociationGuid="a4b41b73-fc2c-4d9d-b0b8-e7f24a4bd92b" p1:Guid="39bf3d48-2a2e-4594-a071-d4278e89debd">
+      <key not-null="true">
+        <column name="NewsFeedId" not-null="true" precision="10" scale="0" sql-type="int" p1:unicode="false" />
+      </key>
+      <many-to-many class="User">
+        <column name="UserId" not-null="true" precision="10" scale="0" sql-type="int" p1:unicode="false" />
+      </many-to-many>
+    </bag>
     <many-to-one name="Chruch" class="Church" p1:AssociationGuid="1770c555-17df-4e8b-8c1a-fee8ee6ad1d5" p1:Guid="7344652d-84c3-47f6-910e-6cbe0ccfaac6">
       <column name="" />
     </many-to-one>
     <many-to-one name="ChurchSubscription" class="ChurchSubscription" p1:AssociationGuid="4d564d30-7074-4a52-943b-95a9a69883c1" p1:Guid="4f5bdd94-a911-4cdf-a031-b9e290aa9c37">
       <column name="" />
     </many-to-one>
-    <bag name="Users" table="LikedNewsFeeds_Users" schema="dbo" generic="true" p1:AssociationGuid="a4b41b73-fc2c-4d9d-b0b8-e7f24a4bd92b" p1:Guid="39bf3d48-2a2e-4594-a071-d4278e89debd">
-      <key not-null="true">
-        <column name="NewsFeedId" not-null="true" precision="10" scale="0" sql-type="int" p1:unicode="false" />
-      </key>
-      <many-to-many class="User" fetch="join">
-        <column name="UserId" not-null="true" precision="10" scale="0" sql-type="int" p1:unicode="false" />
-      </many-to-many>
-    </bag>
     <bag name="Notification" inverse="true" generic="false" p1:AssociationGuid="d943f797-51d1-44ee-bb90-357ac0983cae" p1:Guid="d510dd24-ac04-4e29-bbe7-2d4d13cc40d9">
       <key>
         <column name="" />
@@ -224,7 +224,7 @@
       <key>
         <column name="" />
       </key>
-      <many-to-many class="User" fetch="join">
+      <many-to-many class="User">
         <column name="" />
       </many-to-many>
     </bag>
@@ -290,11 +290,11 @@
     <many-to-one name="Church" class="Church" p1:AssociationGuid="f1daf756-2083-4d40-853e-ef0a098c20e4" p1:Guid="9d723872-757a-4e0d-a398-a94c8569f549">
       <column name="" />
     </many-to-one>
-    <bag name="Users" table="" inverse="true" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="728c7771-32a7-4de4-90c3-d4504b07010f">
+    <bag name="Users" table="" lazy="true" inverse="true" generic="true" p1:AssociationGuid="0c8ebda1-1ea1-4c1c-99e5-92605862640d" p1:Guid="728c7771-32a7-4de4-90c3-d4504b07010f">
       <key>
         <column name="" />
       </key>
-      <many-to-many class="User" fetch="join">
+      <many-to-many class="User">
         <column name="" />
       </many-to-many>
     </bag>

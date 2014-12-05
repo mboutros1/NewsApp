@@ -7,9 +7,12 @@ namespace NewsAppModel.Services
         private string _avatar;
         public int UserId { get; set; }
         public DateTime CreateDate { get; set; }
-
+        public long FacebookId { get; set; }
         public string Avatar {
             get {
+                if (FacebookId > 0) {
+                    return "FB:" + FacebookId;
+                }
                 if (string.IsNullOrWhiteSpace(_avatar))
                     return "/null.png";
                 return _avatar;

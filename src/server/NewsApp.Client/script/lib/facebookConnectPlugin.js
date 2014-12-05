@@ -1,6 +1,9 @@
 
 
 if (!window.cordova) {
+    //window.cordova = { platformId: 'ios' };
+    //thisApp.baseUrl = 'http://localhost:1641/';
+
 // This should override the existing facebookConnectPlugin object created from cordova_plugins.js
     var facebookConnectPlugin = {
 

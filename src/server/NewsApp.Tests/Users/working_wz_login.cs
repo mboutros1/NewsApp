@@ -12,7 +12,7 @@ using NUnit.Framework;
 
 namespace NewsApp.Tests.Users
 {
-    [TestFixture,RequiresSTA]
+    [TestFixture, RequiresSTA]
     public class working_wz_login : BaseTest
     {
         [SetUp]
@@ -49,7 +49,7 @@ namespace NewsApp.Tests.Users
         public void register_new_device()
         {
             string deviceId = Path.GetRandomFileName();
-             _userService.Register(0, deviceId, "ios");
+            _userService.Register(0, deviceId, "ios");
         }
         [Test]
         public void register_existed_device()
@@ -68,6 +68,16 @@ namespace NewsApp.Tests.Users
             const string deviceType = "ios";
             var us = _userService.Login(new LoginRequest(userId, email, "", birthdate, facebookId, deviceId, deviceType));
             us.Dump();
+        }
+
+        [Test]
+        public void load_all() {
+            _userRepository.All().ToList();
+        }
+        [Test]
+        public void merge_users() {
+
+            _userService.Login(new LoginRequest(233, "mic_louis@hotmail.com", "Mike GB", "04/16/1982", (long) 123123999099923, null, null));
         }
     }
 }

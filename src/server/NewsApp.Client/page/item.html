@@ -21,9 +21,9 @@
 <div class="pages navbar-through">
   <div data-page="item" class="page no-toolbar">
     <div class="page-content item-detail">
-      <div id="itemContent" class="content-block card-content">
-          
-      </div>
+        <div id="itemContent" data-bind="template:{name:'itemTemplate',data:$data}" class="content-block card-content">
+
+        </div>
       <div class="comments-content">
           <div class="comment-title">
               <span>{{forward}}&nbsp;&nbsp;|&nbsp;&nbsp;{{comment}}</span>

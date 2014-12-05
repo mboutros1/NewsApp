@@ -57,6 +57,7 @@
     <Compile Include="Messaging\ChurchRequest.cs" />
     <Compile Include="Messaging\ChurchResponse.cs" />
     <Compile Include="Messaging\CreateFeedRequest.cs" />
+    <Compile Include="Messaging\TimeLineRequest.cs" />
     <Compile Include="Model\Church.cs" />
     <Compile Include="Model\Church.Generated.cs" />
     <Compile Include="Model\ChurchSubscription.cs" />

@@ -69,17 +69,17 @@ namespace NewsAppModel.Services
 
         private UserViewModel ValidateUser(int userId, string deviceId, string deviceType)
         {
-            //if (userId == 0)
-                return _userService.Register(userId, deviceId, deviceType).ToViewModel();
-            return null;
+            return _userService.Register(userId, deviceId, deviceType).ToViewModel();
         }
-        public TimeLineResponse GetInitFeed(int userId, int startId, bool refresh, string deviceId, string deviceType)
+
+        public TimeLineResponse GetInitFeed(TimeLineRequest timeLineRequest) 
         {
+            timeLineRequest.DeviceId = timeLineRequest.DeviceId == "null" ? null : timeLineRequest.DeviceId;
             var response = new TimeLineResponse();
-            var vUser = ValidateUser(userId, deviceId, deviceType);
-            if (vUser != null) userId = vUser.UserId;
-            if (!refresh && startId < 0) refresh = true;
-            response.data = _newsFeedRepository.GetNewsFeed(userId, startId, refresh);
+            var vUser = ValidateUser(timeLineRequest.UserId, timeLineRequest.DeviceId, timeLineRequest.DeviceType);
+            if (vUser != null) timeLineRequest.UserId = vUser.UserId;
+            if (!timeLineRequest.Refresh.GetValueOrDefault() && timeLineRequest.StartAt < 0) timeLineRequest.Refresh = true;
+            response.data = _newsFeedRepository.GetNewsFeed(timeLineRequest.UserId, timeLineRequest.StartAt.GetValueOrDefault(), timeLineRequest.Refresh.GetValueOrDefault());
             response.err_code = 0;
             response.err_msg = "";
             response.User = vUser;
@@ -109,14 +109,14 @@ namespace NewsAppModel.Services
 
         public long Like(int feedId, int userId)
         {
-            var value = _newsFeedRepository.LikePost(feedId,userId);
+            var value = _newsFeedRepository.LikePost(feedId, userId);
             _uow.Commit();
             return value;
             //TODO: Add logging
         }
         public long Dislike(int feedId, int userId)
         {
-            var value = _newsFeedRepository.DislikePost(feedId,userId);
+            var value = _newsFeedRepository.DislikePost(feedId, userId);
             _uow.Commit();
             return value;
             //TODO: Add logging

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using NewsAppModel.Services;
 
-namespace NewsAppModel.Services
+namespace NewsAppModel.Messaging
 {
     public class TimeLineResponse
     {

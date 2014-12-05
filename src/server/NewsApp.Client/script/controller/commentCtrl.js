@@ -13,23 +13,28 @@ define(['utils/appFunc', 'utils/xhr', 'view/module'], function (appFunc, xhr, VM
                     else
                         VM.module('commentView').commentPopup({ user: us, query: query });
                 }
-            }]; 
+            }];
             VM.module('commentView').init({
                 bindings: bindings
-            }); 
+            });
             this.getComments(query);
         },
 
         getComments: function (query) {
-            xhr.simpleCall({
-                func: 'GetComments',
-                data: { feedId: query.id }
-            }, function (response) {
+            if (query.item) {
                 VM.module('commentView').render({
-                    comments: response
+                    comments: query.item.Comments
                 });
+            } else
+                xhr.simpleCall({
+                    func: 'GetComments',
+                    data: { feedId: query.id }
+                }, function (response) {
+                    VM.module('commentView').render({
+                        comments: response
+                    });
 
-            });
+                });
         }
 
     };

@@ -57,8 +57,7 @@ namespace NewsApp.Controllers
             var notification = _notificationRepository.All().FirstOrDefault();
             if (notification == null)
                 throw new InvalidOperationException("no notifications in the database, please create one");
-            foreach (var user in users)
-                _notificationService.SendNotification(users, notification);
+            _notificationService.SendNotification(users, notification);
             _uow.Save();
             return View();
         }

@@ -1,26 +1,32 @@
 define(['utils/appFunc', 'utils/tplManager', 'i18n!nls/lang'],
     function (appFunc, TM, i18n) {
 
-        var timelineView = { 
+        var timelineView = {
             init: function () {
                 appFunc.showToolbar('.views');
                 $$('#ourView .pull-to-refresh-layer').show();
                 hiApp.showIndicator();
             },
             getTimeline: function (data) {
-                var renderData = this.renderDataFunc({
-                    data: data
-                });
-                ko.updateThis(renderData, $$('#ourView').find('.time-line-content')[0], {
-                    'feeds': {
-                        key: function (d) {
-                            return ko.utils.unwrapObservable(d.Id);
+                try {
+                    var renderData = this.renderDataFunc({
+                        data: data
+                    });
+                    ko.updateThis(renderData, $$('#ourView').find('.time-line-content')[0], {
+                        'feeds': {
+                            key: function (d) {
+                                return ko.utils.unwrapObservable(d.Id);
+                            }
                         }
-                    }
-                });
-                hiApp.hideIndicator();
-                var ptrContent = $$('#ourView').find('.pull-to-refresh-content');
-                ptrContent.data('scrollLoading', 'unloading');
+                    });
+                    var ptrContent = $$('#ourView').find('.pull-to-refresh-content');
+                    ptrContent.data('scrollLoading', 'unloading');
+                } catch (e) {
+                    logger.log(e.message);
+                } finally {
+                    hiApp.hideIndicator();
+                    hiApp.pullToRefreshDone();
+                }
             },
             renderDataFunc: function (options) {
                 options = options || {};
@@ -42,23 +48,30 @@ define(['utils/appFunc', 'utils/tplManager', 'i18n!nls/lang'],
             },
             refreshTimeline: function (data) {
                 try {
-                    if (data.length == 0) {
+                    if (data.length == 0)
                         timelineView.showLoadResult(i18n.index.nothing_loaded);
-                        return;
-                    }
-                    ko.updateThis({ feeds: data }, $$('#ourView').find('.time-line-content')[0]);
-
+                    else
+                        ko.updateThis({ feeds: data }, $$('#ourView').find('.time-line-content')[0]);
                 } catch (e) {
                     logger.log(e.message);
+                } finally {
+                    hiApp.pullToRefreshDone();
                 }
-                hiApp.pullToRefreshDone();
 
             },
             infiniteTimeline: function (options) {
-                options = options || {};
-                ko.updateThis({ feeds: options.feeds }, $$('#ourView').find('.time-line-content')[0]);
-                hiApp.hideIndicator();
-
+                try {
+                    options = options || {};
+                    var kos = ko.dataFor($$('#ourView').find('.time-line-content')[0]);
+                    kos.feeds.extend({ rateLimit: 50 });
+                    var newFeeds = ko.mapping.fromJS(options.feeds)();
+                    for (var i = 0; i < newFeeds.length; i++)
+                        kos.feeds.push(newFeeds[i]);
+                } catch (e) {
+                    logger.log(e.message);
+                } finally {
+                    hiApp.hideIndicator();
+                }
             },
 
             refreshTimelineByClick: function () {

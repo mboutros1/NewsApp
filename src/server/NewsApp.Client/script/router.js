@@ -80,6 +80,14 @@ define(['GS', 'controller/module'], function (GS, CM) {
                     CM.module('feedbackCtrl').init();
                     break;
                 case 'item':
+                    if (query.isNote) {
+                        hiApp.showPreloader();
+                        require('utils/xhr').simpleCall({ func: 'GetFeedDetails', async: false, data: { id: query.id } },
+                            function (response) {
+                                query.item = response;
+                            }
+                        );
+                    }
                     CM.module('itemCtrl').init(query);
                     CM.module('commentCtrl').init(query);
                     break;

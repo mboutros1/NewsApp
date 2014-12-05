@@ -10,5 +10,9 @@ namespace NewsApp.Model
 
     public partial class UserDevice
     {
+        public override string ToString()
+        {
+            return UserDeviceId + " " + Type;
+        }
     }
 }

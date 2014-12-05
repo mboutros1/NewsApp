@@ -5,7 +5,7 @@
         string Type { get; }
 
         void SendNotification(string deviceId, string notification, int badge,
-            string sound);
+            string sound, int feedId);
     }
 
     public static class DeviceProviderExtension

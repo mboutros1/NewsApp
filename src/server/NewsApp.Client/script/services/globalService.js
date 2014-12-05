@@ -4,25 +4,34 @@ define(['userSubscriptions'], function (sub) {
         init: function () {
             if (!CONFIG) {
                 CONFIG = {
-                    setCurrentUser: function (sid, user) {
+                    validateUser: function (user) {
                         var crId = storage('sid');
                         var lid = parseInt(storage('lid'));
-                        if (lid > 0 && lid != crId)
-                            require('utils/xhr').enqeue({ func: 'Merge', data: { oldUserId: crId, newUserid: lid }, type: 'POST' });
+                        if (lid > 0 && lid != crId) {
+                            require('utils/xhr').enqeue({ func: 'Merge', method: 'POST', data: { oldUserId: crId, newUserid: lid } });
+                            crId = lid;
+                            user.UserId = crId;
+                        }
+                        storage('sid', user.UserId);
+                        return user;
+                    },
+                    setCurrentUser: function (sid, user) {
+                        user = CONFIG.validateUser(user);
+                        sid = user.UserId;
                         CONFIG.currentUser = user;
-                        storage('user', JSON.stringify(user));
-                        storage('sid', sid);
+                        storage('user', user);
                     }, currentUser: { UserId: 0 }
                 };
                 if (storage('sid')) {
                     CONFIG.currentUser.UserId = storage('sid');
                 }
-                if (localStorage.getItem('user')) {
-                    try {
-                        CONFIG.currentUser = storage('user');
-                    }
-                    catch (e) { }
-                }
+                var u = storage('user');
+                if (u)
+                    CONFIG.currentUser = CONFIG.validateUser(u);
+
+                var fb = storage('fbData');
+                if (fb && parseInt(fb.id) > 0 && CONFIG.currentUser.Avatar.indexOf('FB:') == -1)
+                    CONFIG.currentUser.Avatar = "FB:" + fb.id;
                 if (!CONFIG.currentUser.UserId) CONFIG.currentUser.UserId = 0;
             }
         },
@@ -37,8 +46,10 @@ define(['userSubscriptions'], function (sub) {
             var that = this;
             if (window.plugins && window.plugins.pushNotification)
                 window.plugins.pushNotification.register(function (status) {
-                    storage("deviceId", status);
-                    that.storeToken(status);
+                    if (storage("deviceId") != status) {
+                        storage("deviceId", status);
+                        that.storeToken(status);
+                    }
                 }, function (st) {
                     logger.log(st);
                 }, { alert: true, sound: true, badge: true, ecb: 'onNotificationGCM' });
@@ -50,7 +61,7 @@ define(['userSubscriptions'], function (sub) {
             result = !result ? {} : result;
             var name = result.first_name + ' ' + result.last_name;
             var x = require('utils/xhr');
-            x.enqeue({
+            x.simpleCall({
                 func: 'LoginFb',
                 data: {
                     userId: uid,
@@ -61,11 +72,12 @@ define(['userSubscriptions'], function (sub) {
                     deviceId: deviceId
                 }, method: 'POST'
             }, this.loginSuccessed);
-            mainView.loadPage('index.html');
         },
         loginSuccessed: function (response) {
-            storage('lid', response.UserId);
+            if (CONFIG.currentUser && CONFIG.currentUser.UserId != response.UserId)
+                storage('lid', response.UserId);
             CONFIG.setCurrentUser(response.UserId, response);
+            mainView.loadPage('index.html');
             hiApp.hidePreloader();
         },
         facebookUpdate: function () {
@@ -90,6 +102,8 @@ define(['userSubscriptions'], function (sub) {
                 url: thisApp.baseUrl + 'Account/Register',
                 dataType: 'json',
                 success: function (e) {
+                    if (CONFIG.currentUser && CONFIG.currentUser.UserId != e.UserId)
+                        storage('sid', e.UserId);
                     CONFIG.setCurrentUser(e.UserId, e);
                 },
                 contentType: 'application/json',

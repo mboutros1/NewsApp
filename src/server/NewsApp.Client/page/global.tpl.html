@@ -6,7 +6,7 @@
                     <img data-bind="attr:{'data-avatarid':Avatar},formatAvatar:Avatar">
                 </div>
                 <div class="detail">
-                    <p data-bind="text:Name" class="nickname"> </p>
+                    <p data-bind="text:Id() +' ' +  Name()" class="nickname"> </p>
                     <p data-bind="text:CreateDate,formatDate:CreateDate" data-time="" class="create-time"></p>
                 </div>
             </div>
@@ -87,21 +87,22 @@
 <script id="itemTemplate" type="text/html">
     <div class="item-header">
         <div class="avatar">
-            <img src="{{avatar}}">
+            <img data-avatarid="{{Avatar}}"
+                 data-bind="attr:{'data-avatarid':Avatar},formatAvatar:Avatar">
         </div>
         <div class="detail">
-            <p class="nickname">{{nickname}}</p>
-            <p data-time="{{created_at}}" class="create-time">{{time}}</p>
+            <p data-bind="text:Name" class="nickname">{{nickname}}</p>
+            <p data-time="{{created_at}}" data-bind="text:CreateDate,formatDate:CreateDate" class="create-time">{{time}}</p>
         </div>
     </div>
-    <div class="item-subtitle">
+    <div class="item-subtitle" data-bind="text:Title">
         {{text}}
     </div>
-    {{#if image}}
+    <!--ko if:Images-->
     <div class="item-image">
-        <img src="{{image}}" alt="">
+        <img data-bind="attr:{src:Images}" alt="">
     </div>
-    {{/if}}
+    <!--/ko-->
 </script>
 <script id="commentsTemplate" type="text/html">
     <!-- ko foreach:comments-->

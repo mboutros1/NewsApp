@@ -31,6 +31,7 @@ namespace NewsApp.Model
             this.IsSent = false;
             this.NotifyUsers = false;
             this.CommentsCount = 0;
+            this.Users = new List<User>();
             this.Notification = new ArrayList();
             this.Comments = new List<Comment>();
             OnCreated();
@@ -161,6 +162,16 @@ namespace NewsApp.Model
         /// There are no comments for CreatedBy in the schema.
         /// </summary>
         public virtual User CreatedBy
+        {
+            get;
+            set;
+        }
+
+    
+        /// <summary>
+        /// There are no comments for Users in the schema.
+        /// </summary>
+        public virtual IList<User> Users
         {
             get;
             set;

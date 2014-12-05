@@ -37,7 +37,7 @@ namespace NewsAppModel.Services
                     var provider = _providers.FirstOrDefault(m => m.Type == device.Type);
                     if (provider == null)
                         throw new InvalidOperationException("Device Not Supported");
-                    provider.SendNotification(device.UserDeviceId, notification.Title, 1, "default");
+                    provider.SendNotification(device.UserDeviceId, notification.Title, 1, "default",notification.NewsFeedId);
                     _userNotificationRepository.Add(new UserNotification() { Notification = notification, SentDate = DateTime.Now, User = user });
 
                 }

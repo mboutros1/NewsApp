@@ -1,8 +1,9 @@
 define(['utils/xhr'], function (xhr) {
     var subs = {
+        key:'subscription',
         init: function () {
-            this.subscription = storage('subscription') || {};
-            subs.subscription = ko.mapping.fromJS(subs.subscription, {
+            this.subscription = storage(this.key) || {};
+            this.subscription = ko.mapping.fromJS(this.subscription, {
                 'Subscription': {
                     create: function (d) {
                         d.data = d.data || {};
@@ -20,12 +21,11 @@ define(['utils/xhr'], function (xhr) {
                         return ko.mapping.fromJS(d.data);
                     }
                 }
-
             });
         },
         save: function () {
-            storage('subscription', ko.mapping.toJS(subs.subscription));
-        },
+            storage(subs.key, ko.mapping.toJS(subs.subscription));
+         },
         refresh: function (success) {
             xhr.simpleCall({
                 func: 'GetSubscriptions',
@@ -35,14 +35,15 @@ define(['utils/xhr'], function (xhr) {
             }, function (response) {
                 ko.mapping.fromJS(response, {}, subs.subscription);
                 subs.save();
-                if (success) success(response);
+                if (success) success(subs.subscription);
             });
         },
         get: function (success) {
             if (subs.subscription == null || subs.subscription.Churches == null || subs.subscription.Churches().length == 0)
                 subs.refresh(success);
             else
-                success(subs.subscription);
+                if (success) success(subs.subscription);
+            return subs.subscription;
         },
         find: function (id) {
             var ch = subs.subscription.Churches();
@@ -63,8 +64,6 @@ define(['utils/xhr'], function (xhr) {
             });
         }
     }
-
     subs.init();
-
     return subs;
 });

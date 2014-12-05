@@ -9,8 +9,9 @@ namespace NewsApp.Model
         {
             AddDevice(new UserDevice() { UserDeviceId = deviceId, LastLogin = LocalHelper.Now, Type = deviceType });
         }
-        public virtual void AddDevice(UserDevice device)
-        {
+        public virtual void AddDevice(UserDevice device) {
+            if (string.IsNullOrWhiteSpace(device.UserDeviceId))
+                return;
             if (Devices.Any(m => m.UserDeviceId == device.UserDeviceId)) return;
             device.User = this;
             Devices.Add(device);
@@ -28,5 +29,9 @@ namespace NewsApp.Model
             Subscriptions.Add(new ChurchSubscription() { ChurchSubscriptionId = churchSubscriptionId });
 
         }
+
+        public override string ToString() {
+            return string.Format("#{0} {1} Anon:{2} ", UserId, Name,IsAnonymous);
+         }
     }
 }

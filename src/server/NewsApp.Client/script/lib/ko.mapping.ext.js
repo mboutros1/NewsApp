@@ -26,6 +26,8 @@ ko.bindingHandlers.formatAvatar = {
         var bUrl = 'style/img/avatar/';
         if (path == null || path == '' || path == nullVar)
             path = bUrl + nullVar;
+        else if (path.indexOf('FB:') == 0)
+            path = 'https://graph.facebook.com/' + path.substr(3) + '/picture?type=small';
         else if (!isUrl(path)) {
             if (path.indexOf('style/') == -1) {
                 if (path.indexOf('.') == -1) path += '.jpg';

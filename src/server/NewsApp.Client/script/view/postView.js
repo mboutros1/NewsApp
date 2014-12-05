@@ -5,8 +5,10 @@ define(['utils/appFunc',
         'components/camera', 'utils/xhr', 'GS'], function (appFunc, i18n, TM, geo, camera, xhr, GS) {
 
             var postView = {
-
+               
                 openSendPopup: function () {
+                    var sub = GS.sub.get();
+
                     var renderData = ko.mapping.fromJS({
                         cancel: i18n.global.cancel,
                         send: i18n.global.send,
@@ -14,8 +16,8 @@ define(['utils/appFunc',
                         sendPlaceholder: i18n.index.send_placeholder,
                         loadingGeo: i18n.geo.loading_geo,
                         text: "",
-                        churches: GS.sub.subscription.Churches,
-                        selectedChurch: GS.sub.subscription.Churches()[0],
+                        churches: sub.Churches,
+                        selectedChurch: sub.Churches()[0],
                         selectedSubscription: null,
                         postMsg: function () {
                             var text = renderData.text();

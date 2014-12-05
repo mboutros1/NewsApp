@@ -6,7 +6,7 @@ namespace NewsApp.Notifications
 {
     public class AndroidNotifier : IDeviceProvider
     {
-        public void SendNotification(string deviceId, string notification, int badge, string sound)
+        public void SendNotification(string deviceId, string notification, int badge, string sound, int feedId)
         {
             AppController.PushProBroker.QueueNotification(new GcmNotification()
                 .ForDeviceRegistrationId(deviceId)

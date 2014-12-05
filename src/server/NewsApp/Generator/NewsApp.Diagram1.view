@@ -361,22 +361,6 @@
                       <Parent>15</Parent>
                     </CustomProperties>
                     <Children />
-                    <Size>
-                      <Width>100 px</Width>
-                      <Height>18 px</Height>
-                    </Size>
-                    <Enabled>false</Enabled>
-                    <Oid xsi:type="SchemaModelOID">
-                      <Path>0c7edf13-e42b-400b-86f5-545b8d9a529e</Path>
-                      <TypeName>EntityDeveloper.NHibernate.HibernateRelationProperty</TypeName>
-                    </Oid>
-                  </Model>
-                  <Model xsi:type="RelationPropertyVwModel">
-                    <CustomProperties>
-                      <OID>22</OID>
-                      <Parent>15</Parent>
-                    </CustomProperties>
-                    <Children />
                     <Location>
                       <X>0 px</X>
                       <Y>90 px</Y>
@@ -387,6 +371,22 @@
                     </Size>
                     <Oid xsi:type="SchemaModelOID">
                       <Path>39bf3d48-2a2e-4594-a071-d4278e89debd</Path>
+                      <TypeName>EntityDeveloper.NHibernate.HibernateRelationProperty</TypeName>
+                    </Oid>
+                  </Model>
+                  <Model xsi:type="RelationPropertyVwModel">
+                    <CustomProperties>
+                      <OID>22</OID>
+                      <Parent>15</Parent>
+                    </CustomProperties>
+                    <Children />
+                    <Size>
+                      <Width>100 px</Width>
+                      <Height>18 px</Height>
+                    </Size>
+                    <Enabled>false</Enabled>
+                    <Oid xsi:type="SchemaModelOID">
+                      <Path>0506422a-4071-4319-8b72-0c8efa814bc8</Path>
                       <TypeName>EntityDeveloper.NHibernate.HibernateRelationProperty</TypeName>
                     </Oid>
                   </Model>
@@ -782,13 +782,16 @@
                       <Parent>34</Parent>
                     </CustomProperties>
                     <Children />
+                    <Location>
+                      <X>0 px</X>
+                      <Y>144 px</Y>
+                    </Location>
                     <Size>
-                      <Width>100 px</Width>
+                      <Width>228 px</Width>
                       <Height>18 px</Height>
                     </Size>
-                    <Enabled>false</Enabled>
                     <Oid xsi:type="SchemaModelOID">
-                      <Path>223d26c7-aa79-4ead-828c-66b37f1fd49c</Path>
+                      <Path>654d6e40-76c3-443a-85b9-2a8de9441f5d</Path>
                       <TypeName>EntityDeveloper.NHibernate.HibernateRelationProperty</TypeName>
                     </Oid>
                   </Model>
@@ -804,7 +807,7 @@
                     </Size>
                     <Enabled>false</Enabled>
                     <Oid xsi:type="SchemaModelOID">
-                      <Path>ae5f7ca7-194f-437d-b400-4a3d65eb220e</Path>
+                      <Path>f6326519-8a27-48b2-9d8c-7d5d40ce8c0a</Path>
                       <TypeName>EntityDeveloper.NHibernate.HibernateRelationProperty</TypeName>
                     </Oid>
                   </Model>
@@ -814,16 +817,13 @@
                       <Parent>34</Parent>
                     </CustomProperties>
                     <Children />
-                    <Location>
-                      <X>0 px</X>
-                      <Y>144 px</Y>
-                    </Location>
                     <Size>
-                      <Width>228 px</Width>
+                      <Width>100 px</Width>
                       <Height>18 px</Height>
                     </Size>
+                    <Enabled>false</Enabled>
                     <Oid xsi:type="SchemaModelOID">
-                      <Path>654d6e40-76c3-443a-85b9-2a8de9441f5d</Path>
+                      <Path>ebe468d3-daf6-477e-a2a5-6f797580aa14</Path>
                       <TypeName>EntityDeveloper.NHibernate.HibernateRelationProperty</TypeName>
                     </Oid>
                   </Model>
@@ -1513,8 +1513,8 @@
           <Model xsi:type="AssociationVwModel">
             <CustomProperties>
               <OID>80</OID>
-              <OutModel>23</OutModel>
-              <InModel>60</InModel>
+              <OutModel>60</OutModel>
+              <InModel>23</InModel>
               <OutPort>81</OutPort>
               <InPort>82</InPort>
               <Parent>0</Parent>
@@ -1522,11 +1522,11 @@
             <PortAnchors>
               <Port>
                 <Location>
-                  <X>17.1818181818181 px</X>
-                  <Y>0.477272727272748 px</Y>
+                  <X>149.5 px</X>
+                  <Y>0 px</Y>
                 </Location>
                 <Anchors>Left Right</Anchors>
-                <Align>Top</Align>
+                <Align>Bottom</Align>
                 <CustomProperties>
                   <OID>81</OID>
                   <PortType>FloatAnchor</PortType>
@@ -1534,27 +1534,17 @@
               </Port>
               <Port>
                 <Location>
-                  <X>75.1818181818181 px</X>
-                  <Y>284.840909090909 px</Y>
+                  <X>0.5 px</X>
+                  <Y>0 px</Y>
                 </Location>
                 <Anchors>Left Right</Anchors>
-                <Align>Bottom</Align>
+                <Align>Top</Align>
                 <CustomProperties>
                   <OID>82</OID>
                   <PortType>FloatAnchor</PortType>
                 </CustomProperties>
               </Port>
             </PortAnchors>
-            <BendPoints>
-              <PointD>
-                <X>625.181818181818 px</X>
-                <Y>516 px</Y>
-              </PointD>
-              <PointD>
-                <X>534.181818181818 px</X>
-                <Y>516 px</Y>
-              </PointD>
-            </BendPoints>
             <IsManuallyRouted>false</IsManuallyRouted>
             <Oid xsi:type="SchemaModelOID">
               <Path>3c2e6149-b0ad-4722-9987-814987c52f7d</Path>
@@ -2298,8 +2288,8 @@
           <Model xsi:type="AssociationVwModel">
             <CustomProperties>
               <OID>123</OID>
-              <OutModel>23</OutModel>
-              <InModel>111</InModel>
+              <OutModel>111</OutModel>
+              <InModel>23</InModel>
               <OutPort>124</OutPort>
               <InPort>125</InPort>
               <Parent>0</Parent>
@@ -2307,11 +2297,11 @@
             <PortAnchors>
               <Port>
                 <Location>
-                  <X>195.636363636364 px</X>
-                  <Y>0.477272727272748 px</Y>
+                  <X>75 px</X>
+                  <Y>0 px</Y>
                 </Location>
                 <Anchors>Left Right</Anchors>
-                <Align>Top</Align>
+                <Align>Bottom</Align>
                 <CustomProperties>
                   <OID>124</OID>
                   <PortType>FloatAnchor</PortType>
@@ -2319,27 +2309,17 @@
               </Port>
               <Port>
                 <Location>
-                  <X>43.6363636363636 px</X>
-                  <Y>158.068181818182 px</Y>
+                  <X>136 px</X>
+                  <Y>0 px</Y>
                 </Location>
                 <Anchors>Left Right</Anchors>
-                <Align>Bottom</Align>
+                <Align>Top</Align>
                 <CustomProperties>
                   <OID>125</OID>
                   <PortType>FloatAnchor</PortType>
                 </CustomProperties>
               </Port>
             </PortAnchors>
-            <BendPoints>
-              <PointD>
-                <X>803.636363636364 px</X>
-                <Y>516 px</Y>
-              </PointD>
-              <PointD>
-                <X>712.636363636364 px</X>
-                <Y>516 px</Y>
-              </PointD>
-            </BendPoints>
             <IsManuallyRouted>false</IsManuallyRouted>
             <Oid xsi:type="SchemaModelOID">
               <Path>0c8ebda1-1ea1-4c1c-99e5-92605862640d</Path>
@@ -3141,7 +3121,7 @@
           <Scale>1</Scale>
           <Location>
             <X>-339 px</X>
-            <Y>278 px</Y>
+            <Y>226 px</Y>
           </Location>
         </ViewPort>
         <Oid xsi:type="SchemaModelOID">

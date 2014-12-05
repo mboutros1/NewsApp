@@ -71,7 +71,7 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
             appFunc.bindEvents(bindings);
 
         }, loadLastFeed: function (lastFeed) {
-            if (lastFeed) {
+            if (lastFeed && lastFeed.length > 0) {
                 storage('feed', lastFeed);
             }
             else {
@@ -83,13 +83,17 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
 
         getTimeline: function () {
             var user = GS.getCurrentUser();
+            console.log('get the feed ' + user.UserId);
             this.loadLastFeed();
             var that = this;
             var deviceId = storage("deviceId");
+            var platForm = 'DK';
+            if (typeof (cordova) != 'undefined' && typeof (cordova.platformId) != 'undefined')
+                platForm = 'DK';
             xhr.simpleCall({
                 func: 'GetInitFeed', method: 'POST', data: {
                     UserId: user.UserId,
-                    StartAt: timelineCtrl.firstIndex, DeviceId: deviceId, DeviceType: cordova.platformId
+                    StartAt: timelineCtrl.firstIndex, DeviceId: deviceId, DeviceType: platForm
                 }
             }, function (response) {
                 GS.setCurrentUser(response.User.UserId, response.User);
@@ -103,9 +107,9 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
         refreshTimeline: function () {
             var user = GS.getCurrentUser();
             xhr.simpleCall({
-                           func: 'GetFeed',error:function(){
-                           hiApp.pullToRefreshDone();
-}, data: {
+                func: 'GetFeed', error: function () {
+                    hiApp.pullToRefreshDone();
+                }, data: {
                     UserId: user.UserId, StartAt: timelineCtrl.firstIndex,
                     Refresh: true
                 }
@@ -117,7 +121,6 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
 
         infiniteTimeline: function () {
             var $dom = $$(this);
-            console.log('infinite line');
             var user = GS.getCurrentUser();
             if (timelineCtrl.inprogress) return;
             timelineCtrl.inprogress = true;
