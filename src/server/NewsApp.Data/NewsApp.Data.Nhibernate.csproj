@@ -66,6 +66,7 @@
     <Compile Include="NHibernateSessionProvider.cs" />
     <Compile Include="NHibernateUnitOfWork.cs" />
     <Compile Include="NHibernateUnitOfWorkFactory.cs" />
+    <Compile Include="UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

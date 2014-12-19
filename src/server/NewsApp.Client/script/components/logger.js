@@ -104,7 +104,7 @@ define([], function () {
                 }
             }
             var response = xhr.responseText;
-            if (response == "") return returnDefault(xhr); 
+            if (response == "") return returnDefault(xhr);
             try {
                 response = JSON.parse(response);
                 return response;
@@ -119,7 +119,8 @@ define([], function () {
             }, 3100);
         }, runQeue: function () {
             var xhr = require('utils/xhr');
-            if (xhr.qeue && xhr.qeue.length > 0) {
+            var lst = storage('qeue');
+            if (lst && lst.length > 0) {
                 xhr.fireQeue();
                 console.log('Quee running');
             }

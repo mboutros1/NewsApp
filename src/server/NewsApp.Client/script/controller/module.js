@@ -10,7 +10,8 @@ define(['controller/appCtrl',
     'controller/commentCtrl',
         'controller/messageCtrl',
         'controller/languageCtrl',
-        'controller/subscriptionCtrl'], function (appCtrl, loginCtrl, settingCtrl, aboutCtrl, feedbackCtrl, timelineCtrl, itemCtrl, postCtrl, contactCtrl, commentCtrl, messageCtrl, languageCtrl, subscriptionCtrl) {
+        'controller/subscriptionCtrl',
+        'controller/feedCtrl'], function (appCtrl, loginCtrl, settingCtrl, aboutCtrl, feedbackCtrl, timelineCtrl, itemCtrl, postCtrl, contactCtrl, commentCtrl, messageCtrl, languageCtrl, subscriptionCtrl,feedCtrl) {
 
             var module = {
                 module: function (name) {
@@ -20,6 +21,9 @@ define(['controller/appCtrl',
                     switch (name) {
                         case 'appCtrl':
                             controller = appCtrl;
+                            break;
+                        case 'feedCtrl':
+                            controller = feedCtrl;
                             break;
                         case 'loginCtrl':
                             controller = loginCtrl;

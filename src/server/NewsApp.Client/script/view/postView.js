@@ -5,7 +5,7 @@ define(['utils/appFunc',
         'components/camera', 'utils/xhr', 'GS'], function (appFunc, i18n, TM, geo, camera, xhr, GS) {
 
             var postView = {
-               
+
                 openSendPopup: function () {
                     var sub = GS.sub.get();
 
@@ -34,21 +34,18 @@ define(['utils/appFunc',
                                 camera.startUpload(imgSrc);
                             } else {
 
-                                hiApp.showPreloader(i18n.index.sending);
-
-                                xhr.simpleCall({
+                                hiApp.showPreloader(i18n.index.sending); 
+                                xhr.enqeue({
                                     func: 'Post', method: 'POST',
                                     data: {
-                                        UserId: GS.getCurrentUser().UserId, Body: text,
+                                        UserId: GS.getCurrentUser().UserId(), Body: text,
                                         ChurchSubscriptionId: renderData.selectedSubscription().ChurchSubscriptionId()
                                     }
-                                }, function (response) {
-                                });
+                                }, 'hiApp.pullToRefreshTrigger()');
 
                                 setTimeout(function () {
                                     hiApp.hidePreloader();
-                                    hiApp.closeModal('.send-popup');
-                                    //Refresh Timeline
+                                    hiApp.closeModal('.send-popup'); 
                                 }, 1300);
                             }
                         }

@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using NHibernate;
 using NHibernate.Cfg;
 
@@ -66,6 +67,7 @@ namespace NewsApp.Model
                 _session.Dispose();
                 _session = null;
             }
+            Debug.WriteLine("Closing Session");
         }
 
         #region IDisposable Methods

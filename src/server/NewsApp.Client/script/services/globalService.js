@@ -17,7 +17,6 @@ define(['userSubscriptions'], function (sub) {
                     },
                     setCurrentUser: function (sid, user) {
                         user = CONFIG.validateUser(user);
-                        sid = user.UserId;
                         CONFIG.currentUser = user;
                         storage('user', user);
                     }, currentUser: { UserId: 0 }
@@ -30,7 +29,7 @@ define(['userSubscriptions'], function (sub) {
                     CONFIG.currentUser = CONFIG.validateUser(u);
 
                 var fb = storage('fbData');
-                if (fb && parseInt(fb.id) > 0 && CONFIG.currentUser.Avatar.indexOf('FB:') == -1)
+                if (fb && parseInt(fb.id) > 0 && CONFIG.currentUser.Avatar && CONFIG.currentUser.Avatar.indexOf('FB:') == -1)
                     CONFIG.currentUser.Avatar = "FB:" + fb.id;
                 if (!CONFIG.currentUser.UserId) CONFIG.currentUser.UserId = 0;
             }
@@ -82,11 +81,10 @@ define(['userSubscriptions'], function (sub) {
         },
         facebookUpdate: function () {
             var that = this;
-            var fbData = JSON.parse(localStorage.getItem('fbData'));
+            var fbData = storage('fbData');
             facebookConnectPlugin.api(fbData.id + "/?fields=id,email,birthday,first_name,last_name",
                 ["user_birthday"],
                 function (result) {
-
                     try {
                         storage('fbData', result);
                         logger.log(name);
@@ -94,7 +92,6 @@ define(['userSubscriptions'], function (sub) {
                     } catch (e) {
                         logger.log(e);
                     }
-
                 }, cl);
         },
         storeToken: function (deviceId) {
@@ -117,16 +114,16 @@ define(['userSubscriptions'], function (sub) {
         },
         getSid: function () {
             var m = $$.parseUrlQuery(window.location.href || '');
-            return m.sid || localStorage.getItem('sid');
+            return m.sid || storage('sid');
         },
         removeCurrentUser: function () {
             CONFIG.currentUser = { UserId: 0 };
-            localStorage.removeItem('user');
-            localStorage.removeItem('sid');
+            storage('user','remove');
+            storage('sid','remove');
         },
 
         isLogin: function () {
-            return (CONFIG.currentUser && localStorage.getItem('sid'));
+            return (CONFIG.currentUser && storage('sid'));
         }
 
     };

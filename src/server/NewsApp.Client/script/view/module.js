@@ -10,7 +10,8 @@ define(['view/appView',
         'view/commentView',
         'view/messageView',
         'view/languageView',
-        'view/subscriptionView'], function (appView, loginView, settingView, aboutView, feedbackView, timelineView, itemView, postView, contactView, commentView, messageView, languageView, subscriptionView) {
+        'view/subscriptionView',
+        'view/feedView'], function (appView, loginView, settingView, aboutView, feedbackView, timelineView, itemView, postView, contactView, commentView, messageView, languageView, subscriptionView, feedView) {
 
             var module = {
 
@@ -21,6 +22,9 @@ define(['view/appView',
                     switch (name) {
                         case 'appView':
                             view = appView;
+                            break;
+                        case 'feedView':
+                            view = feedView;
                             break;
                         case 'subscriptionView':
                             view = subscriptionView;

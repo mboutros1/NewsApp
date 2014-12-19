@@ -54,7 +54,7 @@ namespace NewsApp.Controllers
             var users = _userRepository.All().ToList();
             if (users.Count == 0)
                 throw new InvalidOperationException("no users in the database, please create one");
-            var notification = _notificationRepository.All().FirstOrDefault();
+            var notification = _notificationRepository.All().Skip(5).FirstOrDefault();
             if (notification == null)
                 throw new InvalidOperationException("no notifications in the database, please create one");
             _notificationService.SendNotification(users, notification);

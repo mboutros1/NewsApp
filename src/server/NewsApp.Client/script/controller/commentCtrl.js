@@ -1,8 +1,6 @@
 define(['utils/appFunc', 'utils/xhr', 'view/module'], function (appFunc, xhr, VM) {
-    var commentCtrl = {
-
-        init: function (query) {
-
+    var commentCtrl = { 
+        init: function (query) { 
             var bindings = [{
                 element: '.item-comment-btn',
                 event: 'click',
@@ -18,8 +16,7 @@ define(['utils/appFunc', 'utils/xhr', 'view/module'], function (appFunc, xhr, VM
                 bindings: bindings
             });
             this.getComments(query);
-        },
-
+        }, 
         getComments: function (query) {
             if (query.item) {
                 VM.module('commentView').render({

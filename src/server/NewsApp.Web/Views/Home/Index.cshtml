@@ -50,3 +50,23 @@
     <input type="submit" value="GetNotification" />
 
 }
+
+@using (Ajax.BeginForm("LoginFb", "Account", new AjaxOptions
+        {
+            LoadingElementDuration = 500,
+            LoadingElementId = "Progress",
+            InsertionMode = InsertionMode.Replace,
+            OnComplete = "$('form').cleanDirty();window.location=window.location",
+            HttpMethod = "POST"
+
+        }))
+{
+    <input type="text" id="userId" name="userId" value="1" />
+    <input type="text" id="email" name="email" value="mic_louis@hotmail.com" />
+    <input type="text" id="name" name="name" value="Mike GB" />
+    <input type="text" id="birthdate" name="birthdate" value="04/16/2015" />
+    <input type="text" id="facebookId" name="facebookId" value="123131231231" />
+    <input type="text" id="deviceId" name="deviceId" value="" />
+    <input type="submit" value="Login Fb" />
+
+}

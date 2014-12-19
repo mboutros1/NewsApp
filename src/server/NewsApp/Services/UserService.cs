@@ -3,6 +3,7 @@ using System.Linq;
 using NewsApp.Model;
 using NewsAppModel.Extensions;
 using NewsAppModel.Helpers;
+using NewsAppModel.Model;
 
 namespace NewsAppModel.Services
 {
@@ -10,10 +11,10 @@ namespace NewsAppModel.Services
     {
         private readonly IRepository<FeedBack> _feedBackRepository;
         private readonly IUnitOfWork _uow;
-        private readonly IRepository<User> _userRepository;
-        private IRepository<ChurchSubscription> _churchSubscriptionRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IRepository<ChurchSubscription> _churchSubscriptionRepository;
 
-        public UserService(IRepository<User> userRepository, IUnitOfWork uow, IRepository<FeedBack> feedBackRepository, IRepository<ChurchSubscription> churchSubscriptionRepository)
+        public UserService(IUserRepository userRepository, IUnitOfWork uow, IRepository<FeedBack> feedBackRepository, IRepository<ChurchSubscription> churchSubscriptionRepository)
         {
             _userRepository = userRepository;
             _uow = uow;
@@ -56,14 +57,6 @@ namespace NewsAppModel.Services
         public User GetById(int userId)
         {
             var user = _userRepository.All().FirstOrDefault(m => m.UserId == userId);
-            // DataRow dr =  ExecuteReader("Select * from Users where Userid  = @userid
-            // User user = new User(); 
-            // user.UserId = dr["UserId"]
-            // user.Name = dr["Name"]
-            // user.Email = dr["Email"]
-            //.....
-            //" Update Users set email = @email where user = @userid 
-
             if (user == null)
                 throw new InvalidOperationException("User Not found");
             return user;
@@ -71,6 +64,7 @@ namespace NewsAppModel.Services
 
         public User Merge(int oldUserid, int newUserId)
         {
+
             return Merge(_userRepository.All().FirstOrDefault(m => m.UserId == oldUserid), _userRepository.All().FirstOrDefault(m => m.UserId == newUserId));
         }
         public User Merge(User user1, User user2)
@@ -91,42 +85,21 @@ namespace NewsAppModel.Services
                 mainUser = user2;
                 sndUser = user1;
             }
-            var email = "";
-            DateTime? bdate;
+            _userRepository.Merge(sndUser.UserId, mainUser.UserId);
+            string email;
+            DateTime? birthDate;
             if (!string.IsNullOrEmpty(mainUser.Email) && string.IsNullOrEmpty(sndUser.Email))
                 email = mainUser.Email;
             else
                 email = sndUser.Email;
             if (mainUser.BirthDay != null && sndUser.BirthDay == null)
-                bdate = mainUser.BirthDay;
+                birthDate = mainUser.BirthDay;
             else
-                bdate = sndUser.BirthDay;
+                birthDate = sndUser.BirthDay;
             mainUser.Email = email;
-            mainUser.BirthDay = bdate;
+            mainUser.BirthDay = birthDate;
             mainUser.IsAnonymous = mainUser.IsAnonymous && sndUser.IsAnonymous;
-            foreach (var u in sndUser.Devices)
-            {
-                mainUser.AddDevice(u);
-                // u.User = mainUser;
-            }
-
-            //IEnumerable<ChurchSubscription> subscriptionLst =
-            //    sndUser.Subscriptions.Where(
-            //        m => !mainUser.Subscriptions.Select(h => h.SubscriptionType).Contains(m.SubscriptionType));
-            //foreach (ChurchSubscription userSubscription in subscriptionLst)
-            //{
-            //    userSubscription.User = mainUser;
-            //    mainUser.Subscriptions.Add(userSubscription);
-            //}
-            var chlst =
-                sndUser.Churches.Where(
-                    m => !mainUser.Churches.Select(h => h.ChurchId).Contains(m.ChurchId));
-            foreach (var userSubscription in chlst)
-            {
-                mainUser.Churches.Add(userSubscription);
-            }
             if (mainUser.CreateDate == DateTime.MinValue) mainUser.CreateDate = LocalHelper.Now;
-            var lst = sndUser.Notifications;
             _userRepository.Remove(sndUser);
             _userRepository.Add(mainUser);
             return mainUser;
@@ -156,7 +129,6 @@ namespace NewsAppModel.Services
             {
                 user.AddChurch(1);
             }
-
             _userRepository.Add(user);
             return user;
         }

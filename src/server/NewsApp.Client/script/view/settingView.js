@@ -11,8 +11,7 @@ define(['utils/appFunc', 'utils/tplManager', 'GS', 'i18n!nls/lang'], function (a
         renderSetting: function (user) {
             var renderData = ko.mapping.fromJS({
                 Avatar: user.Avatar,
-                Name: user.Name || "",
-                points: user.points,
+                Name: user.Name || "", 
                 i18nNickName: i18n.setting.nickname,
                 i18nPoints: i18n.setting.points,
                 feedBack: i18n.setting.feed_back,
@@ -35,9 +34,6 @@ define(['utils/appFunc', 'utils/tplManager', 'GS', 'i18n!nls/lang'], function (a
                 }
             });
             ko.updateThis(renderData, $$('#settingView .page[data-page="setting"]')[0]);
-            //var output = TM.renderTplById('settingTemplate', renderData);
-            //$$('#settingView .page[data-page="setting"]').html(output);
-
             var bindings = [{
                 element: '.logout-button',
                 event: 'click',

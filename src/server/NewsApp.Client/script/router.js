@@ -87,9 +87,17 @@ define(['GS', 'controller/module'], function (GS, CM) {
                                 query.item = response;
                             }
                         );
+                        CM.module('feedCtrl').init(query);
+
+                        //  CM.module('itemCtrl').init(query);
+                        //require('view/module').module('commentView').render({
+                        //    comments: query.item.Comments
+                        //});
+                    } else {
+                        //CM.module('itemCtrl').init(query);
+                        //CM.module('commentCtrl').init(query);
+                        CM.module('feedCtrl').init(query);
                     }
-                    CM.module('itemCtrl').init(query);
-                    CM.module('commentCtrl').init(query);
                     break;
                 case 'message':
                     CM.module('messageCtrl').init(query);

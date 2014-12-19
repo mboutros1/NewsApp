@@ -63,9 +63,10 @@ namespace NewsApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult Merge(int oldUserId, int newUserId)
+        public JsonResult Merge(int? oldUserId, int newUserId)
         {
-            _userService.Merge(oldUserId, newUserId);
+            if (oldUserId != null)
+                _userService.Merge(oldUserId.GetValueOrDefault(), newUserId);
             return Json(new { success = true });
         }
 

@@ -8,6 +8,7 @@
 // the code is regenerated.
 //------------------------------------------------------------------------------
 
+using System.Diagnostics;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NewsAppModel.Infrastructure;
@@ -43,7 +44,8 @@ namespace NewsApp.Model
 
         public static ISession GetSession()
         {
+            Debug.Print("Get Session");
             return SessionFactory.OpenSession();
         }
-    }
+    } 
 }

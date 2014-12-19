@@ -1,6 +1,5 @@
 define(['utils/appFunc', 'utils/tplManager', 'i18n!nls/lang'],
     function (appFunc, TM, i18n) {
-
         var timelineView = {
             init: function () {
                 appFunc.showToolbar('.views');
@@ -9,16 +8,6 @@ define(['utils/appFunc', 'utils/tplManager', 'i18n!nls/lang'],
             },
             getTimeline: function (data) {
                 try {
-                    var renderData = this.renderDataFunc({
-                        data: data
-                    });
-                    ko.updateThis(renderData, $$('#ourView').find('.time-line-content')[0], {
-                        'feeds': {
-                            key: function (d) {
-                                return ko.utils.unwrapObservable(d.Id);
-                            }
-                        }
-                    });
                     var ptrContent = $$('#ourView').find('.pull-to-refresh-content');
                     ptrContent.data('scrollLoading', 'unloading');
                 } catch (e) {

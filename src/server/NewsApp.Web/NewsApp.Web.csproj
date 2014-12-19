@@ -84,6 +84,9 @@
     <Reference Include="Ninject.Web.Common">
       <HintPath>..\packages\Ninject.Web.Common.3.2.3.0\lib\net40-full\Ninject.Web.Common.dll</HintPath>
     </Reference>
+    <Reference Include="Ninject.Web.Mvc">
+      <HintPath>..\packages\Ninject.MVC4.3.2.1.0\lib\net40-full\Ninject.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=3.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NLog.3.1.0.0\lib\net40\NLog.dll</HintPath>
@@ -187,8 +190,6 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Configuration\Factory.cs" />
     <Compile Include="Configuration\NinjectBindingModule.cs" />
-    <Compile Include="Configuration\NinjectDependencySCope.cs" />
-    <Compile Include="Configuration\NinjectMvcDiResolver.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ChurchController.cs" />
     <Compile Include="Controllers\HomeController.cs" />

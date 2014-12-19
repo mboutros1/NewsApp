@@ -36,7 +36,7 @@
       <key>
         <column name="UserId" not-null="true" />
       </key>
-      <many-to-many class="ChurchSubscription">
+      <many-to-many class="ChurchSubscription" fetch="join">
         <column name="ChurchSubscriptionId" not-null="true" />
       </many-to-many>
     </bag>
@@ -44,17 +44,17 @@
       <key>
         <column name="UserId" not-null="true" />
       </key>
-      <many-to-many class="Church">
+      <many-to-many class="Church" fetch="join">
         <column name="ChurchId" not-null="true" />
       </many-to-many>
     </bag>
-    <bag name="Notifications" inverse="true" generic="true">
+    <bag name="Notifications" inverse="true" cascade="all-delete-orphan" generic="true">
       <key>
         <column name="UserId" />
       </key>
       <one-to-many class="UserNotification" />
     </bag>
-    <bag name="Comments" inverse="true" generic="true">
+    <bag name="Comments" inverse="true" cascade="all-delete-orphan" generic="true">
       <key>
         <column name="UserId" />
       </key>
@@ -78,11 +78,11 @@
       </key>
       <one-to-many class="UserRole" />
     </bag>
-    <bag name="LikedNewsFeeds" table="LikedNewsFeeds_Users" schema="dbo" lazy="true" inverse="true" generic="true">
+    <bag name="LikedNewsFeeds" table="LikedNewsFeeds_Users" schema="dbo" lazy="true" inverse="true" cascade="all-delete-orphan" generic="true">
       <key>
         <column name="UserId" />
       </key>
-      <many-to-many class="NewsFeed">
+      <many-to-many class="NewsFeed" fetch="join">
         <column name="NewsFeedId" />
       </many-to-many>
     </bag>
@@ -132,7 +132,7 @@
       <key not-null="true">
         <column name="NewsFeedId" not-null="true" precision="10" scale="0" sql-type="int" />
       </key>
-      <many-to-many class="User">
+      <many-to-many class="User" fetch="join">
         <column name="UserId" not-null="true" precision="10" scale="0" sql-type="int" />
       </many-to-many>
     </bag>
@@ -215,7 +215,7 @@
       <key>
         <column name="ChurchId" />
       </key>
-      <many-to-many class="User">
+      <many-to-many class="User" fetch="join">
         <column name="UserId" />
       </many-to-many>
     </bag>
@@ -286,7 +286,7 @@
       <key>
         <column name="ChurchSubscriptionId" />
       </key>
-      <many-to-many class="User">
+      <many-to-many class="User" fetch="join">
         <column name="UserId" />
       </many-to-many>
     </bag>

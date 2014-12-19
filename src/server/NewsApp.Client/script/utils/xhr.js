@@ -153,11 +153,12 @@ define(['utils/appFunc',
                     this.qeue = lst;
 
                 }, fireQeue: function () {
-                    var lst = (this.qeue || storage('qeue')) || [];
+                    this.qeue = (this.qeue || storage('qeue')) || [];
+                    var lst = this.qeue;
                     if (lst.length == 0) return;
                     var that = this;
                     var doItem = function (option) {
-                        option.async = true;
+                        option.async = false;
                         that.simpleCall(option, function (response) {
                             if (typeof (option.funcName) == 'string') {
                                 var func = option.funcName + '(' + JSON.stringify(response) + ')';

@@ -9,7 +9,8 @@
             i18n: '../vendors/require/i18n',
             Framework7: '../vendors/framework7/framework7',
             GTPL: '../page/global.tpl.html',
-            GS: 'services/globalService',
+            GS: 'viewModel/user',
+            tLine: 'viewModel/timeline',
             userSubscriptions: 'viewModel/userSubscriptions',
             note: 'viewModel/notification'
         },
@@ -79,25 +80,15 @@
             baseUrl: "http://localhost/",
 
         };
-        //app.baseUrl = 'http://192.168.113.1/';
-        ////  app.baseUrl = "http://192.168.10.118/";
-        //app.baseUrl = "http://192.168.1.2/";
-        //app.baseUrl = "http://192.168.1.7/";
-        //   app.baseUrl = 'http://localhost:1641/';
-        //app.baseUrl = 'http://localhost/';
         app.baseUrl = storage('url');
         if (app.baseUrl == null || app.baseUrl == '')
             app.baseUrl = "http://192.168.10.118/";
         window.thisApp = app;
         app.initialize();
         //**************Debugging Only
-        //  thisApp.baseUrl = "http://localhost/";
-
-        //************** 
-
-
+        //  thisApp.baseUrl = "http://localhost/"; 
         //   app.initMainView();
-
+        //**************  
     });
 })();
 function cl(log) {
@@ -108,28 +99,29 @@ function cl(log) {
 var onNotificationGCM = function (e) {
     logger.log('notification coming');
     logger.log(e);
-    if (e.foreground == false) {
-        alert('Cold start Detected ' + JSON.stringify(e));
-        mainView.loadPage('page/item.html?id=' + e.payload.id);
-
-    }
-    window.plugins.pushNotification.setApplicationIconBadgeNumber(cl, cl, e.badge);
-    if (e.alert) {
-        logger.log("Alert " + e.alert);
-        alert(e.alert);
-    }
-    if (e.badge) {
-        console.log("Badge number " + e.badge);
-        var pushNotification = window.plugins.pushNotification;
-        pushNotification.setApplicationIconBadgeNumber(cl, cl, e.badge);
-    }
-    if (e.sound) {
-        console.log("Sound passed in " + e.sound);
-        var snd = new Media(e.sound);
-        snd.play();
-    }
-    if (e.payload.id) {
-        mainView.loadPage('page/item.html?isNote=true&id=' + e.payload.id);
+    try {
+        if (e.foreground == false) {
+            alert('Cold start Detected ' + JSON.stringify(e));
+        }
+        window.plugins.pushNotification.setApplicationIconBadgeNumber(cl, cl, e.badge);
+        if (e.alert) {
+            logger.log("Alert " + e.alert);
+        }
+        if (e.badge) {
+            console.log("Badge number " + e.badge);
+            var pushNotification = window.plugins.pushNotification;
+            pushNotification.setApplicationIconBadgeNumber(cl, cl, e.badge);
+        }
+        if (e.sound) {
+            console.log("Sound passed in " + e.sound);
+            var snd = new Media(e.sound);
+            snd.play();
+        }
+        if (e.payload.id) {
+            mainView.loadPage('page/item.html?isNote=true&id=' + e.payload.id);
+        }
+    } catch (e) {
+        logger.log(e.message);
     }
 }
 
@@ -159,8 +151,8 @@ function storage(key, data) {
             else if (typeof (data) == 'object')
                 localStorage.setItem(key, JSON.stringify(data));
             else
-                localStorage.setItem(key, data); 
-        } 
+                localStorage.setItem(key, data);
+        }
     } catch (e) {
         return null;
     }

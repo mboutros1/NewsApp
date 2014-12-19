@@ -11,6 +11,7 @@ namespace NewsAppModel.Services
 {
     public class FeedService
     {
+        private readonly IRepository<ChurchSubscription> _churchSubscriptionRepository;
         private readonly IRepository<Church> _churchRepository;
         private readonly IRepository<Comment> _commentRepository;
         private readonly INewsFeedRepository _newsFeedRepository;
@@ -19,7 +20,7 @@ namespace NewsAppModel.Services
         private readonly UserService _userService;
 
         public FeedService(INewsFeedRepository newsFeedRepository, IUnitOfWork uow, IRepository<User> userRepository,
-            IRepository<Church> churchRepository, IRepository<Comment> commentRepository, UserService userService)
+            IRepository<Church> churchRepository, IRepository<Comment> commentRepository, UserService userService, IRepository<ChurchSubscription> churchSubscriptionRepository)
         {
             _newsFeedRepository = newsFeedRepository;
             _uow = uow;
@@ -27,30 +28,39 @@ namespace NewsAppModel.Services
             _churchRepository = churchRepository;
             _commentRepository = commentRepository;
             _userService = userService;
+            _churchSubscriptionRepository = churchSubscriptionRepository;
         }
         public NewsFeedView Post(CreateFeedRequest createRequest)
         {
-            if (createRequest.ChurchId == 0)
+            if (createRequest.ChurchId == 0 && createRequest.ChurchSubscriptionId == 0)
                 throw new InvalidOperationException("Church was not set while creating new feed");
             if (createRequest.UserId == 0)
                 throw new InvalidOperationException("user was not set while creating new feed");
             var user = _userRepository.All().FirstOrDefault(m => m.UserId == createRequest.UserId);
             if (user == null)
                 throw new InvalidOperationException("user can't be found [Post]");
-            var church = _churchRepository.All().FirstOrDefault(m => m.ChurchId == createRequest.ChurchId);
+            ChurchSubscription churchSub = null;
+            if (createRequest.ChurchSubscriptionId != 0)
+            {
+                churchSub = _churchSubscriptionRepository.All().FirstOrDefault(m => m.ChurchSubscriptionId == createRequest.ChurchSubscriptionId);
+            }
+            if (churchSub == null)
+                throw new InvalidOperationException("ChurchSubscription can't be found [Post]");
+            var church = churchSub.Church;
             if (church == null)
                 throw new InvalidOperationException("Church can't be found [Post]");
             var feed = new NewsFeed
             {
-                Body = createRequest.Body,
-                Title = createRequest.Title,
+                Body = "",
+                Title = createRequest.Body ?? "",
                 CreateDate = LocalHelper.Now,
                 NotifyUsers = createRequest.Notify,
                 Images = createRequest.Images,
                 CreatedBy = user,
                 IsGlobal = createRequest.IsGlobal,
                 ScheduleDate = createRequest.ScheduleDate,
-                Chruch = church
+                Chruch = church,
+                ChurchSubscription = churchSub
             };
             _newsFeedRepository.Add(feed);
             _uow.Commit();
@@ -72,7 +82,7 @@ namespace NewsAppModel.Services
             return _userService.Register(userId, deviceId, deviceType).ToViewModel();
         }
 
-        public TimeLineResponse GetInitFeed(TimeLineRequest timeLineRequest) 
+        public TimeLineResponse GetInitFeed(TimeLineRequest timeLineRequest)
         {
             timeLineRequest.DeviceId = timeLineRequest.DeviceId == "null" ? null : timeLineRequest.DeviceId;
             var response = new TimeLineResponse();

@@ -386,7 +386,7 @@
                     </Size>
                     <Enabled>false</Enabled>
                     <Oid xsi:type="SchemaModelOID">
-                      <Path>0506422a-4071-4319-8b72-0c8efa814bc8</Path>
+                      <Path>54a9e458-05c0-423a-b8ec-d2153149b6e0</Path>
                       <TypeName>EntityDeveloper.NHibernate.HibernateRelationProperty</TypeName>
                     </Oid>
                   </Model>
@@ -807,7 +807,7 @@
                     </Size>
                     <Enabled>false</Enabled>
                     <Oid xsi:type="SchemaModelOID">
-                      <Path>f6326519-8a27-48b2-9d8c-7d5d40ce8c0a</Path>
+                      <Path>66a70152-9f83-4d12-a79f-899ca959ff93</Path>
                       <TypeName>EntityDeveloper.NHibernate.HibernateRelationProperty</TypeName>
                     </Oid>
                   </Model>
@@ -823,7 +823,7 @@
                     </Size>
                     <Enabled>false</Enabled>
                     <Oid xsi:type="SchemaModelOID">
-                      <Path>ebe468d3-daf6-477e-a2a5-6f797580aa14</Path>
+                      <Path>c6b5a589-c08c-411a-b3d7-dfbd4ac39f71</Path>
                       <TypeName>EntityDeveloper.NHibernate.HibernateRelationProperty</TypeName>
                     </Oid>
                   </Model>
@@ -3121,7 +3121,7 @@
           <Scale>1</Scale>
           <Location>
             <X>-339 px</X>
-            <Y>226 px</Y>
+            <Y>437 px</Y>
           </Location>
         </ViewPort>
         <Oid xsi:type="SchemaModelOID">

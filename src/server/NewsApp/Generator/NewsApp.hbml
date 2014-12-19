@@ -45,7 +45,7 @@
       <key>
         <column name="" />
       </key>
-      <many-to-many class="ChurchSubscription">
+      <many-to-many class="ChurchSubscription" fetch="join">
         <column name="" />
       </many-to-many>
     </bag>
@@ -53,17 +53,17 @@
       <key>
         <column name="" />
       </key>
-      <many-to-many class="Church">
+      <many-to-many class="Church" fetch="join">
         <column name="" />
       </many-to-many>
     </bag>
-    <bag name="Notifications" inverse="true" generic="true" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="6838389c-5451-4ffe-b137-0a5d49b1d23c">
+    <bag name="Notifications" inverse="true" cascade="all-delete-orphan" generic="true" p1:AssociationGuid="f35c1efa-4314-475d-af46-b08ef9974a52" p1:Guid="6838389c-5451-4ffe-b137-0a5d49b1d23c">
       <key>
         <column name="" />
       </key>
       <one-to-many class="UserNotification" />
     </bag>
-    <bag name="Comments" inverse="true" generic="true" p1:AssociationGuid="7e7fa471-8001-4337-a6b6-a42a81f1f3a8" p1:Guid="a54407ae-877d-494d-8e25-556d88c03a21">
+    <bag name="Comments" inverse="true" cascade="all-delete-orphan" generic="true" p1:AssociationGuid="7e7fa471-8001-4337-a6b6-a42a81f1f3a8" p1:Guid="a54407ae-877d-494d-8e25-556d88c03a21">
       <key>
         <column name="" />
       </key>
@@ -87,11 +87,11 @@
       </key>
       <one-to-many class="UserRole" />
     </bag>
-    <bag name="LikedNewsFeeds" table="LikedNewsFeeds_Users" schema="dbo" lazy="true" inverse="true" generic="true" p1:AssociationGuid="a4b41b73-fc2c-4d9d-b0b8-e7f24a4bd92b" p1:Guid="654d6e40-76c3-443a-85b9-2a8de9441f5d">
+    <bag name="LikedNewsFeeds" table="LikedNewsFeeds_Users" schema="dbo" lazy="true" inverse="true" cascade="all-delete-orphan" generic="true" p1:AssociationGuid="a4b41b73-fc2c-4d9d-b0b8-e7f24a4bd92b" p1:Guid="654d6e40-76c3-443a-85b9-2a8de9441f5d">
       <key>
         <column name="UserId" />
       </key>
-      <many-to-many class="NewsFeed">
+      <many-to-many class="NewsFeed" fetch="join">
         <column name="NewsFeedId" />
       </many-to-many>
     </bag>
@@ -141,7 +141,7 @@
       <key not-null="true">
         <column name="NewsFeedId" not-null="true" precision="10" scale="0" sql-type="int" p1:unicode="false" />
       </key>
-      <many-to-many class="User">
+      <many-to-many class="User" fetch="join">
         <column name="UserId" not-null="true" precision="10" scale="0" sql-type="int" p1:unicode="false" />
       </many-to-many>
     </bag>
@@ -224,7 +224,7 @@
       <key>
         <column name="" />
       </key>
-      <many-to-many class="User">
+      <many-to-many class="User" fetch="join">
         <column name="" />
       </many-to-many>
     </bag>
@@ -294,7 +294,7 @@
       <key>
         <column name="" />
       </key>
-      <many-to-many class="User">
+      <many-to-many class="User" fetch="join">
         <column name="" />
       </many-to-many>
     </bag>

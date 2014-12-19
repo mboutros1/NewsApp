@@ -1,8 +1,10 @@
-define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, xhr, VM, GS) {
+define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS', 'tLine'], function (appFunc, xhr,
+    VM, GS, tLine) {
 
     var timelineCtrl = {
         init: function () {
             VM.module('timelineView').init();
+            tLine.update($$('#ourView').find('.time-line-content')[0]);
             this.getTimeline();
         },
         bindEvent: function () {
@@ -30,7 +32,7 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
                     selector: 'a.open-send-popup',
                     event: 'click',
                     handler: function () {
-                        if (require('GS').getCurrentUser().IsAnonymous)
+                        if (require('GS').getCurrentUser().IsAnonymous())
                             mainView.loadPage('page/login.html');
                         else
                             VM.module('postView').openSendPopup();
@@ -47,7 +49,7 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
                          var icon = sender.find('.icon');
                          xhr.simpleCall({
                              func: icon.hasClass('ios7-heart-outline') ? 'Like' : 'Dislike', method: 'POST',
-                             data: { feedId: feedId, userId: GS.getCurrentUser().UserId }
+                             data: { feedId: feedId, userId: GS.getCurrentUser().UserId() }
                          }, function (response) {
                              sender.find('count').text(response.Count);
                              if (icon.hasClass('ios7-heart-outline')) {
@@ -70,21 +72,12 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
 
             appFunc.bindEvents(bindings);
 
-        }, loadLastFeed: function (lastFeed) {
-            if (lastFeed && lastFeed.length > 0) {
-                storage('feed', lastFeed);
-            }
-            else {
-                lastFeed = storage("feed");
-                if (typeof (lastFeed) == 'object')
-                    VM.module('timelineView').getTimeline(lastFeed);
-            }
         },
+       
 
         getTimeline: function () {
             var user = GS.getCurrentUser();
-            console.log('get the feed ' + user.UserId);
-            this.loadLastFeed();
+            console.log('get the feed ' + user.UserId());
             var that = this;
             var deviceId = storage("deviceId");
             var platForm = 'DK';
@@ -92,16 +85,16 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
                 platForm = 'DK';
             xhr.simpleCall({
                 func: 'GetInitFeed', method: 'POST', data: {
-                    UserId: user.UserId,
+                    UserId: user.UserId(),
                     StartAt: timelineCtrl.firstIndex, DeviceId: deviceId, DeviceType: platForm
                 }
             }, function (response) {
                 GS.setCurrentUser(response.User.UserId, response.User);
                 timelineCtrl.firstIndex = response.data.length > 0 ? response.data[0].Id : 00;
                 timelineCtrl.lastIndex = response.data.length > 0 ? response.data[response.data.length - 1].Id : 00;
-                VM.module('timelineView').getTimeline(response.data);
-                that.loadLastFeed(response.data);
-            });
+                tLine.update(response.data,$$('#ourView').find('.time-line-content')[0]);
+
+             });
         },
 
         refreshTimeline: function () {
@@ -110,12 +103,13 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
                 func: 'GetFeed', error: function () {
                     hiApp.pullToRefreshDone();
                 }, data: {
-                    UserId: user.UserId, StartAt: timelineCtrl.firstIndex,
+                    UserId: user.UserId(), StartAt: timelineCtrl.firstIndex,
                     Refresh: true
                 }
             }, function (response) {
                 timelineCtrl.firstIndex = response.data.length > 0 ? response.data[0].Id : 00;
-                VM.module('timelineView').refreshTimeline(response.data);
+                tLine.update(response.data, $$('#ourView').find('.time-line-content')[0]);
+                //VM.module('timelineView').refreshTimeline(response.data);
             });
         },
 
@@ -129,13 +123,14 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS'], function (appFunc, x
             xhr.simpleCall({
                 error: function () {
                     timelineCtrl.inprogress = false;
-                }, func: 'GetFeed', data: { UserId: user.UserId, StartAt: timelineCtrl.lastIndex, Refresh: false }
+                }, func: 'GetFeed', data: { UserId: user.UserId(), StartAt: timelineCtrl.lastIndex, Refresh: false }
             }, function (response) {
                 timelineCtrl.lastIndex = response.data.length > 0 ? response.data[response.data.length - 1].Id : 00;
-                VM.module('timelineView').infiniteTimeline({
-                    feeds: response.data,
-                    $dom: $dom
-                });
+                tLine.add(response.data);
+                //VM.module('timelineView').infiniteTimeline({
+                //    feeds: response.data,
+                //    $dom: $dom
+                //});
                 timelineCtrl.inprogress = false;
             });
         }
