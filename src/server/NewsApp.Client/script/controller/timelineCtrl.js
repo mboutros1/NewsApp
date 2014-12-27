@@ -4,7 +4,7 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS', 'tLine'], function (a
     var timelineCtrl = {
         init: function () {
             VM.module('timelineView').init();
-            tLine.update($$('#ourView').find('.time-line-content')[0]);
+            tLine.update(this.elementId);
             this.getTimeline();
         },
         bindEvent: function () {
@@ -69,16 +69,12 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS', 'tLine'], function (a
                     handler: VM.module('timelineView').openItemPage
                 }
             ];
-
             appFunc.bindEvents(bindings);
-
         },
-       
-
+        elementId: '#ourView .time-line-content',
         getTimeline: function () {
             var user = GS.getCurrentUser();
             console.log('get the feed ' + user.UserId());
-            var that = this;
             var deviceId = storage("deviceId");
             var platForm = 'DK';
             if (typeof (cordova) != 'undefined' && typeof (cordova.platformId) != 'undefined')
@@ -86,35 +82,31 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS', 'tLine'], function (a
             xhr.simpleCall({
                 func: 'GetInitFeed', method: 'POST', data: {
                     UserId: user.UserId(),
-                    StartAt: timelineCtrl.firstIndex, DeviceId: deviceId, DeviceType: platForm
+                    StartAt: tLine.getFirstIndex(), DeviceId: deviceId, DeviceType: platForm
                 }
             }, function (response) {
                 GS.setCurrentUser(response.User.UserId, response.User);
-                timelineCtrl.firstIndex = response.data.length > 0 ? response.data[0].Id : 00;
                 timelineCtrl.lastIndex = response.data.length > 0 ? response.data[response.data.length - 1].Id : 00;
-                tLine.update(response.data,$$('#ourView').find('.time-line-content')[0]);
+                tLine.update(response.data, this.elementId);
 
-             });
+            });
         },
-
         refreshTimeline: function () {
             var user = GS.getCurrentUser();
             xhr.simpleCall({
                 func: 'GetFeed', error: function () {
                     hiApp.pullToRefreshDone();
                 }, data: {
-                    UserId: user.UserId(), StartAt: timelineCtrl.firstIndex,
+                    UserId: user.UserId(), StartAt: tLine.getFirstIndex(),
                     Refresh: true
                 }
             }, function (response) {
-                timelineCtrl.firstIndex = response.data.length > 0 ? response.data[0].Id : 00;
-                tLine.update(response.data, $$('#ourView').find('.time-line-content')[0]);
-                //VM.module('timelineView').refreshTimeline(response.data);
+                tLine.update(response.data, this.elementId);
+                VM.module('timelineView').refreshTimeline(response.data);
             });
         },
 
         infiniteTimeline: function () {
-            var $dom = $$(this);
             var user = GS.getCurrentUser();
             if (timelineCtrl.inprogress) return;
             timelineCtrl.inprogress = true;
@@ -123,14 +115,10 @@ define(['utils/appFunc', 'utils/xhr', 'view/module', 'GS', 'tLine'], function (a
             xhr.simpleCall({
                 error: function () {
                     timelineCtrl.inprogress = false;
-                }, func: 'GetFeed', data: { UserId: user.UserId(), StartAt: timelineCtrl.lastIndex, Refresh: false }
+                }, func: 'GetFeed', data: { UserId: user.UserId(), StartAt: tLine.getLastIndex(), Refresh: false }
             }, function (response) {
                 timelineCtrl.lastIndex = response.data.length > 0 ? response.data[response.data.length - 1].Id : 00;
                 tLine.add(response.data);
-                //VM.module('timelineView').infiniteTimeline({
-                //    feeds: response.data,
-                //    $dom: $dom
-                //});
                 timelineCtrl.inprogress = false;
             });
         }

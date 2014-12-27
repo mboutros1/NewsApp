@@ -12,6 +12,7 @@ using NewsApp.Configuration;
 using NewsApp.Controllers;
 using NewsApp.Notifications;
 using NewsAppModel.Infrastructure;
+using NHibernate;
 using Ninject;
 using Ninject.Web.Common;
 
@@ -59,6 +60,10 @@ namespace NewsApp
         protected void Application_Stop()
         {
             AppController.End();
+        }
+
+        protected void Application_EndRequest(object sender, EventArgs e) {
+            //Factory.Get<ISession>().Flush();
         }
         protected void Application_BeginRequest(object sender, EventArgs e)
         {

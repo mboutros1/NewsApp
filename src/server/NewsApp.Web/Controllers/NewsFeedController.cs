@@ -61,7 +61,7 @@ namespace NewsApp.Controllers
         [HttpPost]
         public JsonResult Post(CreateFeedRequest request)
         {
-            return Json(_feedService.Post(request), JsonRequestBehavior.AllowGet);
+            return Json(new[] { _feedService.Post(request) }, JsonRequestBehavior.AllowGet);
         }
     }
 }

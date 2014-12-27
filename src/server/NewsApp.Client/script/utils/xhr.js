@@ -14,7 +14,7 @@ define(['utils/appFunc',
                     hiApp.hideIndicator();
                     hiApp.hidePreloader();
                     var msg = "";
-                    if ((text.status < 200 || text.status > 300) && text.status != 304 && text.status !=0)
+                    if ((text.status < 200 || text.status > 300) && text.status != 304 && text.status != 0)
                         msg = "No Internet Connection! ";
                     if (logger.devMode || msg == '')
                         msg += logger.getError(text, st, this).message;
@@ -131,7 +131,7 @@ define(['utils/appFunc',
                             }
                         }
                     });
-                    setTimeout(function () { 
+                    setTimeout(function () {
                         if (!thisXhr || thisXhr.isgood) return;
                         thisXhr.abort();
                         xhr.original = options;
@@ -160,13 +160,18 @@ define(['utils/appFunc',
                     var doItem = function (option) {
                         option.async = false;
                         that.simpleCall(option, function (response) {
-                            if (typeof (option.funcName) == 'string') {
-                                var func = option.funcName + '(' + JSON.stringify(response) + ')';
-                                eval(func);
+                            try {
+                                if (typeof (option.funcName) == 'string') {
+                                    var func = option.funcName + '(' + JSON.stringify(response) + ')';
+                                    eval(func);
+                                }
+                            } catch (e) {
+                                logger.log(e.message);
+                            } finally {
+                                lst.pop(option);
+                                storage('qeue', lst);
+                                that.qeue = lst;
                             }
-                            lst.pop(option);
-                            storage('qeue', lst);
-                            that.qeue = lst;
                         });
                     }
                     for (var i = lst.length - 1; i >= 0; i--) {

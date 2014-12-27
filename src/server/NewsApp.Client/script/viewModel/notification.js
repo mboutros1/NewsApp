@@ -3,30 +3,15 @@
         key:'notification',
         init: function () {
             this.list = storage(note.key) || {};
-            note.list = ko.mapping.fromJS(note.list, {
-                'Subscription': {
-                    create: function (d) {
-                        d.data = d.data || {};
-                        d.data.update = function () {
-                            var id = this.ChurchSubscriptionId(), value = !this.IsSubscribe();
-                            xhr.simpleCall({
-                                func: 'UpdateSubscriptions',
-                                data: { userId: storage('sid'), id: id, value: value }
-                            }, function (response) {
-                                var item = note.find(id);
-                                if (item) item.IsSubscribe(value);
-                                note.save();
-                            });
-                        }
-                        return ko.mapping.fromJS(d.data);
-                    }
-                }
-
-            });
+            note.list = ko.mapping.fromJS(note.list);
         },
         save: function () {
             storage(note.key, ko.mapping.toJS(note.list));
         },
+        insert:function(data) {
+            note.list.unshift(data);
+            note.save();
+        }, 
         refresh: function (success) {
             xhr.simpleCall({
                 func: 'GetNotification',

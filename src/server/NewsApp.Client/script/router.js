@@ -28,9 +28,8 @@ define(['GS', 'controller/module'], function (GS, CM) {
         pageBeforeAnimation: function (page) {
             var name = page.name;
             if (name === 'ourView' || name === 'contatcView' || name === 'setting') {
-                if (name === 'ourView')
-                    CM.module('timelineCtrl').loadLastFeed();
-
+                // if (name === 'ourView')
+                //  require('tLine').update();
             }
         },
         pageAfterAnimation: function (page) {
@@ -50,7 +49,7 @@ define(['GS', 'controller/module'], function (GS, CM) {
             switch (name) {
                 case 'ourView':
                     if (from === 'left') return;
-                    CM.module('timelineCtrl').loadLastFeed();
+                    require('tLine').update();
                     break;
             }
         },

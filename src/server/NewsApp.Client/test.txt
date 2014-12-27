@@ -1,0 +1,9 @@
+﻿post a new feed 
+
+  require('utils/xhr').enqeue({
+                                    func: 'Post', method: 'POST',
+                                    data: {
+                                        UserId: 175, Body: 'new comment ' ,
+                                        ChurchSubscriptionId: 7
+                                    }
+                                }, 'require("tLine").insert');

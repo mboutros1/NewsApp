@@ -21,10 +21,10 @@ namespace NewsApp.Model
         protected ITransaction _transaction = null;
 
         public NHibernateUnitOfWork()
-            : this(NHibernateSessionProvider.SessionFactory.OpenSession()) 
+            : this(NHibernateSessionProvider.SessionFactory.OpenSession())
         {
         }
-        
+
         public NHibernateUnitOfWork(ISession session)
         {
             if (session == null)
@@ -80,8 +80,19 @@ namespace NewsApp.Model
             {
                 if (disposing)
                 {
-                    CloseTransaction();
-                    CloseSession();
+                    if (_transaction != null)
+                    {
+                        _transaction.Dispose();
+                        _transaction = null;
+                    }
+                    //CloseTransaction();
+                    if (_session != null)
+                    {
+                        _session.Close();
+                        _session.Dispose();
+                        _session = null;
+                    }
+                    //CloseSession();
                 }
             }
             this.disposed = true;
@@ -99,22 +110,22 @@ namespace NewsApp.Model
 
         public virtual void Save()
         {
-            if (_session == null)
-                throw new InvalidOperationException("Session has not been initialized.");
-            if (_transaction == null || !_transaction.IsActive)
-                throw new InvalidOperationException("No transaction is active.");
-            _transaction.Commit();
+            //if (_session == null)
+            //    throw new InvalidOperationException("Session has not been initialized.");
+            //if (_transaction == null || !_transaction.IsActive)
+            //    throw new InvalidOperationException("No transaction is active.");
+            //_transaction.Commit();
         }
 
         public void Commit()
         {
-            if (_session == null)
-                throw new InvalidOperationException("Session has not been initialized.");
-            if (_transaction == null || !_transaction.IsActive)
-                throw new InvalidOperationException("No transaction is active.");
-            _session.Flush();
-            _transaction.Commit();
-            BeginTransaction();
+            //if (_session == null)
+            //    throw new InvalidOperationException("Session has not been initialized.");
+            //if (_transaction == null || !_transaction.IsActive)
+            //    throw new InvalidOperationException("No transaction is active.");
+            //_session.Flush();
+            //_transaction.Commit();
+            //BeginTransaction();
         }
 
         #endregion

@@ -21,7 +21,7 @@
         }
     });
 
-    require(['Framework7', 'router', 'i18n!nls/lang', 'utils/appFunc', 'logger', 'GS'], function (Framework7, router, i18n, appFunc, logger, GS) {
+    require(['Framework7', 'router', 'i18n!nls/lang', 'utils/appFunc', 'logger', 'GS','note'], function (Framework7, router, i18n, appFunc, logger, GS) {
 
         var app = {
             initialize: function () {
@@ -101,7 +101,7 @@ var onNotificationGCM = function (e) {
     logger.log(e);
     try {
         if (e.foreground == false) {
-            alert('Cold start Detected ' + JSON.stringify(e));
+          //  alert('Cold start Detected ' + JSON.stringify(e));
         }
         window.plugins.pushNotification.setApplicationIconBadgeNumber(cl, cl, e.badge);
         if (e.alert) {
@@ -118,6 +118,7 @@ var onNotificationGCM = function (e) {
             snd.play();
         }
         if (e.payload.id) {
+            require('note').insert(e.payload);
             mainView.loadPage('page/item.html?isNote=true&id=' + e.payload.id);
         }
     } catch (e) {

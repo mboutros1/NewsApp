@@ -61,10 +61,10 @@ ko.updateThis = function (newData, element, mapping) {
         ko.applyBindings(current, element);
     } else if (newData)
         if (mapping)
-            ko.mapping.fromJS(newData, mapping, current);
+            current = ko.mapping.fromJS(newData, mapping, current);
         else
-            ko.mapping.fromJS(newData, current);
-    return this._currentComments;
+            current = ko.mapping.fromJS(newData, current);
+    return current;
 }
 function isUrl(str) {
     var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol

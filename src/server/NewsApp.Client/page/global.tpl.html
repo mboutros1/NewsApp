@@ -22,19 +22,20 @@
             <div class="item-tools">
                 <ul>
                     <li>
-                        <a data-bind="attr:{href:'page/item.html?id=' + Id()}">
-                            <i class="icon ios7-chatbubble-outline"></i>
-                            <span class="text" data-bind="text:$root.i18n.comment"></span>
-                            <span class="text" data-bind="text:CommentsCount,formatNumber:CommentsCount"></span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="#" class="likePost" data-bind="attr:{'data-feedid':Id}">
                             <i class="icon " data-bind="css:{'ios7-heart-liked':IsLiked,  'ios7-heart-outline':IsLiked() ==false}"></i>
                             <span class="text" data-bind="text:$root.i18n.like"></span>
                             <span class="text" data-bind="text:LikesCount,formatNumber:LikesCount"></span>
                         </a>
                     </li>
+                    <li>
+                        <a data-bind="attr:{href:'page/item.html?id=' + Id()}">
+                            <i class="icon ios7-chatbubble-outline"></i>
+                            <span class="text" data-bind="text:$root.i18n.comment"></span>
+                            <span class="text" data-bind="text:CommentsCount,formatNumber:CommentsCount"></span>
+                        </a>
+                    </li>
+
                 </ul>
             </div>
         </div>
@@ -42,7 +43,7 @@
 </script>
 <div class="item-inner user-info">
     <div class="avatar">
-        <img data-bind="formatAvatar:Avatar"  alt="">
+        <img data-bind="formatAvatar:Avatar" alt="">
     </div>
     <div class="user-detail">
         <div data-bind="visible:Name()!='',text:i18nNickName() + ':' + Name()" class="name">{{i18nNickName}}: {{Name}}</div>
@@ -55,7 +56,7 @@
             <div class="item-header">
                 <div class="avatar">
                     <img data-avatarid="{{Avatar}}"
-                         data-bind="attr:{'data-avatarid':Avatar},formatAvatar:Avatar" >
+                         data-bind="attr:{'data-avatarid':Avatar},formatAvatar:Avatar">
                 </div>
                 <div class="detail">
                     <div data-bind="text:Name" class="nickname churchName">{{Name}}</div>
@@ -209,14 +210,14 @@
     <div class="page-content">
         <div class="setting-page list-block">
             <ul>
-                <li>
+                <li data-bind="visible:Name">
                     <div class="item-content">
                         <div class="item-inner user-info">
                             <div class="avatar">
-                                <img data-bind="formatAvatar:Avatar" src="{{avatarUrl}}" alt="">
+                                <img data-bind="formatAvatar:Avatar" alt="">
                             </div>
                             <div class="user-detail">
-                                <div data-bind="visible:Name()!='',text:i18nNickName() + ':' + Name()" class="name">{{i18nNickName}}: {{Name}}</div>
+                                <div data-bind="visible:Name()!='',text: Name()" class="name">{{i18nNickName}}: {{Name}}</div>
                             </div>
                         </div>
                     </div>
@@ -264,13 +265,13 @@
                     </a>
                 </li>
                 <li>
-                         <div class="item-content">
-                            <div class="item-media about spring"></div>
-                            <div class="item-inner">
-                                <input type="text" id="txtServer" data-bind="value:baseUrl" onchange="    thisApp.baseUrl = this.value; storage('url', this.value);" />
-                            </div>
+                    <div class="item-content">
+                        <div class="item-media about spring"></div>
+                        <div class="item-inner">
+                            <input type="text" id="txtServer" data-bind="value:baseUrl" onchange="    thisApp.baseUrl = this.value; storage('url', this.value);" />
                         </div>
-                 </li>
+                    </div>
+                </li>
             </ul>
             <a href="#" class="button button-big logout-button button-fill color-red" data-bind="text:loginOut,click:logOut">{{loginOut}}</a>
         </div>

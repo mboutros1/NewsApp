@@ -34,18 +34,18 @@ define(['utils/appFunc',
                                 camera.startUpload(imgSrc);
                             } else {
 
-                                hiApp.showPreloader(i18n.index.sending); 
+                                hiApp.showPreloader(i18n.index.sending);
                                 xhr.enqeue({
                                     func: 'Post', method: 'POST',
                                     data: {
                                         UserId: GS.getCurrentUser().UserId(), Body: text,
                                         ChurchSubscriptionId: renderData.selectedSubscription().ChurchSubscriptionId()
                                     }
-                                }, 'hiApp.pullToRefreshTrigger()');
+                                }, 'require("tLine").insert');
 
                                 setTimeout(function () {
                                     hiApp.hidePreloader();
-                                    hiApp.closeModal('.send-popup'); 
+                                    hiApp.closeModal('.send-popup');
                                 }, 1300);
                             }
                         }
